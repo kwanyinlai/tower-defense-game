@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StructureBattleSystem : BattleSystem
+public class EnemyBattleSystem : BattleSystem
 {
     void Start()
     {

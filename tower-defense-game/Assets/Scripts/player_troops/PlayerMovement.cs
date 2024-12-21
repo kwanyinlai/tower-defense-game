@@ -12,7 +12,6 @@ public class PlayerMovement : MonoBehaviour
     public int dmg = 10;  
     private float atkCooldown = 1.5f;  
     private float atkTimer = 0f;      
-    private bool isEngaged = false;
     public static LinkedList<GameObject> troops = new LinkedList<GameObject>();   
     public GameObject bulletPrefab; 
 
@@ -24,64 +23,31 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        
         target = GetClosestEnemyInRange();
-        
-    
-
-    
-        
         if (target != null)
         {
             targetStats = target.GetComponent<BattleSystem>(); 
-        }
-        
-
-        if (target != null && targetStats != null)
-        {
             float distance = Vector3.Distance(transform.position, target.position);
-
-            if (distance <= aggroRange)
-            {
-                EngageEnemy(distance);
+            if (distance <= aggroRange) {
+                agent.isStopped = true;
+                if (atkTimer <= 0f)  { Attack(); }
             }
-            
+            else{ agent.SetDestination(target.position); }
         }
-
-       
-        if (atkTimer > 0f)
-        {
-            atkTimer -= Time.deltaTime;
-        }
-
-    }
-
-    void EngageEnemy(float distance)
-    {
-        isEngaged = true;
-
-        if (distance > range)
-        {
-            agent.SetDestination(target.position);
-        }
-        else
-        {
-            agent.isStopped = true;
-
-            if (atkTimer <= 0f)  
-            {
-                Attack();
-            }
-        }
+        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
     }
 
     void Attack()
     {
-        Debug.Log("Player is attacking the target!");
-
-        Projectile();  
-
-
+        if (bulletPrefab != null)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            BulletScript bulletScript = bullet.GetComponent<BulletScript>();
+            if (bulletScript != null)
+            {
+                bulletScript.SetTarget(target);
+            }
+        }
         atkTimer = atkCooldown;  
     }
 
@@ -109,18 +75,7 @@ public class PlayerMovement : MonoBehaviour
         return closestEnemy.transform;
     }
 
-    void Projectile()
-    {
-        if (bulletPrefab != null)
-        {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            BulletScript bulletScript = bullet.GetComponent<BulletScript>();
-            if (bulletScript != null)
-            {
-                bulletScript.SetTarget(target);
-            }
-        }
-    }
+
 }
 
 

@@ -12,12 +12,11 @@ public class EnemyMovement : MonoBehaviour
     private NavMeshAgent agent;
     private BattleSystem targetStats;
     public float range = 5.0f;
-    public int dmg = 10;  
-    private float atkCooldown = 1.5f;  
-    private float atkTimer = 0f;      
-    private bool isEngaged = false;
+    public int dmg = 10;
+    private float atkCooldown = 1.5f;
+    private float atkTimer = 0f;
     public static LinkedList<GameObject> enemies = new LinkedList<GameObject>(); 
-    public GameObject bulletPrefab; 
+    public GameObject bulletPrefab;
 
  
 
@@ -39,18 +38,14 @@ public class EnemyMovement : MonoBehaviour
         if (enemy_target != null)
         {
             targetStats = enemy_target.GetComponent<BattleSystem>(); 
-            if (targetStats != null)
-            {
-                float distance = Vector3.Distance(transform.position, enemy_target.position);
-                if (distance <= aggroRange){ EngageEnemy(distance);}
-            }
-            if (atkTimer > 0f)
-            {
-                atkTimer -= Time.deltaTime;
-            }
+            float distance = Vector3.Distance(transform.position, enemy_target.position);
+            Debug.Log(gameObject.name+ " distance: " + distance);
+            if (distance <= aggroRange){ 
+                agent.isStopped = true;
+                if (atkTimer <= 0f){ Attack(enemy_target);}}
+            else{ agent.SetDestination(enemy_target.position); }
         }
         else if (target != null) {
-
             agent.SetDestination(target.position);
             float distance = Vector3.Distance(agent.transform.position, target.position);
             if (distance <= range && agent.velocity.magnitude <= 0.1f) 
@@ -58,50 +53,23 @@ public class EnemyMovement : MonoBehaviour
                 agent.isStopped = true;
                 if (atkTimer <= 0f){  Attack(target);}
             }
-            else{ agent.isStopped = false; }
-            atkTimer -= Time.deltaTime;
+            else { agent.isStopped = false; }
         }
-    }
-
-    void AttackBase(float distance)
-    {
-
-        if (distance > range)
-        {
-            agent.SetDestination(target.position);
-        }
-        else
-        {
-            agent.isStopped = true;
-
-            if (atkTimer <= 0f)  
-            {
-                Attack(target);
-            }
-        }
-    }
-
-    void EngageEnemy(float distance)
-    {
-
-        if (distance > range)
-        {
-            agent.SetDestination(enemy_target.position);
-        }
-        else
-        {
-            agent.isStopped = true;
-            if (atkTimer <= 0f)  
-            {
-                Attack(enemy_target);
-            }
-        }
+        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
     }
 
 
     void Attack(Transform target)
     {
-        Projectile(target);
+        if (bulletPrefab != null)
+        {
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            BulletScript bulletScript = bullet.GetComponent<BulletScript>();
+            if (bulletScript != null)
+            {
+                bulletScript.SetTarget(target);
+            }
+        }
         atkTimer = atkCooldown;
     }
 
@@ -123,21 +91,8 @@ public class EnemyMovement : MonoBehaviour
                 closestDistance = distance;
             }
         }
-        
         if (closestEnemy == null) { return null; }
         return closestEnemy.transform;
     }
 
-    void Projectile(Transform target)
-    {
-        if (bulletPrefab != null)
-        {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            BulletScript bulletScript = bullet.GetComponent<BulletScript>();
-            if (bulletScript != null)
-            {
-                bulletScript.SetTarget(target);
-            }
-        }
-    }
 }

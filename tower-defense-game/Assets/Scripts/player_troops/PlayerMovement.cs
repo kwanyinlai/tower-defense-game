@@ -28,11 +28,14 @@ public class PlayerMovement : MonoBehaviour
         {
             targetStats = target.GetComponent<BattleSystem>(); 
             float distance = Vector3.Distance(transform.position, target.position);
-            if (distance <= aggroRange) {
+            if (distance <= range && agent.velocity.magnitude <= 0.1f) {
                 agent.isStopped = true;
-                if (atkTimer <= 0f)  { Attack(); }
+                if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)  { Attack(); }
             }
-            else{ agent.SetDestination(target.position); }
+            else{ 
+                 agent.isStopped = false;
+                agent.SetDestination(target.position); 
+            }
         }
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
     }

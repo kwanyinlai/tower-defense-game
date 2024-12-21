@@ -2,11 +2,10 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    public float projectileSpeed = 10f;         
-    public int dmg = 10;          
-    public float lifetime = 5f;    
-    private Transform target;        
-    private bool hasHit = false;      
+    public float projectileSpeed = 10f;
+    public int dmg = 10;  
+    private Transform target;
+    private bool hasHit = false;
 
     void Start()
     {
@@ -35,7 +34,7 @@ public class BulletScript : MonoBehaviour
             }
         }
         else{
-             Destroy(gameObject, lifetime);
+            Destroy(gameObject);
         }
     }
 

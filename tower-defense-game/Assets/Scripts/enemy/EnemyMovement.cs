@@ -39,11 +39,15 @@ public class EnemyMovement : MonoBehaviour
         {
             targetStats = enemy_target.GetComponent<BattleSystem>(); 
             float distance = Vector3.Distance(transform.position, enemy_target.position);
-            Debug.Log(gameObject.name+ " distance: " + distance);
-            if (distance <= aggroRange){ 
+            if (distance <= range){ 
                 agent.isStopped = true;
                 if (atkTimer <= 0f){ Attack(enemy_target);}}
-            else{ agent.SetDestination(enemy_target.position); }
+            else{ 
+                agent.isStopped = false;
+                agent.SetDestination(enemy_target.position); 
+                Debug.Log("testing");
+                Debug.Log(enemy_target.name + ": " + enemy_target.transform.position);
+                }
         }
         else if (target != null) {
             agent.SetDestination(target.position);

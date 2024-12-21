@@ -2,13 +2,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
-
-
-public class EnemyMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     public float aggroRange = 10.0f;
     public Transform target;
-    public Transform enemy_target;
     private NavMeshAgent agent;
     private BattleSystem targetStats;
     public float range = 5.0f;
@@ -16,77 +13,59 @@ public class EnemyMovement : MonoBehaviour
     private float atkCooldown = 1.5f;  
     private float atkTimer = 0f;      
     private bool isEngaged = false;
-    public static LinkedList<GameObject> enemies = new LinkedList<GameObject>(); 
+    public static LinkedList<GameObject> troops = new LinkedList<GameObject>();   
     public GameObject bulletPrefab; 
 
- 
-
-     void Start()
+    void Start()
     {
-        enemies.AddLast(gameObject);
         agent = GetComponent<NavMeshAgent>();
-        if (target != null)
-        {
-            targetStats = target.GetComponent<BattleSystem>(); 
-        }
-       
+        troops.AddLast(gameObject);
     }
 
     void Update()
     {
         
-        enemy_target = GetClosestEnemyInRange();
-        if (enemy_target != null)
+        target = GetClosestEnemyInRange();
+        
+    
+
+    
+        
+        if (target != null)
         {
-            targetStats = enemy_target.GetComponent<BattleSystem>(); 
-            if (targetStats != null)
+            targetStats = target.GetComponent<BattleSystem>(); 
+        }
+        
+
+        if (target != null && targetStats != null)
+        {
+            float distance = Vector3.Distance(transform.position, target.position);
+
+            if (distance <= aggroRange)
             {
-                float distance = Vector3.Distance(transform.position, enemy_target.position);
-                if (distance <= aggroRange){ EngageEnemy(distance);}
+                EngageEnemy(distance);
             }
-            if (atkTimer > 0f)
+            else
             {
-                atkTimer -= Time.deltaTime;
+                Idle();
             }
         }
-        else if (target != null) {
 
-            agent.SetDestination(target.position);
-            float distance = Vector3.Distance(agent.transform.position, target.position);
-            if (distance <= range && agent.velocity.magnitude <= 0.1f) 
-            {
-                agent.isStopped = true;
-                if (atkTimer <= 0f){  Attack(target);}
-            }
-            else{ agent.isStopped = false; }
+       
+        if (atkTimer > 0f)
+        {
             atkTimer -= Time.deltaTime;
         }
-    }
 
-    void AttackBase(float distance)
-    {
-
-        if (distance > range)
-        {
-            agent.SetDestination(target.position);
-        }
-        else
-        {
-            agent.isStopped = true;
-
-            if (atkTimer <= 0f)  
-            {
-                Attack(target);
-            }
-        }
     }
 
     void EngageEnemy(float distance)
     {
+        isEngaged = true;
 
         if (distance > range)
         {
-            agent.SetDestination(enemy_target.position);
+            agent.SetDestination(target.position);
         }
         else
         {
@@ -94,27 +73,39 @@ public class EnemyMovement : MonoBehaviour
 
             if (atkTimer <= 0f)  
             {
-                Attack(enemy_target);
+                Attack();
             }
         }
     }
 
-
-    void Attack(Transform target)
+    void Attack()
     {
-        Projectile(target);
-        atkTimer = atkCooldown;
+        Debug.Log("Player is attacking the target!");
+
+        Projectile();  
+
+
+        atkTimer = atkCooldown;  
     }
 
+    void Idle()
+    {
+        if (isEngaged)
+        {
+            Debug.Log("Player is idling.");
+        }
+
+        agent.isStopped = true;
+    }
 
     Transform GetClosestEnemyInRange()
     {
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
-        if (PlayerMovement.troops.Count == 0 ){
+        if (EnemyMovement.enemies.Count == 0 ){
             return null;
         }
-        foreach (var enemy in PlayerMovement.troops)
+        foreach (var enemy in EnemyMovement.enemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
@@ -129,7 +120,7 @@ public class EnemyMovement : MonoBehaviour
         return closestEnemy.transform;
     }
 
-    void Projectile(Transform target)
+    void Projectile()
     {
         if (bulletPrefab != null)
         {
@@ -142,3 +133,9 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 }
+
+
+
+
+
+

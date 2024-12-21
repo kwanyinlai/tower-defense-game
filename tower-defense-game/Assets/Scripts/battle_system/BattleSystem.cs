@@ -14,8 +14,7 @@ public abstract class BattleSystem : MonoBehaviour
      public void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        Debug.Log($"{gameObject.name} took {damage} damage. HP: {currentHealth}");
-
+       
         if (currentHealth <= 0)
         {
             Die();
@@ -23,7 +22,7 @@ public abstract class BattleSystem : MonoBehaviour
     }
 
     // Handle the target's death
-    void Die()
+    protected virtual void Die()
     {
         Debug.Log($"{gameObject.name} has died!");
         Destroy(gameObject);  

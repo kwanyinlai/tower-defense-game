@@ -13,6 +13,7 @@ public class HealthBar : MonoBehaviour
         health = target.GetComponent<BattleSystem>();
         healthSlider = GetComponent<Slider>();
         UpdateHealthBar();
+        target = gameObject;
     }
 
     void Update()

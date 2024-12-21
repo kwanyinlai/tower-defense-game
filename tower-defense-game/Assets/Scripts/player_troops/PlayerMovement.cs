@@ -45,10 +45,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 EngageEnemy(distance);
             }
-            else
-            {
-                Idle();
-            }
+            
         }
 
        
@@ -88,15 +85,7 @@ public class PlayerMovement : MonoBehaviour
         atkTimer = atkCooldown;  
     }
 
-    void Idle()
-    {
-        if (isEngaged)
-        {
-            Debug.Log("Player is idling.");
-        }
-
-        agent.isStopped = true;
-    }
+  
 
     Transform GetClosestEnemyInRange()
     {

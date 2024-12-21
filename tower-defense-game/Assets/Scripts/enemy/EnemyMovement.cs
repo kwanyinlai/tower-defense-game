@@ -91,7 +91,6 @@ public class EnemyMovement : MonoBehaviour
         else
         {
             agent.isStopped = true;
-
             if (atkTimer <= 0f)  
             {
                 Attack(enemy_target);

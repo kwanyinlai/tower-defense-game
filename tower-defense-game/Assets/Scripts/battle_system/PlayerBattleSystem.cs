@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 public class PlayerBattleSystem : BattleSystem
 {
+    private Barracks barracks;
+
+    public void setBarracks(Barracks barracks){
+        this.barracks = barracks;
+    }
+
     void Start()
     {
         currentHealth = maxHealth;
@@ -10,6 +16,7 @@ public class PlayerBattleSystem : BattleSystem
      
     protected override void Die(){
         LinkedListNode<GameObject> currentNode = PlayerMovement.troops.First;
+        barracks.decrementTroops();
         while (currentNode != null)
         {
             if (currentNode.Value == gameObject)

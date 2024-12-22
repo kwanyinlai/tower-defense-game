@@ -2,11 +2,14 @@ using UnityEngine;
 
 public class FaceCamera : MonoBehaviour
 {
-    public Transform cam;  
+    public Transform cam;
+    
+    void Start(){
+        cam = Camera.main.transform;
+    }
 
     void LateUpdate()
     {
-        // Make the canvas always face the camera
         transform.LookAt(transform.position + cam.forward);
     }
 

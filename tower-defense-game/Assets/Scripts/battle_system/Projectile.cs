@@ -7,11 +7,6 @@ public class BulletScript : MonoBehaviour
     private Transform target;
     private bool hasHit = false;
 
-    void Start()
-    {
-       
-    }
-
     public void SetTarget(Transform target)
     {
         this.target = target;

@@ -58,6 +58,9 @@ public class PlayerMovement : MonoBehaviour
 
     Transform GetClosestEnemyInRange()
     {
+        if (agent.isStopped && target!=null){
+            return target;
+        }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
         if (EnemyMovement.enemies.Count == 0 ){

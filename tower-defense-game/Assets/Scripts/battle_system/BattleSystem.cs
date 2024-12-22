@@ -21,7 +21,6 @@ public abstract class BattleSystem : MonoBehaviour
         }
     }
 
-    // Handle the target's death
     protected virtual void Die()
     {
         Debug.Log($"{gameObject.name} has died!");

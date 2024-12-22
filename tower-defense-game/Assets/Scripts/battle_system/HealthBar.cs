@@ -13,7 +13,6 @@ public class HealthBar : MonoBehaviour
         health = target.GetComponent<BattleSystem>();
         healthSlider = GetComponent<Slider>();
         UpdateHealthBar();
-        target = gameObject;
     }
 
     void Update()
@@ -26,6 +25,13 @@ public class HealthBar : MonoBehaviour
     {
         float healthPercentage = health.GetPercentageHP();
         healthSlider.value = healthPercentage;
+       
+        if (healthPercentage<1){
+            gameObject.transform.localScale = new Vector3(1f,1f, 1f);
+        }
+        else{
+           gameObject.transform.localScale = new Vector3(0,0,0);
+        }
     }
 
 

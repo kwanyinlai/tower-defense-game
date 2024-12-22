@@ -45,8 +45,6 @@ public class EnemyMovement : MonoBehaviour
             else{ 
                 agent.isStopped = false;
                 agent.SetDestination(enemy_target.position); 
-                Debug.Log("testing");
-                Debug.Log(enemy_target.name + ": " + enemy_target.transform.position);
                 }
         }
         else if (target != null) {
@@ -80,6 +78,9 @@ public class EnemyMovement : MonoBehaviour
 
     Transform GetClosestEnemyInRange()
     {
+        if (agent.isStopped && enemy_target!=null){
+            return enemy_target;
+        }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
         if (PlayerMovement.troops.Count == 0 ){

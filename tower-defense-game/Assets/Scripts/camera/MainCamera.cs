@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MainCamera : MonoBehaviour
 {
@@ -16,7 +17,14 @@ public class MainCamera : MonoBehaviour
     private float minZoom = 20f; 
     private float maxZoom = 100f;
     private float targetFieldOfView;
+    private bool isSelecting = false;
     
+    private List<GameObject> selectedTroops = new List<GameObject>();
+    [SerializeField] private LineRenderer selectionLine;
+    private List<Vector3> mousePositions = new List<Vector3>();
+
+
+
     private Camera camera;
 
     void Start()
@@ -26,14 +34,32 @@ public class MainCamera : MonoBehaviour
         cam = Camera.main.transform;
 
         lastMousePosition = (Vector2)Input.mousePosition;
+
     }
 
     void Update()
+    {   
+       
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            isSelecting = !isSelecting;
+        }
+
+        if (!isSelecting)
+        {
+            CameraMovement();
+        }
+        else{
+            LassoSelection();
+        }
+        
+    }
+
+    void CameraMovement()
     {
 
         //Movement code
         Vector3 moveCamera = new Vector3(0, 0, 0);
-
         if (Input.GetMouseButtonDown(0))
         {
             lastMousePosition = (Vector2)Input.mousePosition;
@@ -65,5 +91,65 @@ public class MainCamera : MonoBehaviour
             camera.fieldOfView = targetFieldOfView;
         }
     }
+    void LassoSelection()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            mouseDown = true;
+            mousePositions.Clear(); //placed here for tesitng purposes for now, move down to mousebutton up later
+            selectionLine.positionCount = 0;
+        }
 
+        if (Input.GetMouseButtonUp(0))
+        {
+            
+            
+            mouseDown = false;
+            
+        }
+        else
+        {
+            if (mouseDown)
+            {
+                Vector3 mousePosition = GetMousePosition(Input.mousePosition);
+                if (mousePositions.Count == 0 || Vector3.Distance(mousePositions[mousePositions.Count - 1],
+                    mousePosition) > 0.1f)
+                {
+                    mousePositions.Add(mousePosition);
+                }
+            }
+        }
+
+        DrawLine();
+    }
+
+    Vector3 GetMousePosition(Vector3 mousePosition)
+    {
+        mousePosition.z = cam.position.y;
+        return camera.ScreenToWorldPoint(mousePosition);
+    }
+
+    
+    void DrawLine()
+    {
+        if (mousePositions.Count > 0)
+        {
+            selectionLine.positionCount = mousePositions.Count;
+
+            for (int i = 0; i < mousePositions.Count; i++)
+            {
+                selectionLine.SetPosition(i, mousePositions[i]);
+            }
+        }
+        if (mouseDown==false){
+            if (mousePositions.Count > 0)
+            {
+                selectionLine.positionCount = mousePositions.Count + 1; 
+                selectionLine.SetPosition(mousePositions.Count, mousePositions[0]); 
+                // closing the loop
+            }
+        }
+       
+       
+    }
 }

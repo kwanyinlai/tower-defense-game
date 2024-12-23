@@ -50,8 +50,6 @@ public class EnemyMovement : MonoBehaviour
         else if (target != null) {
             
             float distance = Vector3.Distance(agent.transform.position, target.position);
-            Debug.Log("Distance: " + distance);
-            Debug.Log("Range: " + range);
             if (distance <= range) 
             {
                 agent.isStopped = true;

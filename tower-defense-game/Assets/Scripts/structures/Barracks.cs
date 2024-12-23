@@ -54,7 +54,7 @@ public class Barracks : MonoBehaviour
         currentTroops++; 
     }
 
-    public void decrementTroops(){
+    public void DecrementTroops(){
         currentTroops -= 1;
     }
 }

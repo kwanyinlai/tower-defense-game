@@ -16,7 +16,7 @@ public class PlayerBattleSystem : BattleSystem
      
     protected override void Die(){
         LinkedListNode<GameObject> currentNode = PlayerMovement.troops.First;
-        barracks.decrementTroops();
+        barracks.DecrementTroops();
         while (currentNode != null)
         {
             if (currentNode.Value == gameObject)

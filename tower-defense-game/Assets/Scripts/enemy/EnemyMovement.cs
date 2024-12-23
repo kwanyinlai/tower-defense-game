@@ -59,7 +59,6 @@ public class EnemyMovement : MonoBehaviour
                     if (atkTimer <= 0f){  Attack(target);}
                 }
                
-                
             }
             else { 
                 agent.isStopped = false; 

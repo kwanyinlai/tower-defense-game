@@ -8,6 +8,11 @@ public class Barracks : MonoBehaviour
     public int maxTroops = 10;
     private float timer = 0f;
     private int currentTroops = 0;
+    private Transform troopEmptyObject;
+
+    private void Start(){
+        troopEmptyObject = GameObject.Find("troops").transform;
+    }
 
     private void Update()
     {
@@ -46,7 +51,7 @@ public class Barracks : MonoBehaviour
                 break;
         }
         Debug.Log(spawnPos);
-        GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity);
+        GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
         troop.GetComponent<PlayerBattleSystem>().setBarracks(this);
         currentTroops++; 
     }

@@ -42,16 +42,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Attack()
     {
+        Vector3 bulletPos = transform.position;
+        bulletPos.y += 3f;
         if (bulletPrefab != null)
         {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab, bulletPos, transform.rotation);
             BulletScript bulletScript = bullet.GetComponent<BulletScript>();
             if (bulletScript != null)
             {
                 bulletScript.SetTarget(target);
             }
         }
-        atkTimer = atkCooldown;  
+        atkTimer = atkCooldown;
     }
 
   

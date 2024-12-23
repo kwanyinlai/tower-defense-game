@@ -33,7 +33,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        
+
         enemy_target = GetClosestEnemyInRange();
         if (enemy_target != null)
         {
@@ -69,15 +69,17 @@ public class EnemyMovement : MonoBehaviour
     }
 
 
-    void Attack(Transform target)
+    void Attack(Transform bulletTarget)
     {
+        Vector3 bulletPos = transform.position;
+        bulletPos.y += 3f;
         if (bulletPrefab != null)
         {
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab, bulletPos, transform.rotation);
             BulletScript bulletScript = bullet.GetComponent<BulletScript>();
             if (bulletScript != null)
             {
-                bulletScript.SetTarget(target);
+                bulletScript.SetTarget(bulletTarget);
             }
         }
         atkTimer = atkCooldown;
@@ -86,12 +88,14 @@ public class EnemyMovement : MonoBehaviour
 
     Transform GetClosestEnemyInRange()
     {
-        if (agent.isStopped && enemy_target!=null){
+        if (agent.isStopped && enemy_target != null)
+        {
             return enemy_target;
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
-        if (PlayerMovement.troops.Count == 0 ){
+        if (PlayerMovement.troops.Count == 0)
+        {
             return null;
         }
         foreach (var enemy in PlayerMovement.troops)

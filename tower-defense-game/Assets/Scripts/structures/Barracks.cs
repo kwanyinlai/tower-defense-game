@@ -31,7 +31,6 @@ public class Barracks : MonoBehaviour
     {
         int direction = (int) Mathf.Round(transform.eulerAngles.y / 90); //0 for north (up), 1 for east (right) 2 for south (down), 3 for west (left).
         Vector3 spawnPos = transform.position;
-        // Debug.Log(transform.position);
         switch (direction)
         {
             case 0:
@@ -50,7 +49,6 @@ public class Barracks : MonoBehaviour
                 Debug.Log("Error With Troop Spawn Direction");
                 break;
         }
-        Debug.Log(spawnPos);
         GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
         troop.GetComponent<PlayerBattleSystem>().setBarracks(this);
         currentTroops++; 

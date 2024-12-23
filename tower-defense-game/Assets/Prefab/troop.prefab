@@ -112,7 +112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 2}
+  m_AnchoredPosition: {x: 0, y: 4}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &3020873887201416521
@@ -449,11 +449,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360d220152b3b401394f6aee3f844cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aggroRange: 15
+  aggroRange: 30
   target: {fileID: 0}
   range: 5
   dmg: 10
-  bulletPrefab: {fileID: 5006408747920937475, guid: 28cc16d2611534d9e96132b6f30b7bf8, type: 3}
+  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
 --- !u!114 &6607062131761796454
 MonoBehaviour:
   m_ObjectHideFlags: 0

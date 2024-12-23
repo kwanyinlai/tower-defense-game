@@ -48,14 +48,23 @@ public class EnemyMovement : MonoBehaviour
                 }
         }
         else if (target != null) {
-            agent.SetDestination(target.position);
+            
             float distance = Vector3.Distance(agent.transform.position, target.position);
-            if (distance <= range && agent.velocity.magnitude <= 0.1f) 
+            Debug.Log("Distance: " + distance);
+            Debug.Log("Range: " + range);
+            if (distance <= range) 
             {
                 agent.isStopped = true;
-                if (atkTimer <= 0f){  Attack(target);}
+                if( agent.velocity.magnitude <= 0.1f){
+                    if (atkTimer <= 0f){  Attack(target);}
+                }
+               
+                
             }
-            else { agent.isStopped = false; }
+            else { 
+                agent.isStopped = false; 
+                agent.SetDestination(target.position);
+            }
         }
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
     }

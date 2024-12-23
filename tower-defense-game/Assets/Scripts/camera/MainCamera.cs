@@ -23,7 +23,6 @@ public class MainCamera : MonoBehaviour
     {
         camera = GetComponent<Camera>();
         targetFieldOfView = camera.fieldOfView;
-        Debug.Log(camera.fieldOfView);
         cam = Camera.main.transform;
 
         lastMousePosition = (Vector2)Input.mousePosition;

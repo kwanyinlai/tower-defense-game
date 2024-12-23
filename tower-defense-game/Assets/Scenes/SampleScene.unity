@@ -2490,7 +2490,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 29.5
+      value: 13.34
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2498,23 +2498,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -49.2
+      value: -24.92
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2522,7 +2522,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z

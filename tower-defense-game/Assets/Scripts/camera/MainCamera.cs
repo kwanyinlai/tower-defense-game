@@ -13,16 +13,23 @@ public class MainCamera : MonoBehaviour
     private bool mouseDown = false;
     private float moveSpeed = 2f;
 
+
     private float zoomSpeed = 20f; 
     private float minZoom = 20f; 
     private float maxZoom = 100f;
     private float targetFieldOfView;
     private bool isSelecting = false;
+    private bool dontComplete = false;
+    private bool validSelection = true;
     
     private List<GameObject> selectedTroops = new List<GameObject>();
     [SerializeField] private LineRenderer selectionLine;
     private List<Vector3> mousePositions = new List<Vector3>();
 
+    public GameObject selectionMesh;
+    [SerializeField] private Mesh mesh;
+    private MeshFilter meshFilter;
+    private MeshCollider meshCollider;
 
 
     private Camera camera;
@@ -44,6 +51,9 @@ public class MainCamera : MonoBehaviour
         {
             isSelecting = !isSelecting;
         }
+
+
+        
 
         if (!isSelecting)
         {
@@ -96,27 +106,39 @@ public class MainCamera : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             mouseDown = true;
-            mousePositions.Clear(); //placed here for tesitng purposes for now, move down to mousebutton up later
-            selectionLine.positionCount = 0;
+            dontComplete = false;
+            
         }
 
         if (Input.GetMouseButtonUp(0))
-        {
+        {   
+            GameObject mesh;
+            if(validSelection){
+                mesh = CreateMesh();
+
+                // send raycast from all troops to camera and see if it collides with mesh collider
+                // Destroy(mesh);
+            }
             
             
+
             mouseDown = false;
-            
+            validSelection = true;
+            dontComplete = false;
+            mousePositions.Clear(); 
+            selectionLine.positionCount = 0;
         }
         else
         {
             if (mouseDown)
             {
                 Vector3 mousePosition = GetMousePosition(Input.mousePosition);
-                for ( int i = 0; i<mousePositions.Count-1; i++){
+                for (int i = 0; i<mousePositions.Count-1; i++){
                     if (Intersects(mousePosition, mousePositions[mousePositions.Count-1],
                         mousePositions[i], mousePositions[i+1])){
                         mouseDown = false;
-                        Debug.Log("test");
+                        validSelection = false;
+                        dontComplete = true;
                     }
                 }
                 
@@ -151,11 +173,23 @@ public class MainCamera : MonoBehaviour
             }
         }
         if (mouseDown==false){
+            
             if (mousePositions.Count > 0)
             {
-                selectionLine.positionCount = mousePositions.Count + 1; 
-                selectionLine.SetPosition(mousePositions.Count, mousePositions[0]); 
-                // closing the loop
+                for ( int i = 0; i<mousePositions.Count-1; i++)
+                {
+                    if (Intersects(mousePositions[0], mousePositions[mousePositions.Count-1],
+                    mousePositions[i], mousePositions[i+1])){
+                        dontComplete = true;
+                    }
+                }
+            
+                if(!dontComplete){
+                    selectionLine.positionCount = mousePositions.Count + 1; 
+                    selectionLine.SetPosition(mousePositions.Count, mousePositions[0]); 
+                    // closing the loop
+                }
+               
             }
         }    
     }
@@ -174,6 +208,64 @@ public class MainCamera : MonoBehaviour
     }
     // https://www.quora.com/Given-four-Cartesian-coordinates-how-do-I-check-whether-these-two-segments-intersect-or-not-using-C-C++
     // This seems relevant
+
+    GameObject CreateMesh()
+    {
+        
+        selectionMesh = new GameObject("selection-mesh");
+
+        
+        MeshFilter meshFilter = selectionMesh.AddComponent<MeshFilter>();
+        MeshCollider meshCollider = selectionMesh.AddComponent<MeshCollider>();
+
+
+        mesh = new Mesh();
+        
+
+
+ 
+        Vector3[] positions = new Vector3[mousePositions.Count + 1];
+        for (int i = 0; i < mousePositions.Count; i++)
+        {
+            positions[i] = mousePositions[i];
+        }
+        positions[positions.Length - 1] = mousePositions[0]; 
+
+        Vector3[] vertices = new Vector3[positions.Length+1]; 
+        Vector3 centre = Vector3.zero;
+        foreach (Vector3 pos in positions)
+        {
+            centre += pos;
+        }
+        centre /= positions.Length;
+        Debug.Log(centre);
+        vertices[0] = centre;
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            vertices[i+1] = positions[i];
+        }
+
+        int[] triangles = new int[(positions.Length-1) * 3]; 
+        for (int i = 0; i < positions.Length - 1; i++)
+        {
+            int index = i * 3;
+            triangles[index] = 0; //centre
+            triangles[index + 1] = i + 1; 
+            triangles[index + 2] = i + 2;
+        }
+
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        meshFilter.mesh = mesh;
+        meshCollider.sharedMesh = mesh;
+        return selectionMesh;
+    }
+
+
 
 }
 

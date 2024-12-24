@@ -112,6 +112,15 @@ public class MainCamera : MonoBehaviour
             if (mouseDown)
             {
                 Vector3 mousePosition = GetMousePosition(Input.mousePosition);
+                for ( int i = 0; i<mousePositions.Count-1; i++){
+                    if (Intersects(mousePosition, mousePositions[mousePositions.Count-1],
+                        mousePositions[i], mousePositions[i+1])){
+                        mouseDown = false;
+                        Debug.Log("test");
+                    }
+                }
+                
+                
                 if (mousePositions.Count == 0 || Vector3.Distance(mousePositions[mousePositions.Count - 1],
                     mousePosition) > 0.1f)
                 {
@@ -148,8 +157,24 @@ public class MainCamera : MonoBehaviour
                 selectionLine.SetPosition(mousePositions.Count, mousePositions[0]); 
                 // closing the loop
             }
-        }
-       
-       
+        }    
     }
+
+    
+
+    bool Intersects(Vector3 A, Vector3 B, Vector3 C, Vector3 D){
+       
+        // Proper intersection
+        if (Vector3.Dot(Vector3.Cross(B-A, C-B), Vector3.Cross(B-A, D-B)) < 0 && 
+                Vector3.Dot(Vector3.Cross(D-C, A-D), Vector3.Cross(D-C, B-D)) < 0){
+            return true;
+        }
+        
+        return false;
+    }
+    // https://www.quora.com/Given-four-Cartesian-coordinates-how-do-I-check-whether-these-two-segments-intersect-or-not-using-C-C++
+    // This seems relevant
+
 }
+
+

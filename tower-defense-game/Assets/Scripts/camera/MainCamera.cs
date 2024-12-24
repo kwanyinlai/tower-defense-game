@@ -112,16 +112,16 @@ public class MainCamera : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {   
+            DrawLine();
             GameObject mesh;
             if(validSelection){
                 mesh = CreateMesh();
 
                 // send raycast from all troops to camera and see if it collides with mesh collider
                 // Destroy(mesh);
+            } else{
+                Debug.Log("Invalid selection");
             }
-            
-            
-
             mouseDown = false;
             validSelection = true;
             dontComplete = false;
@@ -130,17 +130,18 @@ public class MainCamera : MonoBehaviour
         }
         else
         {
-            if (mouseDown)
+            if (mouseDown) // TODO: FIX VALIDSELECTION FLAG
             {
                 Vector3 mousePosition = GetMousePosition(Input.mousePosition);
                 for (int i = 0; i<mousePositions.Count-1; i++){
                     if (Intersects(mousePosition, mousePositions[mousePositions.Count-1],
                         mousePositions[i], mousePositions[i+1])){
                         mouseDown = false;
-                        validSelection = false;
                         dontComplete = true;
+                        return;
                     }
                 }
+                
                 
                 
                 if (mousePositions.Count == 0 || Vector3.Distance(mousePositions[mousePositions.Count - 1],

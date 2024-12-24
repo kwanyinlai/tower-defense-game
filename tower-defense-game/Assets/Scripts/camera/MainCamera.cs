@@ -117,8 +117,9 @@ public class MainCamera : MonoBehaviour
             if(validSelection){
                 mesh = CreateMesh();
 
-                // send raycast from all troops to camera and see if it collides with mesh collider
-                // Destroy(mesh);
+                PlayerMovement.inSelection(mesh.GetComponent<MeshCollider>(), cam);
+                Debug.Log("sent rays");
+                Destroy(mesh);
             } else{
                 Debug.Log("Invalid selection");
             }

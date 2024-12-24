@@ -13,7 +13,9 @@ public class PlayerMovement : MonoBehaviour
     private float atkCooldown = 1.5f;  
     private float atkTimer = 0f;      
     public static LinkedList<GameObject> troops = new LinkedList<GameObject>();   
+    public static List<GameObject> selectedTroops = new List<GameObject>();   
     public GameObject bulletPrefab; 
+
 
     void Start()
     {
@@ -38,6 +40,14 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
+
+        if (selectedTroops.Count!=0){
+            // selected troop script goes here
+            return;
+    
+
+
+        }
     }
 
     void Attack()
@@ -83,6 +93,33 @@ public class PlayerMovement : MonoBehaviour
         return closestEnemy.transform;
     }
 
+    public static void inSelection(MeshCollider collider, Transform cam){
+
+        selectedTroops.Clear();
+        Debug.Log("Nums troops: "+troops.Count);
+        foreach (var troop in troops)
+        {
+            Ray ray = new Ray(troop.transform.position, cam.position - troop.transform.position);
+            Debug.DrawRay(ray.origin, ray.direction * 1000f, Color.red, 10f);
+
+            RaycastHit hit;
+
+
+            if (Physics.Raycast(ray, out hit, 1000f))
+            {
+                if (hit.collider == collider)
+                {
+                    Debug.Log("Mesh collider hit");
+                    selectedTroops.Add(troop);
+                }
+            }
+            else
+            {
+                Debug.Log(troop.name + " ray did not hit anything.");
+            }
+        }
+
+    }
 
 }
 

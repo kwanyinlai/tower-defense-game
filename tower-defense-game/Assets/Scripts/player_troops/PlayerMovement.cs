@@ -53,7 +53,8 @@ public class PlayerMovement : MonoBehaviour
     void Attack()
     {
         Vector3 bulletPos = transform.position;
-        bulletPos.y += 3f;
+        Collider collider = this.GetComponent<Collider>();
+        bulletPos.y += collider.bounds.size.y * (0.75f);
         if (bulletPrefab != null)
         {
             GameObject bullet = Instantiate(bulletPrefab, bulletPos, transform.rotation);

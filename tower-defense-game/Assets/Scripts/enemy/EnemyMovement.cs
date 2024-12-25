@@ -18,6 +18,7 @@ public class EnemyMovement : MonoBehaviour
     public static LinkedList<GameObject> enemies = new LinkedList<GameObject>(); 
     public GameObject bulletPrefab;
 
+
  
 
      void Start()
@@ -109,5 +110,7 @@ public class EnemyMovement : MonoBehaviour
         if (closestEnemy == null) { return null; }
         return closestEnemy.transform;
     }
+
+
 
 }

@@ -118,7 +118,6 @@ public class MainCamera : MonoBehaviour
                 mesh = CreateMesh();
 
                 PlayerMovement.inSelection(mesh.GetComponent<MeshCollider>(), cam);
-                Debug.Log("sent rays");
                 Destroy(mesh);
             } else{
                 Debug.Log("Invalid selection");

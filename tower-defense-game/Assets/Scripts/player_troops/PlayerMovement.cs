@@ -15,12 +15,16 @@ public class PlayerMovement : MonoBehaviour
     public static LinkedList<GameObject> troops = new LinkedList<GameObject>();   
     public static List<GameObject> selectedTroops = new List<GameObject>();   
     public GameObject bulletPrefab; 
+    
+    [SerializeField] private GameObject selectorCircle;
 
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         troops.AddLast(gameObject);
+        DeactivateSelectingCircle();
+
     }
 
     void Update()
@@ -96,7 +100,6 @@ public class PlayerMovement : MonoBehaviour
     public static void inSelection(MeshCollider collider, Transform cam){
 
         selectedTroops.Clear();
-        Debug.Log("Nums troops: "+troops.Count);
         foreach (var troop in troops)
         {
             Ray ray = new Ray(troop.transform.position, cam.position - troop.transform.position);
@@ -109,8 +112,8 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (hit.collider == collider)
                 {
-                    Debug.Log("Mesh collider hit");
                     selectedTroops.Add(troop);
+                    troop.GetComponent<PlayerMovement>().ActivateSelectingCircle();
                 }
             }
             else
@@ -120,11 +123,18 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
+    void ActivateSelectingCircle(){
+        selectorCircle.transform.localScale= new Vector3(3,0.01f,3);
+        Debug.Log("Activating");
+        Debug.Log(selectorCircle.transform.localScale);
+    }
+
+    void DeactivateSelectingCircle(){
+        selectorCircle.transform.localScale= new Vector3(0f,0f,0f);
+        Debug.Log("Deactivating");
+    }
 
 }
-
-
-
 
 
 

@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f333259ce273243be82da9b2da64aa0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  troopPrefab: {fileID: 4382600055188331882, guid: 8081b45bab8524ac6a45a2b126c54e36, type: 3}
+  troopPrefab: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
   spawnInterval: 10
   maxTroops: 2
 --- !u!23 &8812181380161284085
@@ -109,7 +109,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 15b8edb35f5e240cdb174e68f60a04c8, type: 2}
+  - {fileID: 2100000, guid: 137e10bce58a0487fb3474d23487480e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

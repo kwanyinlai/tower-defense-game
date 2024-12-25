@@ -47,10 +47,11 @@ public class MainCamera : MonoBehaviour
     void Update()
     {   
        
-        if (Input.GetKeyDown(KeyCode.L))
+        /*if (Input.GetKeyDown(KeyCode.L))
         {
             isSelecting = !isSelecting;
         }
+        */
 
 
         
@@ -60,7 +61,8 @@ public class MainCamera : MonoBehaviour
             CameraMovement();
         }
         else{
-            LassoSelection();
+            // LassoSelection();
+            break;
         }
         
     }
@@ -101,7 +103,7 @@ public class MainCamera : MonoBehaviour
             camera.fieldOfView = targetFieldOfView;
         }
     }
-    void LassoSelection()
+    /* void LassoSelection()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -265,6 +267,8 @@ public class MainCamera : MonoBehaviour
         meshCollider.sharedMesh = mesh;
         return selectionMesh;
     }
+    */ 
+    // scrapped selection mechanic
 
 
 

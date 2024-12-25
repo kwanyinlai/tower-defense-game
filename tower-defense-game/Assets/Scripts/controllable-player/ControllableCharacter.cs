@@ -5,6 +5,8 @@ public class ControllablePlayer : MonoBehaviour
     public float moveSpeed = 5f; // Movement speed
     public float angularSpeed = 700f; // Rotation speed
     public Transform cam;
+    public float controlRadius;
+    [SerializeField] private GameObject selectorCircle;
 
     private CharacterController characterController;
 
@@ -16,6 +18,10 @@ public class ControllablePlayer : MonoBehaviour
     void Update()
     {
         Movement();
+
+        if(Input.GetKeyDown("space")){
+            return;
+        }
         
     }
 

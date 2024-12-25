@@ -18,7 +18,7 @@ public class MainCamera : MonoBehaviour
     private float minZoom = 20f; 
     private float maxZoom = 100f;
     private float targetFieldOfView;
-    private bool isSelecting = false;
+    /*private bool isSelecting = false;
     private bool dontComplete = false;
     private bool validSelection = true;
     
@@ -30,7 +30,7 @@ public class MainCamera : MonoBehaviour
     [SerializeField] private Mesh mesh;
     private MeshFilter meshFilter;
     private MeshCollider meshCollider;
-
+    */
 
     private Camera camera;
 
@@ -56,7 +56,7 @@ public class MainCamera : MonoBehaviour
 
         
 
-        if (!isSelecting)
+        /*if (!isSelecting)
         {
             CameraMovement();
         }
@@ -64,6 +64,8 @@ public class MainCamera : MonoBehaviour
             // LassoSelection();
             return;
         }
+        */
+        CameraMovement();
         
     }
 

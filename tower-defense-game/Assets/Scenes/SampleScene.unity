@@ -1427,8 +1427,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf36e9dbf6b4d447c9b23c4b64270914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rotationSpeed: 700
+  moveSpeed: 8
+  angularSpeed: 700
+  cam: {fileID: 330585546}
 --- !u!143 &1155523877
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1453,7 +1454,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &1228363591
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,59 +1,48 @@
 using UnityEngine;
-using UnityEngine.AI;
 
-public class ControllableCharacter : MonoBehaviour
+public class ControllablePlayer : MonoBehaviour
 {
-    public float moveSpeed = 100f;
-    public float angularSpeed = 700f;
-    public float acceleration = 8f;
-    private NavMeshAgent agent;
-    public Camera playerCamera; 
-    
+    public float moveSpeed = 5f; // Movement speed
+    public float angularSpeed = 700f; // Rotation speed
+    public Transform cam;
+
+    private CharacterController characterController;
+
     void Start()
     {
-        
-        agent = GetComponent<NavMeshAgent>();
-        
-        agent.speed = moveSpeed;
-        agent.angularSpeed = angularSpeed;
-        agent.acceleration = acceleration;
+        characterController = GetComponent<CharacterController>();
     }
 
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        Movement();
         
-        if (Mathf.Approximately(horizontal, 0f) && Mathf.Approximately(vertical, 0f)){
-            return;
-        }
+    }
 
-       
-        Vector3 forward = playerCamera.transform.forward;
-        Vector3 right = playerCamera.transform.right;
+    void Movement(){
+        float horiz = Input.GetAxis("Horizontal");
+        float vert = Input.GetAxis("Vertical");
 
-       
-        forward.y = 0f;
-        right.y = 0f;
+        Vector3 forward = cam.forward;
+        Vector3 right = cam.right;
 
-        // Normalize to avoid faster diagonal movement
+
+        
         forward.Normalize();
         right.Normalize();
 
-        Vector3 moveDirection = forward * vertical + right * horizontal;
+        
+        Vector3 dir = forward * vert + right * horiz;
+        dir.y = 0;
 
-        if (moveDirection.magnitude >= 0.1f)
+        characterController.Move(dir * moveSpeed * Time.deltaTime);
+
+        
+        if (dir != Vector3.zero)
         {
-            
-            Vector3 targetPosition = transform.position + moveDirection * moveSpeed * Time.deltaTime;
-            agent.SetDestination(targetPosition);
-
-            
-            if (moveDirection != Vector3.zero)
-            {
-                Quaternion toRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 720f * Time.deltaTime);
-            }
+            Quaternion rotateDir = Quaternion.LookRotation(-1*dir);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
+
     }
 }

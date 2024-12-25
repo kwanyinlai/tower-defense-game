@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public class ControllableCharacter : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 100f;
     public float angularSpeed = 700f;
     public float acceleration = 8f;
     private NavMeshAgent agent;
@@ -24,8 +24,9 @@ public class ControllableCharacter : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
         
-        if (Mathf.Approximately(horizontal, 0f) && Mathf.Approximately(vertical, 0f))
+        if (Mathf.Approximately(horizontal, 0f) && Mathf.Approximately(vertical, 0f)){
             return;
+        }
 
        
         Vector3 forward = playerCamera.transform.forward;

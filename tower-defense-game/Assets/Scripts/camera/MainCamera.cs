@@ -62,7 +62,7 @@ public class MainCamera : MonoBehaviour
         }
         else{
             // LassoSelection();
-            break;
+            return;
         }
         
     }

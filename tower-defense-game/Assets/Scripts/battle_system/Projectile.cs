@@ -14,7 +14,13 @@ public class BulletScript : MonoBehaviour
         Collider collider = bulletTarget.GetComponent<Collider>();
         this.targetPos = bulletTarget.position;
         this.target = bulletTarget;
+        Vector3 rot = transform.rotation.eulerAngles;
         targetPos.y += collider.bounds.size.y * (0.75f);
+        rot.x -= Mathf.Atan2((targetPos.y - transform.position.y), Mathf.Sqrt(
+                Mathf.Pow(targetPos.x - transform.position.x, 2) + Mathf.Pow(
+                targetPos.z - transform.position.z, 2))) * 180 / Mathf.PI;
+        transform.rotation = Quaternion.Euler(rot);
+        
     }
 
     void Update()

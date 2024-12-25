@@ -42,7 +42,8 @@ public class EnemyMovement : MonoBehaviour
             float distance = Vector3.Distance(transform.position, enemy_target.position);
             if (distance <= range){ 
                 agent.isStopped = true;
-                if (atkTimer <= 0f){ Attack(enemy_target);}}
+                if (atkTimer <= 0f){ Attack(enemy_target);}
+            }
             else{ 
                 agent.isStopped = false;
                 agent.SetDestination(enemy_target.position); 

@@ -16,13 +16,13 @@ public class Barracks : MonoBehaviour
 
     private void Update()
     {
-        if (currentTroops < maxTroops)
+        timer += Time.deltaTime;
+        if(timer >= spawnInterval)
         {
-            timer += Time.deltaTime;
-            if (timer >= spawnInterval)
+            if(currentTroops < maxTroops)
             {
                 SpawnTroop();
-                timer = 0f; 
+                timer = 0f;
             }
         }
     }

@@ -8,6 +8,10 @@ public class PlayerMovement : MonoBehaviour
     public Transform target;
     private NavMeshAgent agent;
     private BattleSystem targetStats;
+    private Vector3 idleTransform;
+    private Vector3 idleStartPos;
+    private bool isIdle = true;
+    public float idleRange = 10.0f;
     public float range = 5.0f;
     public int dmg = 10;  
     private float atkCooldown = 1.5f;  
@@ -18,9 +22,21 @@ public class PlayerMovement : MonoBehaviour
     
     [SerializeField] private GameObject selectorCircle;
 
+    public Vector3 getRandomPosition(Vector3 center, float idleRange)
+    {
+        Vector3 randomTransform;
+        randomTransform.y = 0;
+        randomTransform.x = Random.value;
+        randomTransform.z = Random.value;
+        randomTransform = randomTransform.normalized * Random.value * idleRange;
+        return randomTransform;
+    }
+
 
     void Start()
     {
+        idleTransform = this.transform.position;
+        idleStartPos = this.transform.position;
         agent = GetComponent<NavMeshAgent>();
         troops.AddLast(gameObject);
         DeactivateSelectingCircle();
@@ -29,8 +45,18 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        target = GetClosestEnemyInRange();
-        if (target != null)
+        Transform copy = GetClosestEnemyInRange();
+        if (copy != null)
+        {
+            isIdle = false;
+            target = copy;
+        }
+        else
+        {
+            isIdle = true;
+        }
+
+        if (!isIdle)
         {
             targetStats = target.GetComponent<BattleSystem>(); 
             float distance = Vector3.Distance(transform.position, target.position);
@@ -39,10 +65,25 @@ public class PlayerMovement : MonoBehaviour
                 if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)  { Attack(); }
             }
             else{ 
-                 agent.isStopped = false;
+                agent.isStopped = false;
                 agent.SetDestination(target.position); 
             }
+        } else {
+            float dist = Mathf.Sqrt(Mathf.Pow(idleStartPos.x - transform.position.x, 2) + Mathf.Pow(idleStartPos.z - transform.position.z, 2));
+            float dist2 = Mathf.Sqrt(Mathf.Pow(idleTransform.x - transform.position.x, 2) + Mathf.Pow(idleTransform.z - transform.position.z, 2));
+            if (dist >= idleRange)
+            {
+                idleStartPos = transform.position;
+            }
+            if (dist >= idleRange || dist2 <= 3f)
+            {
+                idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
+                agent.isStopped = false;
+                agent.SetDestination(idleTransform);
+            }
         }
+
+
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
 
         if (selectedTroops.Count!=0){

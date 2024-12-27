@@ -1,12 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-public class ControllablePlayer : MonoBehaviour
+public class CharacterMovement : MonoBehaviour
 {
     public float moveSpeed = 5f; // Movement speed
     public float angularSpeed = 700f; // Rotation speed
     public Transform cam;
-    public float controlRadius;
-    [SerializeField] private GameObject selectorCircle;
+    
+
+    
 
     private CharacterController characterController;
 
@@ -19,9 +21,8 @@ public class ControllablePlayer : MonoBehaviour
     {
         Movement();
 
-        if(Input.GetKeyDown("space")){
-            return;
-        }
+    
+        
         
     }
 
@@ -40,8 +41,14 @@ public class ControllablePlayer : MonoBehaviour
         
         Vector3 dir = forward * vert + right * horiz;
         dir.y = 0;
+        dir.Normalize();
 
-        characterController.Move(dir * moveSpeed * Time.deltaTime);
+        
+       
+
+        
+        
+        characterController.Move(dir * moveSpeed * Time.deltaTime );
 
         
         if (dir != Vector3.zero)
@@ -49,6 +56,8 @@ public class ControllablePlayer : MonoBehaviour
             Quaternion rotateDir = Quaternion.LookRotation(-1*dir);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
+        
+        
 
     }
 }

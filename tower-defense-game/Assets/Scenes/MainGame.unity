@@ -2529,7 +2529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6348565370732182375, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: maxTroops
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7576528943238116007, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_Name

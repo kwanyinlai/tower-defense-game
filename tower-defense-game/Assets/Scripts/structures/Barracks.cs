@@ -5,7 +5,7 @@ public class Barracks : MonoBehaviour
 {
     public GameObject troopPrefab;
     public float spawnInterval = 3f;
-    public int maxTroops = 10;
+    public float maxTroops = 10f;
     private float timer = 0f;
     private int currentTroops = 0;
     private Transform troopEmptyObject;
@@ -17,13 +17,14 @@ public class Barracks : MonoBehaviour
     private void Update()
     {
         timer += Time.deltaTime;
-        if(timer >= spawnInterval)
+        Debug.Log("Timer: " + timer + "Curr: " + currentTroops);
+        Debug.Log(timer >= spawnInterval);
+        Debug.Log(currentTroops < maxTroops);
+        if (timer >= spawnInterval && currentTroops < maxTroops)
         {
-            if(currentTroops < maxTroops)
-            {
-                SpawnTroop();
-                timer = 0f;
-            }
+            Debug.Log("Spawn");
+            SpawnTroop();
+            timer = 0f;
         }
     }
 
@@ -55,6 +56,6 @@ public class Barracks : MonoBehaviour
     }
 
     public void DecrementTroops(){
-        currentTroops -= 1;
+        currentTroops--;
     }
 }

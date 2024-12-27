@@ -335,7 +335,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 5
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -360,7 +360,8 @@ MonoBehaviour:
   enemy_target: {fileID: 0}
   range: 5
   dmg: 10
-  bulletPrefab: {fileID: 5006408747920937475, guid: 28cc16d2611534d9e96132b6f30b7bf8, type: 3}
+  atkTimer: 0
+  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
 --- !u!114 &240636124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,9 +549,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 330585546}
   mouseSensitivity: 2
-  selectionLine: {fileID: 0}
-  selectionMesh: {fileID: 0}
-  mesh: {fileID: 0}
 --- !u!1 &341426667
 GameObject:
   m_ObjectHideFlags: 0
@@ -2275,7 +2273,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 5
+  m_StoppingDistance: 4
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -2300,7 +2298,8 @@ MonoBehaviour:
   enemy_target: {fileID: 0}
   range: 5
   dmg: 10
-  bulletPrefab: {fileID: 5006408747920937475, guid: 28cc16d2611534d9e96132b6f30b7bf8, type: 3}
+  atkTimer: 0
+  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
 --- !u!114 &1810553804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2490,7 +2489,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.1
+      value: 72.2
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2498,7 +2497,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.1
+      value: -10.4
       objectReference: {fileID: 0}
     - target: {fileID: 2288211281726811182, guid: 9fe898e51ecc643a49f1d22c9dace1aa, type: 3}
       propertyPath: m_LocalRotation.w

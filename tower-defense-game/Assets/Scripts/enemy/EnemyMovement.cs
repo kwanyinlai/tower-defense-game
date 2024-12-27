@@ -15,7 +15,7 @@ public class EnemyMovement : MonoBehaviour
     public float range = 5.0f;
     public int dmg = 10;
     private float atkCooldown = 1.5f;
-    private float atkTimer = 0f;
+    public float atkTimer = 0f;
     public static LinkedList<GameObject> enemies = new LinkedList<GameObject>(); 
     public GameObject bulletPrefab;
 
@@ -43,12 +43,14 @@ public class EnemyMovement : MonoBehaviour
             float distance = Vector3.Distance(transform.position, enemy_target.position);
             if (distance <= range){ 
                 agent.isStopped = true;
-                if (atkTimer <= 0f){ Attack(enemy_target);}
+                if (atkTimer <= 0f){
+                    Attack(enemy_target);
+                }
             }
             else{ 
                 agent.isStopped = false;
                 agent.SetDestination(enemy_target.position); 
-                }
+            }
         }
         else if (target != null) {
             
@@ -57,7 +59,9 @@ public class EnemyMovement : MonoBehaviour
             {
                 agent.isStopped = true;
                 if( agent.velocity.magnitude <= 0.1f){
-                    if (atkTimer <= 0f){  Attack(target);}
+                    if (atkTimer <= 0f){
+                        Attack(target);
+                    }
                 }
                
             }
@@ -66,7 +70,12 @@ public class EnemyMovement : MonoBehaviour
                 agent.SetDestination(target.position);
             }
         }
-        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
+        if (atkTimer > 0f) {
+            atkTimer -= Time.deltaTime;
+        } else
+        {
+            atkTimer = atkCooldown;
+        }
     }
 
 

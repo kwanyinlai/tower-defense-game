@@ -17,12 +17,8 @@ public class Barracks : MonoBehaviour
     private void Update()
     {
         timer += Time.deltaTime;
-        Debug.Log("Timer: " + timer + "Curr: " + currentTroops);
-        Debug.Log(timer >= spawnInterval);
-        Debug.Log(currentTroops < maxTroops);
         if (timer >= spawnInterval && currentTroops < maxTroops)
         {
-            Debug.Log("Spawn");
             SpawnTroop();
             timer = 0f;
         }

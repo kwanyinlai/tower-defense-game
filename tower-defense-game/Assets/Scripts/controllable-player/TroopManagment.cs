@@ -4,25 +4,34 @@ using System.Collections.Generic;
 public class TroopManagment : MonoBehaviour
 {
 
-    public float controlRadius;
     [SerializeField] private GameObject selectorCircle;
     public static List<GameObject> selected = new List<GameObject>();
     private bool selecting;
-    private float selectionRadius=10f;
+    public float selectionRadius = 8f;
 
     
     void Start()
     {
-        if(Input.GetKeyDown("space")){
-            selecting = !selecting;
-            SelectTroops();
-        }
+        selecting = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        SelectTroops();
+        if(Input.GetKeyDown("space")){
+            selecting = !selecting;
+
+            
+            
+        }
+        if(selecting){
+            SelectTroops();
+            selectorCircle.transform.localScale = new Vector3(15f,0.2f,15f);
+        }
+        else{
+            selectorCircle.transform.localScale = new Vector3(0,0,0);
+            selected.Clear();
+        }
     }
 
     void SelectTroops(){
@@ -34,7 +43,6 @@ public class TroopManagment : MonoBehaviour
             playerPosition.y = 0f;
             troopPosition.y = 0f;
 
-            Debug.Log("COntains:" +PlayerMovement.troops.Contains(troop));
             Debug.Log("Distance = " + Vector3.Distance(playerPosition, troopPosition) );
             if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && 
                     !selected.Contains(troop))

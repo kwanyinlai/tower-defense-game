@@ -15,9 +15,9 @@ public class MainCamera : MonoBehaviour
 
 
     private float zoomSpeed = 20f; 
-    private float minZoom = 20f; 
-    private float maxZoom = 100f;
-    private float targetFieldOfView;
+    private float minZoom = 5f; 
+    private float maxZoom = 50f;
+    private float targetSize;
     /*private bool isSelecting = false;
     private bool dontComplete = false;
     private bool validSelection = true;
@@ -37,11 +37,13 @@ public class MainCamera : MonoBehaviour
     void Start()
     {
         camera = GetComponent<Camera>();
-        targetFieldOfView = camera.fieldOfView;
+        targetSize = camera.orthographicSize;
         cam = Camera.main.transform;
 
         lastMousePosition = (Vector2)Input.mousePosition;
 
+        camera.orthographic = true;
+        camera.orthographicSize = 10f;
     }
 
     void Update()
@@ -86,9 +88,12 @@ public class MainCamera : MonoBehaviour
 
         if (mouseDown)
         {
+            
             Vector2 mouseDelta = (Vector2)Input.mousePosition - lastMousePosition;
-            moveCamera.x = mouseDelta.x * mouseSensitivity;
-            moveCamera.z = mouseDelta.y * mouseSensitivity;
+            Vector3 moveDelta = new Vector3(mouseDelta.x, 0, mouseDelta.y) * mouseSensitivity;
+            moveCamera = -cam.right * moveDelta.x - moveDelta.z * cam.up;
+
+            
         }
 
         lastMousePosition = (Vector2)Input.mousePosition;
@@ -100,9 +105,9 @@ public class MainCamera : MonoBehaviour
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         if (scrollInput != 0)
         {
-            targetFieldOfView -= scrollInput * zoomSpeed;
-            targetFieldOfView = Mathf.Clamp(targetFieldOfView, minZoom, maxZoom);
-            camera.fieldOfView = targetFieldOfView;
+            targetSize -= scrollInput * zoomSpeed;
+            targetSize = Mathf.Clamp(targetSize, minZoom, maxZoom);
+            camera.orthographicSize = targetSize;
         }
     }
     /* void LassoSelection()

@@ -20,8 +20,9 @@ public class PlayerMovement : MonoBehaviour
     public static LinkedList<GameObject> troops = new LinkedList<GameObject>();
     public GameObject bulletPrefab; 
     [SerializeField] private GameObject selectorCircle;
-    private bool underSelection=false;
-    private GameObject commandingPlayer;
+    public bool underSelection=false;
+    public GameObject commandingPlayer;
+    public GameObject waypoint;
     
 
 
@@ -47,10 +48,10 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    
+
     void Update()
     {
-        CheckIfSelected();
+        
         if(underSelection){
             ActivateSelectingCircle();
         }
@@ -75,13 +76,19 @@ public class PlayerMovement : MonoBehaviour
         } 
         else {
             
-            
-           if(underSelection){
-            FollowCommander();
-           }
-           else{
-            Idle();
-           }
+            if(underSelection){
+                if (waypoint == null){
+                    FollowCommander();
+                } 
+                else{
+                    GoToWaypoint();
+                }
+                
+                
+            }
+            else{
+                Idle();
+            }
             
             
             
@@ -93,22 +100,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    void CheckIfSelected(){
-        foreach(GameObject player in Player.players)
-        {
-            List<GameObject> selected = player.GetComponent<TroopManagment>().selected;
-            if(selected.Contains(gameObject)){ //if has been selected
 
-                underSelection=true;
-                commandingPlayer=player;
-                Debug.Log("found");
-                return;
-            }
-            
-        }
-        underSelection=false;
-        commandingPlayer=null;
-    }
 
 
     void Idle(){
@@ -191,6 +183,17 @@ public class PlayerMovement : MonoBehaviour
         if (closestEnemy == null) { return null; }
         return closestEnemy.transform;
     }
+    void GoToWaypoint(){
+        if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 5f){
+            waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
+            waypoint = null;
+        }
+        else{
+            agent.SetDestination(waypoint.transform.position); 
+        }
+        
+    }
+
 
     /*
     public static void inSelection(MeshCollider collider, Transform cam){
@@ -224,13 +227,10 @@ public class PlayerMovement : MonoBehaviour
     
     void ActivateSelectingCircle(){
         selectorCircle.transform.localScale= new Vector3(3,0.01f,3);
-        Debug.Log("Activating");
-        Debug.Log(selectorCircle.transform.localScale);
     }
 
     void DeactivateSelectingCircle(){
         selectorCircle.transform.localScale= new Vector3(0f,0f,0f);
-        Debug.Log("Deactivating");
     }
     
 

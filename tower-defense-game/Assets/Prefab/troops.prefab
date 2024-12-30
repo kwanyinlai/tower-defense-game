@@ -121,6 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aggroRange: 30
   target: {fileID: 0}
+  commander: {fileID: 0}
+  idleRange: 10
   range: 5
   dmg: 10
   bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
@@ -297,7 +299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4010111740912432552, guid: 8b6004ab6b71941f4ab2b871aab86e2c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4010111740912432552, guid: 8b6004ab6b71941f4ab2b871aab86e2c, type: 3}
       propertyPath: m_LocalPosition.z

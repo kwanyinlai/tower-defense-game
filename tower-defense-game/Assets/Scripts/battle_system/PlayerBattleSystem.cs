@@ -22,7 +22,14 @@ public class PlayerBattleSystem : BattleSystem
             if (currentNode.Value == gameObject)
             {
                 PlayerMovement.troops.Remove(currentNode); 
-                TroopManagment.selected.Remove(currentNode.Value);
+
+                foreach(GameObject player in Player.players){
+                    List<GameObject> selected = player.GetComponent<TroopManagment>().selected;
+                    if(selected.Contains(currentNode.Value)){
+                        selected.Remove(currentNode.Value);
+                    }
+                }
+                
                 break; 
             }
             currentNode = currentNode.Next;

@@ -85,7 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   troopPrefab: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
   spawnInterval: 10
-  maxTroops: 2
+  maxTroops: 10
 --- !u!23 &8812181380161284085
 MeshRenderer:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ public class TroopManagment : MonoBehaviour
 {
 
     [SerializeField] private GameObject selectorCircle;
-    public static List<GameObject> selected = new List<GameObject>();
+    public List<GameObject> selected = new List<GameObject>();
     private bool selecting;
     public float selectionRadius = 8f;
 
@@ -26,11 +26,14 @@ public class TroopManagment : MonoBehaviour
         }
         if(selecting){
             SelectTroops();
-            selectorCircle.transform.localScale = new Vector3(15f,0.2f,15f);
+            selectorCircle.transform.localScale = new Vector3(15f,0.0002f,15f);
         }
         else{
             selectorCircle.transform.localScale = new Vector3(0,0,0);
-            selected.Clear();
+            selected.Clear(); 
+
+            // dont clear immediately, clear after some button is pressed
+            // reserve A and B buttons for confirm and back 
         }
     }
 
@@ -43,7 +46,7 @@ public class TroopManagment : MonoBehaviour
             playerPosition.y = 0f;
             troopPosition.y = 0f;
 
-            Debug.Log("Distance = " + Vector3.Distance(playerPosition, troopPosition) );
+           
             if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && 
                     !selected.Contains(troop))
             {

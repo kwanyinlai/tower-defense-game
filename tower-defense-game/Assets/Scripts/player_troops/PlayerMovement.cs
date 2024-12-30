@@ -6,20 +6,22 @@ public class PlayerMovement : MonoBehaviour
 {
     public float aggroRange = 10.0f;
     public Transform target;
+    [SerializeField] private Transform commander;
     private NavMeshAgent agent;
     private BattleSystem targetStats;
     private Vector3 idleTransform;
     private Vector3 idleStartPos;
-    private bool isIdle = true;
+    private bool inCombat = false;
     public float idleRange = 10.0f;
     public float range = 5.0f;
-    public int dmg = 10;  
-    private float atkCooldown = 1.5f;  
-    private float atkTimer = 0f;      
-    public static LinkedList<GameObject> troops = new LinkedList<GameObject>();   
-    public static List<GameObject> selected = new List<GameObject>();   
+    public int dmg = 10;
+    private float atkCooldown = 1.5f;
+    private float atkTimer = 0f;
+    public static LinkedList<GameObject> troops = new LinkedList<GameObject>();
     public GameObject bulletPrefab; 
-    // [SerializedField] private GameObject selectorCircle;
+    [SerializeField] private GameObject selectorCircle;
+    private bool underSelection=false;
+    private GameObject commandingPlayer;
     
 
 
@@ -36,57 +38,97 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        
         idleTransform = this.transform.position;
         idleStartPos = this.transform.position;
         agent = GetComponent<NavMeshAgent>();
         troops.AddLast(gameObject);
-        // DeactivateSelectingCircle();
+        DeactivateSelectingCircle();
 
     }
 
+    
     void Update()
     {
+        CheckIfSelected();
+        if(underSelection){
+            ActivateSelectingCircle();
+        }
+        else{
+            DeactivateSelectingCircle();
+        }
         Transform copy = GetClosestEnemyInRange();
         if (copy != null)
         {
-            isIdle = false;
+            inCombat = true;
             target = copy;
         }
         else
-        {
-            
-            
-            isIdle = true;
-            
-            
+        {   
+            inCombat = false;   
         }
 
-        if (!isIdle)
+        if (inCombat)
         {
-            EnemyInRange();
+            
+            FightEnemyInRange();
         } 
         else {
-            if(selected.Contains(gameObject)){
-                return;
-            }
-            else{
-                float dist = Mathf.Sqrt(Mathf.Pow(idleStartPos.x - transform.position.x, 2) + Mathf.Pow(idleStartPos.z - transform.position.z, 2));
-                float dist2 = Mathf.Sqrt(Mathf.Pow(idleTransform.x - transform.position.x, 2) + Mathf.Pow(idleTransform.z - transform.position.z, 2));
-                if (dist >= idleRange)
-                {
-                    idleStartPos = transform.position;
-                }
-                if (dist >= idleRange || dist2 <= 3f)
-                {
-                    idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
-                    agent.isStopped = false;
-                    agent.SetDestination(idleTransform);
-                }
-            }
+            
+            
+           if(underSelection){
+            FollowCommander();
+           }
+           else{
+            Idle();
+           }
+            
+            
+            
         }
 
 
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
+
+
+    }
+
+    void CheckIfSelected(){
+        foreach(GameObject player in Player.players)
+        {
+            List<GameObject> selected = player.GetComponent<TroopManagment>().selected;
+            if(selected.Contains(gameObject)){ //if has been selected
+
+                underSelection=true;
+                commandingPlayer=player;
+                Debug.Log("found");
+                return;
+            }
+            
+        }
+        underSelection=false;
+        commandingPlayer=null;
+    }
+
+
+    void Idle(){
+        float dist = Mathf.Sqrt(Mathf.Pow(idleStartPos.x - transform.position.x, 2) + Mathf.Pow(idleStartPos.z - transform.position.z, 2));
+        float dist2 = Mathf.Sqrt(Mathf.Pow(idleTransform.x - transform.position.x, 2) + Mathf.Pow(idleTransform.z - transform.position.z, 2));
+        if (dist >= idleRange)
+        {
+            idleStartPos = transform.position;
+        }
+        if (dist >= idleRange || dist2 <= 3f)
+        {
+            idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
+            agent.isStopped = false;
+            agent.SetDestination(idleTransform);
+        }
+    }
+
+    void FollowCommander(){
+
+        agent.SetDestination(commandingPlayer.transform.position); 
 
 
     }
@@ -109,7 +151,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
   
-    void EnemyInRange(){
+    void FightEnemyInRange(){
         targetStats = target.GetComponent<BattleSystem>(); 
         float distance = Vector3.Distance(transform.position, target.position);
         if (distance <= range && agent.velocity.magnitude <= 0.1f) {
@@ -179,7 +221,7 @@ public class PlayerMovement : MonoBehaviour
     }
     */
 
-    /*
+    
     void ActivateSelectingCircle(){
         selectorCircle.transform.localScale= new Vector3(3,0.01f,3);
         Debug.Log("Activating");
@@ -190,7 +232,7 @@ public class PlayerMovement : MonoBehaviour
         selectorCircle.transform.localScale= new Vector3(0f,0f,0f);
         Debug.Log("Deactivating");
     }
-    */
+    
 
     
 

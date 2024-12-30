@@ -44,7 +44,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (characterController.isGrounded)
         {
-            gravCalculation.y = modelVerticalOffset;  
+            gravCalculation.y = -0.5f;  
         }
         else
         {

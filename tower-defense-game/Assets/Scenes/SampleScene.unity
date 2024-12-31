@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 111092829}
   - component: {fileID: 111092833}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: pause-menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

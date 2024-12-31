@@ -18,6 +18,13 @@ public class MainCamera : MonoBehaviour
     private float minZoom = 5f; 
     private float maxZoom = 50f;
     private float targetSize;
+
+    private Vector3 posWhole; //Constant position for the camera overseeing the entire game
+    private Quaternion rotWhole;
+    private int cameraState;
+    public GameObject player;
+
+
     /*private bool isSelecting = false;
     private bool dontComplete = false;
     private bool validSelection = true;
@@ -36,9 +43,16 @@ public class MainCamera : MonoBehaviour
 
     void Start()
     {
+        posWhole = new Vector3(15f, 14.58988f, 5.5f);
+        rotWhole = Quaternion.Euler(new Vector3(26.334f, -126.921f, 0f));
+
         camera = GetComponent<Camera>();
         targetSize = camera.orthographicSize;
         cam = Camera.main.transform;
+        cam.position = posWhole;
+        cam.rotation = rotWhole;
+        cameraState = 0;
+        targetSize = maxZoom;
 
         lastMousePosition = (Vector2)Input.mousePosition;
 
@@ -47,8 +61,30 @@ public class MainCamera : MonoBehaviour
     }
 
     void Update()
-    {   
-       
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            cameraState++;
+            cameraState %= 3;
+            if(cameraState == 2)
+            {
+                camera.orthographicSize = targetSize;
+            }
+        }
+
+        if(cameraState == 0)
+        {
+            camera.orthographicSize = maxZoom;
+            cam.position = posWhole;
+        } else if (cameraState == 1)
+        {
+            camera.orthographicSize = maxZoom / 2;
+            cam.position = player.transform.position + posWhole;
+        } else
+        {
+            cameraMovement();
+            cameraZoom();
+        }
         /*if (Input.GetKeyDown(KeyCode.L))
         {
             isSelecting = !isSelecting;
@@ -67,11 +103,11 @@ public class MainCamera : MonoBehaviour
             return;
         }
         */
-        CameraMovement();
-        
     }
 
-    void CameraMovement()
+    
+
+    void cameraMovement()
     {
 
         //Movement code
@@ -99,8 +135,10 @@ public class MainCamera : MonoBehaviour
         lastMousePosition = (Vector2)Input.mousePosition;
 
         transform.position += moveCamera * Time.deltaTime * moveSpeed;
+    }
 
-
+    void cameraZoom()
+    {
         //zoom code
         float scrollInput = Input.GetAxis("Mouse ScrollWheel");
         if (scrollInput != 0)
@@ -110,6 +148,8 @@ public class MainCamera : MonoBehaviour
             camera.orthographicSize = targetSize;
         }
     }
+
+
     /* void LassoSelection()
     {
         if (Input.GetMouseButtonDown(0))

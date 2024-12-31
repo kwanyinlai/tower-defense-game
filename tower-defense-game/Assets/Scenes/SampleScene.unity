@@ -322,7 +322,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: -0.10178057, y: 0.871108, z: -0.2037888, w: -0.43506512}
-  m_LocalPosition: {x: 28.901436, y: 14.589879, z: 2.6959724}
+  m_LocalPosition: {x: 14.94, y: 13.09, z: 7.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -386,6 +386,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 330585546}
   mouseSensitivity: 2
+  player: {fileID: 1155523872}
 --- !u!1 &341426667
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
+
+    //TODO: don't show outline if cant be placed
+    // TODO: indicator for moving which isn't too intrusive
+    // TODO: build menu for selecitng buildings
     public int gridWidth = 100;
     public int gridHeight = 100;
     public static float tileSize = 4f;
@@ -44,8 +48,7 @@ public class GridSystem : MonoBehaviour
         {
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-                Debug.Log("x: "+ x);
-                Debug.Log("z: "+z);
+
                 if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z])
                 {
 
@@ -64,13 +67,12 @@ public class GridSystem : MonoBehaviour
         {
             for (int z = gridCoords.z; z < gridCoords.z + size.y; z++)
             {
-                Debug.Log(x);
-                Debug.Log(z);
+
 
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
                     grid[x, z] = false;
-                    Debug.Log("yes");
+
                 }
             }
         }

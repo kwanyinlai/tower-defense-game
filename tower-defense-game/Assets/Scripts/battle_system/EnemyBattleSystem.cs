@@ -9,14 +9,16 @@ public class EnemyBattleSystem : BattleSystem
     }
 
     protected override void Die(){
-        foreach(var enemy in EnemyMovement.enemies)
-        {
-            if (enemy == gameObject)
-            {
-                EnemyMovement.enemies.Remove(enemy); 
-                break; 
+        
+        EnemyMovement.enemies.Remove(gameObject);
+        foreach(GameObject player in Player.players){
+            List<GameObject> list = player.GetComponent<TroopManagment>().selected;
+            if (list.Contains(gameObject)){
+                list.Remove(gameObject);
+                break;
             }
-        }
+        } 
+        EnemyMovement.enemies.Remove(gameObject);
 
         base.Die();
     }

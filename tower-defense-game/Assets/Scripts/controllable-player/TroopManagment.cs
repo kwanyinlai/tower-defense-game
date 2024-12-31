@@ -134,7 +134,6 @@ public class TroopManagment : MonoBehaviour
     void ValidMenuSelection(){
         menuOpen = false;
         StopAndClearSelecting();
-        Debug.Log("hi");
     }
 
 

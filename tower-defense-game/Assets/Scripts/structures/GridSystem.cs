@@ -62,19 +62,11 @@ public class GridSystem : MonoBehaviour
             }
         }
     }
-<<<<<<< Updated upstream
     public void StopOccupying(Vector2Int gridCoords, Vector2Int size)
     {
         for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
         {
             for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
-=======
-    public void StopOccupying(Vector2Int gridPosition, Vector2Int size)
-    {
-        for (int x = gridPosition.x; x < gridPosition.x + size.x; x++)
-        {
-            for (int z = gridPosition.y; z < gridPosition.y + size.y; z++)
->>>>>>> Stashed changes
             {
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {

@@ -50,13 +50,8 @@ public class BuildMode : MonoBehaviour
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
 
-<<<<<<< Updated upstream
         //if (grid.IsBuildable(placementPosition))
         //{
-=======
-        if (grid.IsAreaBuildable(gridPosition, gridSize))
-        {
->>>>>>> Stashed changes
  
             Instantiate(barracksPrefab, grid.CoordinatesToGrid(placementPosition), grid.SnapRotation(transform.rotation));
 

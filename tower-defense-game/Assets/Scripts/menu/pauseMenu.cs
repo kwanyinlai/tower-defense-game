@@ -1,21 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenu;
-    public static bool isPaused;
-    void Start()
-    {
-        pauseMenu.SetActive(false);
-    }
+    public static bool gameIsPaused = false;
+
+    public GameObject pauseMenuUI;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
+            if (gameIsPaused)
             {
                 ResumeGame();
             }
@@ -25,17 +21,17 @@ public class PauseMenu : MonoBehaviour
             }
         }
     }
-    public void PauseGame()
-    {
-        pauseMenu.SetActive(true);
-        Time.timeScale = 0f;
-        isPaused = true;
-    }
     public void ResumeGame()
     {
-        pauseMenu.SetActive(false);
+        pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
-        isPaused = false;
+        gameIsPaused = false;
+    }
+    public void PauseGame()
+    {
+        pauseMenuUI.SetActive(true);
+        Time.timeScale = 0f;
+        gameIsPaused = true;
     }
     public void QuitGame()
     {

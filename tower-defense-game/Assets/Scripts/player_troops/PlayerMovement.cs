@@ -51,7 +51,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        
+        Debug.Log(gameObject.name + agent.isStopped);
+        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){
             ActivateSelectingCircle();
         }
@@ -66,9 +67,10 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {   
-            inCombat = false;   
+            inCombat = false;  
+            agent.isStopped=false; 
         }
-
+       
         if (inCombat)
         {
             
@@ -94,9 +96,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
 
-        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
-
-
+        
+        
     }
 
 
@@ -112,7 +113,6 @@ public class PlayerMovement : MonoBehaviour
         if (dist >= idleRange || dist2 <= 3f)
         {
             idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
-            agent.isStopped = false;
             agent.SetDestination(idleTransform);
         }
     }

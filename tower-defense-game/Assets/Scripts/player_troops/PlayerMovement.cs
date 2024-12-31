@@ -51,7 +51,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(gameObject.name + agent.isStopped);
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){
             ActivateSelectingCircle();

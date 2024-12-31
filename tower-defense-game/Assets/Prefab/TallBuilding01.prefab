@@ -77,6 +77,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 578301436fa1840b28bc23a88e00fcfd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8518752687395785492}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 578301436fa1840b28bc23a88e00fcfd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -473531046215275935}
   m_SourcePrefab: {fileID: 100100000, guid: 578301436fa1840b28bc23a88e00fcfd, type: 3}
 --- !u!1 &4821968310022303996 stripped
 GameObject:
@@ -95,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f333259ce273243be82da9b2da64aa0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  size: {x: 0, y: 0}
   troopPrefab: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
   spawnInterval: 10
   maxTroops: 10
@@ -164,3 +168,11 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &-473531046215275935
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4821968310022303996}
+  m_Mesh: {fileID: -2432090755550338912, guid: 578301436fa1840b28bc23a88e00fcfd, type: 3}

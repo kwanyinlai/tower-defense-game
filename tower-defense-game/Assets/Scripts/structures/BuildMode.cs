@@ -34,7 +34,7 @@ public class BuildMode : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.Return)){
                     
-                    PlaceBuilding();
+                    PlaceBuilding(barracksOutline);
                 }
             }
             else{
@@ -44,22 +44,22 @@ public class BuildMode : MonoBehaviour
        
     }
 
-    void PlaceBuilding()
+    public void PlaceBuilding(GameObject selectedBuilding) // call the outline
     {
         
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
-
-        //if (grid.IsBuildable(placementPosition))
-        //{
- 
-            Instantiate(barracksPrefab, grid.GridToCoordinates(grid.CoordinatesToGrid(placementPosition)), grid.SnapRotation(transform.rotation));
-
-        //}
-        //else
-        //{
-        //    Debug.Log("not buildable?");
-        //}
+        Placeable temp = selectedBuilding.GetComponent<Placeable>();
+        if (temp.IsBuildable(placementPosition))
+        {
+            Instantiate(temp.prefab, grid.GridToCoordinates(grid.CoordinatesToGrid(placementPosition)), grid.SnapRotation(transform.rotation));
+            grid.OccupyArea(placementPosition,temp.size);
+        }
+        else
+        {
+            Debug.Log("not buildable?");
+            
+        }
     }
 
     void ShowBuildingOutline(){

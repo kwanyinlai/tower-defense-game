@@ -21,6 +21,10 @@ public class GridSystem : MonoBehaviour
 
     }
 
+    void GetFloorSize(){
+
+    }
+
     public bool IsTileBuildable(Vector3 coordinates)
     {
         Vector3Int gridCoords = CoordinatesToGrid(coordinates);
@@ -33,14 +37,18 @@ public class GridSystem : MonoBehaviour
         return false;
     }
 
-    public bool IsTileAreaBuildable(Vector2Int gridCoords, Vector2Int size)
+    public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
     {
-        for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
+        Vector3 gridCoords = CoordinatesToGrid(coordinates);
+        for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
         {
-            for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
+            for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-                if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || grid[x, z])
+                Debug.Log("x: "+ x);
+                Debug.Log("z: "+z);
+                if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z])
                 {
+
                     return false; 
                 }
             }
@@ -49,15 +57,20 @@ public class GridSystem : MonoBehaviour
     }
 
 
-    public void OccupyArea(Vector2Int gridCoords, Vector2Int size)
+    public void OccupyArea(Vector3 coordinates, Vector2Int size)
     {
+        Vector3Int gridCoords = CoordinatesToGrid(coordinates);
         for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
         {
-            for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
+            for (int z = gridCoords.z; z < gridCoords.z + size.y; z++)
             {
+                Debug.Log(x);
+                Debug.Log(z);
+
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
-                    grid[x, z] = true;
+                    grid[x, z] = false;
+                    Debug.Log("yes");
                 }
             }
         }
@@ -68,9 +81,11 @@ public class GridSystem : MonoBehaviour
         {
             for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
             {
+
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
-                    grid[x, z] = false;
+ 
+                    grid[x, z] = true;
                 }
             }
         }

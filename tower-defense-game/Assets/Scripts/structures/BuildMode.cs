@@ -6,12 +6,18 @@ public class BuildMode : MonoBehaviour
     public int offset = -6;
     public bool building = false;
     [SerializeField] private GameObject barracksOutline;
+    private GridSystem grid; 
 
 
     // TODO: LOCK TO GRID
+
+    void Start(){
+        grid = GameObject.Find("grid-manager").GetComponent<GridSystem>();
+    }
     
     void Update()
     {
+
         if(!gameObject.GetComponent<TroopManagment>().inProgress){
             if (Input.GetKeyDown(KeyCode.B))
             {
@@ -22,7 +28,12 @@ public class BuildMode : MonoBehaviour
 
             if(building){
                 ShowBuildingOutline();
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    building = false;
+                }
                 if (Input.GetKeyDown(KeyCode.Return)){
+                    
                     PlaceBuilding();
                 }
             }
@@ -35,11 +46,20 @@ public class BuildMode : MonoBehaviour
 
     void PlaceBuilding()
     {
-        Debug.Log("building");
+        
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
-        
-        Instantiate(barracksPrefab, placementPosition, transform.rotation);
+
+        if (grid.IsBuildable(placementPosition))
+        {
+ 
+            Instantiate(barracksPrefab, grid.WorldToGridPosition(placementPosition), grid.SnapRotation(transform.rotation));
+
+        }
+        else
+        {
+            Debug.Log("not buildable?");
+        }
     }
 
     void ShowBuildingOutline(){
@@ -53,5 +73,6 @@ public class BuildMode : MonoBehaviour
     void HideBuildingOutline(){
         barracksOutline.transform.localScale= new Vector3(0f,0f,0f);
     }
+    
     
 }

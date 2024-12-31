@@ -3,7 +3,6 @@ using UnityEngine;
 public class GridSystem : MonoBehaviour
 {
 
-    //TODO: don't show outline if cant be placed
     // TODO: indicator for moving which isn't too intrusive
     // TODO: build menu for selecitng buildings
     public int gridWidth = 100;

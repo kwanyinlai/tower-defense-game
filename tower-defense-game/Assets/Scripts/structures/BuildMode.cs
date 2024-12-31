@@ -5,14 +5,16 @@ public class BuildMode : MonoBehaviour
     public GameObject barracksPrefab;
     public int offset = -6;
     public bool building = false;
-    [SerializeField] private GameObject barracksOutline;
+    [SerializeField] private GameObject selectedBuilding;
     private GridSystem grid; 
+    private bool buildMenu;
 
 
-    // TODO: LOCK TO GRID
+
 
     void Start(){
         grid = GameObject.Find("grid-manager").GetComponent<GridSystem>();
+        buildMenu = true; 
     }
     
     void Update()
@@ -27,15 +29,25 @@ public class BuildMode : MonoBehaviour
             }
 
             if(building){
-                ShowBuildingOutline();
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    building = false;
+                    CloseBuildMenu();
                 }
-                if (Input.GetKeyDown(KeyCode.Return)){
+                if(buildMenu){
+                    OpenBuildMenu();
+                }
+                else{
+                    ShowBuildingOutline();
                     
-                    PlaceBuilding(barracksOutline);
+                    if (Input.GetKeyDown(KeyCode.Return)){
+                        
+                        PlaceBuilding(selectedBuilding);
+                        CloseBuildMenu();
+                    }
                 }
+
+
+
             }
             else{
                 HideBuildingOutline();
@@ -65,14 +77,26 @@ public class BuildMode : MonoBehaviour
     void ShowBuildingOutline(){
         
       
-        barracksOutline.transform.localScale= new Vector3(2f,2f,2f);
+        selectedBuilding.transform.localScale= new Vector3(2f,2f,2f);
             
         
     }
 
     void HideBuildingOutline(){
-        barracksOutline.transform.localScale= new Vector3(0f,0f,0f);
+        selectedBuilding.transform.localScale= new Vector3(0f,0f,0f);
+    }
+
+    void OpenBuildMenu()
+    {
+        buildMenu=false; // change this set buildMenu to false AFTER building is selected
+        // only when build menu is implemented
     }
     
+    void CloseBuildMenu()
+    {
+        buildMenu = true;
+        building = false;
+        // selectedBuilding = null;
+    }
     
 }

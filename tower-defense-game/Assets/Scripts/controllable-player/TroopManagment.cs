@@ -15,6 +15,7 @@ public class TroopManagment : MonoBehaviour
     [SerializeField] private bool menuOpen = false;
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject outlineWaypoint;
+    public bool inProgress = false;
     // private float menuTime; // for timing how long menu is up for before it closes
     
 
@@ -30,64 +31,69 @@ public class TroopManagment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.Space)){
-            selecting = true;
-            ShowSelectingCircle();
-        }
-        else{
-            selecting=false;
-            HideSelectingCircle();
-            // OpenTroopOrdersMenu();
-            ShowWaypointOutline();
-        }
-        if(menuOpen){
-            // timeMenu += time.deltaTime;
-            // if (timer >= timeLimit){
-
-            // }
-
-
-            switch(true){
-                /*case bool _ when Input.GetKeyDown(KeyCode.Alpha1):
-                    SetWaypoint();
-                    ValidMenuSelection();
-                    break;
-                case bool _ when Input.GetKeyDown(KeyCode.Alpha2):
-                    // other command
-                    ValidMenuSelection();
-                    break;
-                case bool _ when Input.GetKeyDown(KeyCode.Alpha3):
-                    // other command
-                    ValidMenuSelection();
-                    break;
-                case bool _ when Input.GetKeyDown(KeyCode.Alpha4):
-                    // other command
-                    ValidMenuSelection();
-                    break;
-                    */
-                case bool _ when Input.GetKeyDown(KeyCode.Return):
-                    Debug.Log("test");
-                    SetWaypoint();
-                    ValidMenuSelection();
-                    break;
-                case bool _ when Input.GetKeyDown(KeyCode.Space):
-                    menuOpen = false; // close menu but keep selecting
-                    selecting = true;
-                    break;
-                case bool _ when Input.GetKeyDown(KeyCode.Escape):
-                    menuOpen = false; // cancel selecting and menu if escape
-                    StopAndClearSelecting();
-                    break;
+        if (!gameObject.GetComponent<BuildMode>().building){
+            
+        
+            if(Input.GetKey(KeyCode.Space)){
+                selecting = true;
+                inProgress = true;
+                ShowSelectingCircle();
             }
-            
-            
-        }
-        else{
-            HideWaypointOutline();
-        }
+            else{
+                selecting=false;
+                HideSelectingCircle();
+                // OpenTroopOrdersMenu();
+                ShowWaypointOutline();
+            }
+            if(menuOpen){
+                // timeMenu += time.deltaTime;
+                // if (timer >= timeLimit){
 
-        if(selecting){
-            SelectTroops();
+                // }
+
+
+                switch(true){
+                    /*case bool _ when Input.GetKeyDown(KeyCode.Alpha1):
+                        SetWaypoint();
+                        ValidMenuSelection();
+                        break;
+                    case bool _ when Input.GetKeyDown(KeyCode.Alpha2):
+                        // other command
+                        ValidMenuSelection();
+                        break;
+                    case bool _ when Input.GetKeyDown(KeyCode.Alpha3):
+                        // other command
+                        ValidMenuSelection();
+                        break;
+                    case bool _ when Input.GetKeyDown(KeyCode.Alpha4):
+                        // other command
+                        ValidMenuSelection();
+                        break;
+                        */
+                    case bool _ when Input.GetKeyDown(KeyCode.Return):
+                        Debug.Log("test");
+                        SetWaypoint();
+                        ValidMenuSelection();
+                        break;
+                    case bool _ when Input.GetKeyDown(KeyCode.Space):
+                        menuOpen = false; // close menu but keep selecting
+                        selecting = true;
+                        break;
+                    case bool _ when Input.GetKeyDown(KeyCode.Escape):
+                        menuOpen = false; // cancel selecting and menu if escape
+                        StopAndClearSelecting();
+                        break;
+                }
+                
+                
+            }
+            else{
+                HideWaypointOutline();
+            }
+
+            if(selecting){
+                SelectTroops();
+            }
         }
 
     }
@@ -121,6 +127,7 @@ public class TroopManagment : MonoBehaviour
 
         }
         selected.Clear();
+        inProgress = false;
     }
 
     void SelectTroops(){
@@ -160,6 +167,7 @@ public class TroopManagment : MonoBehaviour
     void ValidMenuSelection(){
         menuOpen = false;
         StopAndClearSelecting();
+        
     }
 
 

@@ -4,22 +4,24 @@ public class SnapToGrid : MonoBehaviour
 {
     [SerializeField] private Transform commandingPlayer;
     private GridSystem grid;
-    private Vector2Int size;
+    private Placeable placeable;
 
     void Start(){
         grid = GameObject.Find("grid-manager").GetComponent<GridSystem>();
-        size = GetComponent<Placeable>().size;
+        placeable = GetComponent<Placeable>();
     }
     
     void Update()
     {
         transform.position = grid.GridToCoordinates(grid.CoordinatesToGrid(commandingPlayer.position + commandingPlayer.forward * -6));
         transform.rotation = grid.SnapRotation(commandingPlayer.rotation);
-        if(grid.IsTileAreaBuildable(commandingPlayer.position + commandingPlayer.forward * -6, size)){
+        
+        if(placeable.IsBuildable(commandingPlayer.position + commandingPlayer.forward * -6)){
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{
             transform.localScale=new Vector3(0f,0f,0f);
+            Debug.Log("not buildable");
         }
     }
 }

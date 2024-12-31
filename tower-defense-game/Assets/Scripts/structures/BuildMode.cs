@@ -53,7 +53,7 @@ public class BuildMode : MonoBehaviour
         //if (grid.IsBuildable(placementPosition))
         //{
  
-            Instantiate(barracksPrefab, grid.CoordinatesToGrid(placementPosition), grid.SnapRotation(transform.rotation));
+            Instantiate(barracksPrefab, grid.GridToCoordinates(grid.CoordinatesToGrid(placementPosition)), grid.SnapRotation(transform.rotation));
 
         //}
         //else

@@ -4,7 +4,7 @@ public class GridSystem : MonoBehaviour
 {
     public int gridWidth = 100;
     public int gridHeight = 100;
-    public float tileSize = 1f;
+    public static float tileSize = 8f;
 
     private bool[,] grid;
 
@@ -21,9 +21,9 @@ public class GridSystem : MonoBehaviour
 
     }
 
-    public bool IsBuildable(Vector3 worldPosition)
+    public bool IsTileBuildable(Vector3 coordinates)
     {
-        Vector3Int gridCoords = WorldToGridPosition(worldPosition);
+        Vector3Int gridCoords = CoordinatesToGrid(coordinates);
 
         if (gridCoords.x >= 0 && gridCoords.x < gridWidth && 
             gridCoords.y >= 0 && gridCoords.y < gridHeight)
@@ -33,14 +33,57 @@ public class GridSystem : MonoBehaviour
         return false;
     }
 
-    public Vector3Int WorldToGridPosition(Vector3 worldPosition)
+    public bool IsTileAreaBuildable(Vector2Int gridCoords, Vector2Int size)
     {
-        int x = Mathf.FloorToInt(worldPosition.x / tileSize);
-        int z = Mathf.FloorToInt(worldPosition.z / tileSize);
+        for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
+        {
+            for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
+            {
+                if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || grid[x, z])
+                {
+                    return false; 
+                }
+            }
+        }
+        return true;
+    }
+
+
+    public void OccupyArea(Vector2Int gridCoords, Vector2Int size)
+    {
+        for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
+        {
+            for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
+            {
+                if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
+                {
+                    grid[x, z] = true;
+                }
+            }
+        }
+    }
+    public void StopOccupying(Vector2Int gridCoords, Vector2Int size)
+    {
+        for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
+        {
+            for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
+            {
+                if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
+                {
+                    grid[x, z] = false;
+                }
+            }
+        }
+    }
+
+    public Vector3Int CoordinatesToGrid(Vector3 coordinates)
+    {
+        int x = Mathf.FloorToInt(coordinates.x / tileSize);
+        int z = Mathf.FloorToInt(coordinates.z / tileSize);
         return new Vector3Int(x,0,z);
     }
 
-    public Vector3 GridToWorldPosition(Vector3 gridCoords)
+    public Vector3 GridToCoordinates(Vector3 gridCoords)
     {
         return new Vector3(gridCoords.x * tileSize, 0f, gridCoords.y * tileSize);
     }

@@ -50,16 +50,16 @@ public class BuildMode : MonoBehaviour
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
 
-        if (grid.IsBuildable(placementPosition))
-        {
+        //if (grid.IsBuildable(placementPosition))
+        //{
  
-            Instantiate(barracksPrefab, grid.WorldToGridPosition(placementPosition), grid.SnapRotation(transform.rotation));
+            Instantiate(barracksPrefab, grid.CoordinatesToGrid(placementPosition), grid.SnapRotation(transform.rotation));
 
-        }
-        else
-        {
-            Debug.Log("not buildable?");
-        }
+        //}
+        //else
+        //{
+        //    Debug.Log("not buildable?");
+        //}
     }
 
     void ShowBuildingOutline(){

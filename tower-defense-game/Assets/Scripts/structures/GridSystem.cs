@@ -4,7 +4,7 @@ public class GridSystem : MonoBehaviour
 {
     public int gridWidth = 100;
     public int gridHeight = 100;
-    public static float tileSize = 8f;
+    public static float tileSize = 4f;
 
     private bool[,] grid;
 
@@ -85,7 +85,7 @@ public class GridSystem : MonoBehaviour
 
     public Vector3 GridToCoordinates(Vector3 gridCoords)
     {
-        return new Vector3(gridCoords.x * tileSize, 0f, gridCoords.y * tileSize);
+        return new Vector3(gridCoords.x * tileSize, 0f, gridCoords.z * tileSize);
     }
 
     public Quaternion SnapRotation(Quaternion currentRotation)

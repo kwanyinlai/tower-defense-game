@@ -10,6 +10,8 @@ public class Waypoint : MonoBehaviour
     // TODO: timer for troop command menu
     // TODO: not deleting waypoint correctly
 
+    
+
     public List<GameObject> troopsBound = new List<GameObject>();
 
     void Update(){

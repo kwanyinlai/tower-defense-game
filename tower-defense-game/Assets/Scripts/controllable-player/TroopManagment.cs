@@ -12,9 +12,10 @@ public class TroopManagment : MonoBehaviour
     private bool selecting;
     public float selectionRadius = 8f;
     [SerializeField] private GameObject commandMenu;
-    private bool menuOpen = false;
+    [SerializeField] private bool menuOpen = false;
     [SerializeField] private GameObject waypoint;
-    private float menuTime;
+    [SerializeField] private GameObject outlineWaypoint;
+    // private float menuTime; // for timing how long menu is up for before it closes
     
 
 
@@ -23,6 +24,7 @@ public class TroopManagment : MonoBehaviour
     {
         selecting = false;
         commandMenu.SetActive(false);
+        HideWaypointOutline();
     }
 
     // Update is called once per frame
@@ -35,15 +37,18 @@ public class TroopManagment : MonoBehaviour
         else{
             selecting=false;
             HideSelectingCircle();
-            OpenTroopOrdersMenu();
+            // OpenTroopOrdersMenu();
+            ShowWaypointOutline();
         }
         if(menuOpen){
             // timeMenu += time.deltaTime;
             // if (timer >= timeLimit){
 
             // }
+
+
             switch(true){
-                case bool _ when Input.GetKeyDown(KeyCode.Alpha1):
+                /*case bool _ when Input.GetKeyDown(KeyCode.Alpha1):
                     SetWaypoint();
                     ValidMenuSelection();
                     break;
@@ -59,6 +64,12 @@ public class TroopManagment : MonoBehaviour
                     // other command
                     ValidMenuSelection();
                     break;
+                    */
+                case bool _ when Input.GetKeyDown(KeyCode.Return):
+                    Debug.Log("test");
+                    SetWaypoint();
+                    ValidMenuSelection();
+                    break;
                 case bool _ when Input.GetKeyDown(KeyCode.Space):
                     menuOpen = false; // close menu but keep selecting
                     selecting = true;
@@ -68,9 +79,11 @@ public class TroopManagment : MonoBehaviour
                     StopAndClearSelecting();
                     break;
             }
+            
+            
         }
         else{
-            HideTroopOrdersMenu();
+            HideWaypointOutline();
         }
 
         if(selecting){
@@ -85,6 +98,18 @@ public class TroopManagment : MonoBehaviour
             menuOpen = true;
         }
         
+        
+    }
+
+    void ShowWaypointOutline(){
+        if(selected.Count>0){
+            outlineWaypoint.transform.localScale= new Vector3(1f,1f,1f);
+            menuOpen = true;
+        }
+    }
+
+    void HideWaypointOutline(){
+        outlineWaypoint.transform.localScale= new Vector3(0f,0f,0f);
     }
 
     void StopAndClearSelecting(){
@@ -126,6 +151,7 @@ public class TroopManagment : MonoBehaviour
     void ShowSelectingCircle(){
         selectorCircle.transform.localScale = new Vector3(15f,0.0002f,15f);
     }
+
     
     void HideSelectingCircle(){
         selectorCircle.transform.localScale = new Vector3(0,0,0);
@@ -142,7 +168,7 @@ public class TroopManagment : MonoBehaviour
     }
 
     void SetWaypoint(){
-        GameObject deployedPoint = Instantiate(waypoint, gameObject.transform.position, Quaternion.identity);
+        GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,-3f), transform.rotation);
         foreach (GameObject troop in selected)
         {
             PlayerMovement troopScript = troop.GetComponent<PlayerMovement>();

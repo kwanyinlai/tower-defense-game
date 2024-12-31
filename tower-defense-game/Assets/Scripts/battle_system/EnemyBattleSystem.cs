@@ -9,15 +9,13 @@ public class EnemyBattleSystem : BattleSystem
     }
 
     protected override void Die(){
-        LinkedListNode<GameObject> currentNode = EnemyMovement.enemies.First;
-        while (currentNode != null)
+        foreach(var enemy in EnemyMovement.enemies)
         {
-            if (currentNode.Value == gameObject)
+            if (enemy == gameObject)
             {
-                EnemyMovement.enemies.Remove(currentNode); 
+                EnemyMovement.enemies.Remove(enemy); 
                 break; 
             }
-            currentNode = currentNode.Next;
         }
 
         base.Die();

@@ -16,7 +16,7 @@ public class EnemyMovement : MonoBehaviour
     public int dmg = 10;
     private float atkCooldown = 1.5f;
     public float atkTimer = 0f;
-    public static LinkedList<GameObject> enemies = new LinkedList<GameObject>(); 
+    public static List<GameObject> enemies = new List<GameObject>(); 
     public GameObject bulletPrefab;
 
 
@@ -24,8 +24,11 @@ public class EnemyMovement : MonoBehaviour
 
      void Start()
     {
-        enemies.AddLast(gameObject);
+        enemies.Add(gameObject);
+    
         agent = GetComponent<NavMeshAgent>();
+
+
         if (target != null)
         {
             targetStats = target.GetComponent<BattleSystem>(); 

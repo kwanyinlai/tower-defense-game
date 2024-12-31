@@ -15,6 +15,7 @@ public class TroopManagment : MonoBehaviour
     private bool menuOpen = false;
     [SerializeField] private GameObject waypoint;
     private float menuTime;
+    
 
 
     
@@ -114,7 +115,7 @@ public class TroopManagment : MonoBehaviour
                 
                 troopScript.underSelection=true;
                 troopScript.commandingPlayer = gameObject;
-                troopScript.waypoint = null;
+                troopScript.DeleteFromWaypoint();
                 selected.Add(troop);
             }
         }
@@ -143,7 +144,7 @@ public class TroopManagment : MonoBehaviour
 
     void SetWaypoint(){
         GameObject deployedPoint = Instantiate(waypoint, gameObject.transform.position, Quaternion.identity);
-        foreach (GameObject troop in PlayerMovement.troops)
+        foreach (GameObject troop in selected)
         {
             PlayerMovement troopScript = troop.GetComponent<PlayerMovement>();
             troopScript.commandingPlayer = null;

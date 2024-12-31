@@ -15,27 +15,28 @@ public class PlayerBattleSystem : BattleSystem
     }
      
     protected override void Die(){
-        LinkedListNode<GameObject> currentNode = PlayerMovement.troops.First;
         
         barracks.DecrementTroops();
-        while (currentNode != null)
+        foreach (GameObject troop in PlayerMovement.troops)
         {
-            if (currentNode.Value == gameObject)
+            if (troop == gameObject)
             {
-                PlayerMovement.troops.Remove(currentNode); 
-                gameObject.GetComponent<PlayerMovement>().waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
+                PlayerMovement.troops.Remove(troop);
+                GameObject temp = gameObject.GetComponent<PlayerMovement>().waypoint;
+                if (temp!=null){
+                    temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
+                }
                     
 
                 foreach(GameObject player in Player.players){
                     List<GameObject> selected = player.GetComponent<TroopManagment>().selected;
-                    if(selected.Contains(currentNode.Value)){
-                        selected.Remove(currentNode.Value);
+                    if(selected.Contains(troop)){
+                        selected.Remove(troop);
                     }
                 }
                 
                 break; 
             }
-            currentNode = currentNode.Next;
         }
 
         base.Die();

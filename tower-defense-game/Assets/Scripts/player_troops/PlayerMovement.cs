@@ -11,13 +11,13 @@ public class PlayerMovement : MonoBehaviour
     private BattleSystem targetStats;
     private Vector3 idleTransform;
     private Vector3 idleStartPos;
-    private bool inCombat = false;
+    [SerializeField] private bool inCombat = false;
     public float idleRange = 10.0f;
     public float range = 5.0f;
     public int dmg = 10;
     private float atkCooldown = 1.5f;
     private float atkTimer = 0f;
-    public static LinkedList<GameObject> troops = new LinkedList<GameObject>();
+    public static List<GameObject> troops = new List<GameObject>();
     public GameObject bulletPrefab; 
     [SerializeField] private GameObject selectorCircle;
     public bool underSelection=false;
@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
         idleTransform = this.transform.position;
         idleStartPos = this.transform.position;
         agent = GetComponent<NavMeshAgent>();
-        troops.AddLast(gameObject);
+        troops.Add(gameObject);
         DeactivateSelectingCircle();
 
     }
@@ -74,20 +74,19 @@ public class PlayerMovement : MonoBehaviour
             
             FightEnemyInRange();
         } 
-        else {
-            
+        else {      
             if(underSelection){
-                if (waypoint == null){
-                    FollowCommander();
-                } 
-                else{
-                    GoToWaypoint();
-                }
-                
-                
+               
+                FollowCommander();
             }
             else{
-                Idle();
+                if(waypoint!=null){
+                    GoToWaypoint();
+                }
+                else{
+                    Idle();
+                }
+
             }
             
             
@@ -144,6 +143,7 @@ public class PlayerMovement : MonoBehaviour
 
   
     void FightEnemyInRange(){
+        
         targetStats = target.GetComponent<BattleSystem>(); 
         float distance = Vector3.Distance(transform.position, target.position);
         if (distance <= range && agent.velocity.magnitude <= 0.1f) {
@@ -185,11 +185,18 @@ public class PlayerMovement : MonoBehaviour
     }
     void GoToWaypoint(){
         if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 5f){
-            waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
-            waypoint = null;
+            DeleteFromWaypoint();
         }
         else{
             agent.SetDestination(waypoint.transform.position); 
+        }
+        
+    }
+
+    public void DeleteFromWaypoint(){
+        if (waypoint!=null){
+            waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
+            waypoint = null;
         }
         
     }

@@ -8,7 +8,7 @@ public class Waypoint : MonoBehaviour
     // TODO: arrow from troops or some indicator to waypoint
 
     // TODO: timer for troop command menu
-    // TODO: bug with troops stuck after killing enemy but also selected
+    // TODO: not deleting waypoint correctly
 
     public List<GameObject> troopsBound = new List<GameObject>();
 

@@ -7,7 +7,6 @@ public class CharacterMovement : MonoBehaviour
     public Transform cam;
     private const float GRAVITY = -9.81f;
     private Vector3 gravCalculation;
-    [SerializeField] private float modelVerticalOffset = -1f; // due to change if model chnges
 
     private CharacterController characterController;
 
@@ -24,7 +23,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Movement()
     {
-        
+
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
@@ -52,14 +51,16 @@ public class CharacterMovement : MonoBehaviour
         }
 
         Vector3 movement = dir * moveSpeed + gravCalculation;
-        if(horiz!=0 || vert!=0){
-            characterController.Move(movement * Time.deltaTime);
-        }
-        else{
-            // characterController.Move(this.transform.position + new Vector3(0f, modelVerticalOffset,0f));
-            return;
-        }
         
+        
+        
+        
+       
+
+
+        characterController.Move(movement * Time.deltaTime);
+    
+
 
         
         if (dir != Vector3.zero)

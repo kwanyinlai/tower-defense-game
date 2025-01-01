@@ -3,11 +3,11 @@ using UnityEngine;
 public class BuildMode : MonoBehaviour
 {
     public GameObject barracksPrefab;
-    public int offset = -6;
+    public int offset = -7;
     public bool building = false;
     [SerializeField] private GameObject selectedBuilding;
     private GridSystem grid; 
-    private bool buildMenu;
+    public bool buildMenu;
 
 
 
@@ -15,6 +15,7 @@ public class BuildMode : MonoBehaviour
     void Start(){
         grid = GameObject.Find("grid-manager").GetComponent<GridSystem>();
         buildMenu = true; 
+        building=false;
     }
     
     void Update()

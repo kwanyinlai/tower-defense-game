@@ -803,13 +803,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.10178057, y: 0.871108, z: -0.2037888, w: -0.43506512}
-  m_LocalPosition: {x: 28.901436, y: 14.589879, z: 2.6959724}
+  m_LocalRotation: {x: 0, y: 0.9848078, z: -0.17364816, w: 0}
+  m_LocalPosition: {x: 10, y: 8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 20, y: 180, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2535,7 +2535,8 @@ MonoBehaviour:
   barracksPrefab: {fileID: 4821968310022303996, guid: 2cdd6d0f4fd2f49109f94cebc8bc91e0, type: 3}
   offset: -6
   building: 0
-  barracksOutline: {fileID: 956969875}
+  selectedBuilding: {fileID: 956969875}
+  buildMenu: 0
 --- !u!1 &1228363591
 GameObject:
   m_ObjectHideFlags: 0

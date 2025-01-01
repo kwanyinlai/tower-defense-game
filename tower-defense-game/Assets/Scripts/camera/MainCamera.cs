@@ -44,7 +44,7 @@ public class MainCamera : MonoBehaviour
     void Start()
     {
         posWhole = new Vector3(10f, 8f, -10f);
-        rotWhole = Quaternion.Euler(new Vector3(20f, 180f, 0f));
+        rotWhole = Quaternion.Euler(new Vector3(20f, 210f, 0f));
 
         camera = GetComponent<Camera>();
         targetSize = camera.orthographicSize;

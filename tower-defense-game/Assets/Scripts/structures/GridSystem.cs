@@ -4,14 +4,15 @@ public class GridSystem : MonoBehaviour
 {
 
     // TODO: build menu for selecting buildings
-    public int gridWidth = 100;
-    public int gridHeight = 100;
+    public int gridWidth = 200;
+    public int gridHeight = 200;
     public static float tileSize = 4f;
 
     private bool[,] grid;
 
     void Start()
     {
+        //make all squares buidable
         grid = new bool[gridWidth, gridHeight];
         for (int x = 0; x < gridWidth; x++)
         {
@@ -93,14 +94,14 @@ public class GridSystem : MonoBehaviour
 
     public Vector3Int CoordinatesToGrid(Vector3 coordinates)
     {
-        int x = Mathf.FloorToInt(coordinates.x / tileSize);
-        int z = Mathf.FloorToInt(coordinates.z / tileSize);
+        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2;
+        int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
         return new Vector3Int(x,0,z);
     }
 
     public Vector3 GridToCoordinates(Vector3 gridCoords)
     {
-        return new Vector3(gridCoords.x * tileSize, 0f, gridCoords.z * tileSize);
+        return new Vector3((gridCoords.x - gridWidth/2) * tileSize, 0f, (gridCoords.z - gridHeight/2) * tileSize);
     }
 
     public Quaternion SnapRotation(Quaternion currentRotation)

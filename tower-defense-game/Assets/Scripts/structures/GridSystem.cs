@@ -3,8 +3,7 @@ using UnityEngine;
 public class GridSystem : MonoBehaviour
 {
 
-    // TODO: indicator for moving which isn't too intrusive
-    // TODO: build menu for selecitng buildings
+    // TODO: build menu for selecting buildings
     public int gridWidth = 100;
     public int gridHeight = 100;
     public static float tileSize = 4f;

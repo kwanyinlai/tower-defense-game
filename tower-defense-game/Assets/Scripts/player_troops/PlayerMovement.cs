@@ -189,6 +189,8 @@ public class PlayerMovement : MonoBehaviour
         else{
             agent.SetDestination(waypoint.transform.position); 
         }
+
+        // indicator towards waypoint
         
     }
 

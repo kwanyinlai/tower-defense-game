@@ -17,7 +17,7 @@ public class MainCamera : MonoBehaviour
     private float zoomSpeed = 20f; 
     private float minZoom = 5f; 
     private float maxZoom = 50f;
-    private float targetSize;
+    private float targetSize=14;
 
     private Vector3 posWhole; //Constant position for the camera overseeing the entire game
     private Quaternion rotWhole;
@@ -43,8 +43,8 @@ public class MainCamera : MonoBehaviour
 
     void Start()
     {
-        posWhole = new Vector3(15f, 14.58988f, 5.5f);
-        rotWhole = Quaternion.Euler(new Vector3(26.334f, -126.921f, 0f));
+        posWhole = new Vector3(10f, 8f, -10f);
+        rotWhole = Quaternion.Euler(new Vector3(20f, 180f, 0f));
 
         camera = GetComponent<Camera>();
         targetSize = camera.orthographicSize;

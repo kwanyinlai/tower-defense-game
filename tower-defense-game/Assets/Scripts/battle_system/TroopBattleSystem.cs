@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerBattleSystem : BattleSystem
+public class TroopBattleSystem : BattleSystem
 {
     private Barracks barracks;
 
@@ -17,12 +17,12 @@ public class PlayerBattleSystem : BattleSystem
     protected override void Die(){
         
         barracks.DecrementTroops();
-        foreach (GameObject troop in PlayerMovement.troops)
+        foreach (GameObject troop in TroopMovement.troops)
         {
             if (troop == gameObject)
             {
-                PlayerMovement.troops.Remove(troop);
-                GameObject temp = gameObject.GetComponent<PlayerMovement>().waypoint;
+                TroopMovement.troops.Remove(troop);
+                GameObject temp = gameObject.GetComponent<TroopMovement>().waypoint;
                 if (temp!=null){
                     temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
                 }

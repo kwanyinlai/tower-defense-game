@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
-public class PlayerMovement : MonoBehaviour
+public class TroopMovement : MonoBehaviour
 {
     public float aggroRange = 10.0f;
     public Transform target;

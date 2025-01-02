@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    public float angularSpeed = 700f;
+    public float angularSpeed = 60f;
     public Transform cam;
     private const float GRAVITY = -9.81f;
     private Vector3 gravCalculation;
@@ -51,13 +51,6 @@ public class CharacterMovement : MonoBehaviour
         }
 
         Vector3 movement = dir * moveSpeed + gravCalculation;
-        
-        
-        
-        
-       
-
-
         characterController.Move(movement * Time.deltaTime);
     
 

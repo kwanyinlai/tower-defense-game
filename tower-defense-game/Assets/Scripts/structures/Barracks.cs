@@ -47,7 +47,7 @@ public class Barracks : MonoBehaviour
                 break;
         }
         GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
-        troop.GetComponent<PlayerBattleSystem>().setBarracks(this);
+        troop.GetComponent<TroopBattleSystem>().setBarracks(this);
         currentTroops++; 
     }
 

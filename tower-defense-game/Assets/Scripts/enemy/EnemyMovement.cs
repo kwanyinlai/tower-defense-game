@@ -109,11 +109,11 @@ public class EnemyMovement : MonoBehaviour
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
-        if (PlayerMovement.troops.Count == 0)
+        if (TroopMovement.troops.Count == 0)
         {
             return null;
         }
-        foreach (var enemy in PlayerMovement.troops)
+        foreach (var enemy in TroopMovement.troops)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 

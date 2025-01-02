@@ -121,7 +121,7 @@ public class TroopManagment : MonoBehaviour
     void StopAndClearSelecting(){
         selecting = false;
         foreach(GameObject troop in selected){
-            PlayerMovement troopScript = troop.GetComponent<PlayerMovement>();
+            TroopMovement troopScript = troop.GetComponent<TroopMovement>();
             troopScript.underSelection=false;
             troopScript.commandingPlayer=null;
 
@@ -132,14 +132,14 @@ public class TroopManagment : MonoBehaviour
 
     void SelectTroops(){
                 
-        foreach (GameObject troop in PlayerMovement.troops)
+        foreach (GameObject troop in TroopMovement.troops)
         {
             Vector3 playerPosition = transform.position;
             Vector3 troopPosition = troop.transform.position;
             playerPosition.y = 0f;
             troopPosition.y = 0f;
 
-            PlayerMovement troopScript = troop.GetComponent<PlayerMovement>();
+            TroopMovement troopScript = troop.GetComponent<TroopMovement>();
             if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && 
                     !selected.Contains(troop) && 
                    troopScript.underSelection==false)
@@ -179,7 +179,7 @@ public class TroopManagment : MonoBehaviour
         GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,-3f), transform.rotation);
         foreach (GameObject troop in selected)
         {
-            PlayerMovement troopScript = troop.GetComponent<PlayerMovement>();
+            TroopMovement troopScript = troop.GetComponent<TroopMovement>();
             troopScript.commandingPlayer = null;
             troopScript.waypoint = deployedPoint;
             deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);

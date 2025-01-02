@@ -9,20 +9,46 @@ public class GridSystem : MonoBehaviour
     public static float tileSize = 4f;
 
     private bool[,] grid;
+    private int[,] territoryGrid; //0 for not territory, 1 not -> territory, 2 for territory, 3 for territory -> not
+    public GameObject target;
+
 
     void Start()
     {
         //make all squares buidable
         grid = new bool[gridWidth, gridHeight];
+        territoryGrid = new int[gridWidth, gridHeight];
+        territoryGrid = new int[gridWidth, gridHeight];
         for (int x = 0; x < gridWidth; x++)
         {
             for (int z = 0; z < gridHeight; z++)
             {
                 grid[x, z] = true;
+                territoryGrid[x, z] = 0;
             }
         }
-
+        setStarterTerritory();
+        
+        
     }
+
+    void setStarterTerritory()
+    {
+        Vector3 pos = target.transform.position;
+        Vector3Int gridPos = CoordinatesToGrid(pos);
+        for(int i = gridPos.x - 5; i <= gridPos.x + 5; i++)
+        {
+            for(int j =  gridPos.z - 5; j <= gridPos.z + 5; j++)
+            {
+                float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
+                if(distSquared < 25) //Territory radius of 3 around the target
+                {
+                    territoryGrid[i, j] = 2;
+                }
+            }
+        }
+    }
+
 
     void GetFloorSize(){
 
@@ -48,7 +74,7 @@ public class GridSystem : MonoBehaviour
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
 
-                if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z])
+                if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z] || territoryGrid[x, z] != 2)
                 {
 
                     return false; 
@@ -59,12 +85,12 @@ public class GridSystem : MonoBehaviour
     }
 
 
-    public void OccupyArea(Vector3 coordinates, Vector2Int size)
+    public void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
     {
-        Vector3Int gridCoords = CoordinatesToGrid(coordinates);
-        for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
+        Vector3Int gridPos = CoordinatesToGrid(coordinates);
+        for (int x = gridPos.x; x < gridPos.x + size.x; x++)
         {
-            for (int z = gridCoords.z; z < gridCoords.z + size.y; z++)
+            for (int z = gridPos.z; z < gridPos.z + size.y; z++)
             {
 
 
@@ -72,6 +98,18 @@ public class GridSystem : MonoBehaviour
                 {
                     grid[x, z] = false;
 
+                }
+            }
+        }
+
+        for (int i = gridPos.x - range; i <= gridPos.x + size.x + range; i++)
+        {
+            for (int j = gridPos.z - range; j <= gridPos.z + size.y + range; j++)
+            {   
+                float distSquared = Mathf.Pow(i - gridPos.x - size.x/2, 2) + Mathf.Pow(j - gridPos.z - size.y/2, 2);
+                if (distSquared < Mathf.Pow(range, 2) && territoryGrid[i, j] != 2) //Territory radius of 3 around the target
+                {
+                    territoryGrid[i, j] = 2; //TODO: When implementing wave system, change to 1
                 }
             }
         }

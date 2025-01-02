@@ -66,7 +66,8 @@ public class BuildMode : MonoBehaviour
         if (temp.IsBuildable(placementPosition))
         {
             Instantiate(temp.prefab, grid.GridToCoordinates(grid.CoordinatesToGrid(placementPosition)), grid.SnapRotation(transform.rotation));
-            grid.OccupyArea(placementPosition,temp.size);
+            Barracks barrackScript = temp.prefab.GetComponent<Barracks>();
+            grid.OccupyArea(placementPosition,temp.size, barrackScript.getRange());
         }
         else
         {

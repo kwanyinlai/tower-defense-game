@@ -10,8 +10,6 @@ public class Barracks : MonoBehaviour
     private int currentTroops = 0;
     private Transform troopEmptyObject;
 
-    public int range = 10; //for territory purposes, can also be used as actual range
-
     private void Start(){
         troopEmptyObject = GameObject.Find("troops").transform;
     }
@@ -26,10 +24,6 @@ public class Barracks : MonoBehaviour
         }
     }
 
-    public int getRange()
-    {
-        return range;
-    }
     private void SpawnTroop()
     {
         int direction = (int) Mathf.Round(transform.eulerAngles.y / 90); //0 for north (up), 1 for east (right) 2 for south (down), 3 for west (left).

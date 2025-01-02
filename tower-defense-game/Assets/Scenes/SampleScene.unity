@@ -2259,6 +2259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridWidth: 100
   gridHeight: 100
+  target: {fileID: 341426667}
 --- !u!4 &1022243305
 Transform:
   m_ObjectHideFlags: 0

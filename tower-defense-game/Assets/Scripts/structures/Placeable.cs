@@ -7,13 +7,12 @@ public class Placeable : MonoBehaviour
     private MeshRenderer meshRenderer;
     public Vector2Int size;
     protected Vector2Int gridCoords;
-    protected GridSystem grid;
     public GameObject prefab;
 
     void Start(){
         meshRenderer = GetComponent<MeshRenderer>();
-        grid = GameObject.Find("grid-manager").GetComponent<GridSystem>(); // issue is that this is called befor eobject is even instantiated so it doesnt exist
         size = CalculateOccupyingSize();
+        Debug.Log(meshRenderer.bounds.size);
     }
 
     Vector2Int CalculateOccupyingSize(){
@@ -22,6 +21,7 @@ public class Placeable : MonoBehaviour
     }
 
     public bool IsBuildable(Vector3 placementPosition){
-        return grid.IsTileAreaBuildable(placementPosition, size);
+
+        return GridSystem.IsTileAreaBuildable(placementPosition, size);
     }
 }

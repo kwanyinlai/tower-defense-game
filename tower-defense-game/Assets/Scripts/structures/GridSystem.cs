@@ -4,11 +4,11 @@ public class GridSystem : MonoBehaviour
 {
 
     // TODO: build menu for selecting buildings
-    public int gridWidth = 200;
-    public int gridHeight = 200;
+    public static int gridWidth = 200;
+    public static int gridHeight = 200;
     public static float tileSize = 4f;
 
-    private bool[,] grid;
+    private static bool[,] grid;
 
     void Start()
     {
@@ -28,7 +28,7 @@ public class GridSystem : MonoBehaviour
 
     }
 
-    public bool IsTileBuildable(Vector3 coordinates)
+    public static bool IsTileBuildable(Vector3 coordinates)
     {
         Vector3Int gridCoords = CoordinatesToGrid(coordinates);
 
@@ -40,7 +40,7 @@ public class GridSystem : MonoBehaviour
         return false;
     }
 
-    public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
+    public static bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
     {
         Vector3 gridCoords = CoordinatesToGrid(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
@@ -59,7 +59,7 @@ public class GridSystem : MonoBehaviour
     }
 
 
-    public void OccupyArea(Vector3 coordinates, Vector2Int size)
+    public static void OccupyArea(Vector3 coordinates, Vector2Int size)
     {
         Vector3Int gridCoords = CoordinatesToGrid(coordinates);
         for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
@@ -92,19 +92,19 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    public Vector3Int CoordinatesToGrid(Vector3 coordinates)
+    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
     {
-        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2;
+        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; // this could be broken i think
         int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
         return new Vector3Int(x,0,z);
     }
 
-    public Vector3 GridToCoordinates(Vector3 gridCoords)
+    public static Vector3 GridToCoordinates(Vector3 gridCoords)
     {
         return new Vector3((gridCoords.x - gridWidth/2) * tileSize, 0f, (gridCoords.z - gridHeight/2) * tileSize);
     }
 
-    public Quaternion SnapRotation(Quaternion currentRotation)
+    public static Quaternion SnapRotation(Quaternion currentRotation)
     {
         float yRotation = currentRotation.eulerAngles.y;
         yRotation = Mathf.Round(yRotation / 90f) * 90f;

@@ -6,14 +6,12 @@ public class BuildMode : MonoBehaviour
     public int offset = -7;
     public bool building = false;
     [SerializeField] private GameObject selectedBuilding;
-    private GridSystem grid; 
     public bool buildMenu;
 
 
 
 
     void Start(){
-        grid = GameObject.Find("grid-manager").GetComponent<GridSystem>();
         buildMenu = true; 
         building=false;
     }
@@ -63,10 +61,11 @@ public class BuildMode : MonoBehaviour
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
         Placeable temp = selectedBuilding.GetComponent<Placeable>();
+        Debug.Log(temp);
         if (temp.IsBuildable(placementPosition))
         {
-            Instantiate(temp.prefab, grid.GridToCoordinates(grid.CoordinatesToGrid(placementPosition)), grid.SnapRotation(transform.rotation));
-            grid.OccupyArea(placementPosition,temp.size);
+            Instantiate(temp.prefab, GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(placementPosition)), GridSystem.SnapRotation(transform.rotation));
+            GridSystem.OccupyArea(placementPosition,temp.size);
         }
         else
         {

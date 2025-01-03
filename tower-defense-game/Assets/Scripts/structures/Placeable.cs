@@ -12,7 +12,6 @@ public class Placeable : MonoBehaviour
     void Start(){
         meshRenderer = GetComponent<MeshRenderer>();
         size = CalculateOccupyingSize();
-        Debug.Log(meshRenderer.bounds.size);
     }
 
     Vector2Int CalculateOccupyingSize(){
@@ -21,7 +20,7 @@ public class Placeable : MonoBehaviour
     }
 
     public bool IsBuildable(Vector3 placementPosition){
-
+        Debug.Log(size);
         return GridSystem.IsTileAreaBuildable(placementPosition, size);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class BuildMode : MonoBehaviour
 {
     public GameObject barracksPrefab;
-    public int offset = -7;
+    public int offset = -6;
     public bool building = false;
     [SerializeField] private GameObject selectedBuilding;
     public bool buildMenu;

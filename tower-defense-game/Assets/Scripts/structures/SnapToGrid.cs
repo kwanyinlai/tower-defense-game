@@ -6,7 +6,7 @@ public class SnapToGrid : MonoBehaviour
     private Placeable placeable;
     private BuildMode buildMode;
 
-    private int offset = -7;
+    private int offset = -6;
 
     void Start(){
         placeable = GetComponent<Placeable>();

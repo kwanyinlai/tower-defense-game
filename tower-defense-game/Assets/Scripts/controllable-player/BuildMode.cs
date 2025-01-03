@@ -2,32 +2,28 @@ using UnityEngine;
 
 public class BuildMode : MonoBehaviour
 {
-    public GameObject barracksPrefab;
-    public int offset = -6;
-    public bool building = false;
+
+
+    public bool isBuilding = false;
     [SerializeField] private GameObject selectedBuilding;
     public bool buildMenu;
 
-
+    [Header("Building Prefabs")]
+    public GameObject barracksPrefab;
 
 
     void Start(){
         buildMenu = true; 
-        building=false;
+        isBuilding=false;
     }
     
     void Update()
     {
 
         if(!gameObject.GetComponent<TroopManagment>().inProgress){
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                building = !building;
-                
-                
-            }
+            
 
-            if(building){
+            if(isBuilding){
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     CloseBuildMenu();
@@ -50,6 +46,11 @@ public class BuildMode : MonoBehaviour
             }
             else{
                 HideBuildingOutline();
+                if (Input.GetKeyDown(KeyCode.B))
+                {
+                    isBuilding = true;
+                }
+
             }
         }
        
@@ -58,15 +59,17 @@ public class BuildMode : MonoBehaviour
     public void PlaceBuilding(GameObject selectedBuilding) // call the outline
     {
         
+        Placeable placeable = selectedBuilding.GetComponent<Placeable>();
+        int offset = placeable.offset;
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
-        Placeable temp = selectedBuilding.GetComponent<Placeable>();
-        if (temp.IsBuildable(placementPosition))
+        if (placeable.IsBuildable(placementPosition))
         {
-            Instantiate(temp.prefab, GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(placementPosition)), 
-                    GridSystem.SnapRotation(transform.rotation));
-            Barracks barrackScript = temp.prefab.GetComponent<Barracks>();
-            GridSystem.OccupyArea(placementPosition,temp.size, barrackScript.getRange());
+            GameObject building = Instantiate(placeable.prefab, 
+                            GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(placementPosition)), 
+                            GridSystem.SnapRotation(transform.rotation));
+            GridSystem.OccupyArea(placementPosition, placeable.size, 
+                            building.GetComponent<Building>().range);
         }
         else
         {
@@ -96,7 +99,7 @@ public class BuildMode : MonoBehaviour
     void CloseBuildMenu()
     {
         buildMenu = true;
-        building = false;
+        isBuilding = false;
         // selectedBuilding = null;
     }
     

@@ -11,7 +11,6 @@ public class TroopManagment : MonoBehaviour
     public List<GameObject> selected = new List<GameObject>();
     private bool selecting;
     public float selectionRadius = 8f;
-    [SerializeField] private GameObject commandMenu;
     [SerializeField] private bool menuOpen = false;
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject outlineWaypoint;
@@ -24,14 +23,13 @@ public class TroopManagment : MonoBehaviour
     void Start()
     {
         selecting = false;
-        commandMenu.SetActive(false);
         HideWaypointOutline();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!gameObject.GetComponent<BuildMode>().building){
+        if (!gameObject.GetComponent<BuildMode>().isBuilding){
             
         
             if(Input.GetKey(KeyCode.Space)){
@@ -42,7 +40,6 @@ public class TroopManagment : MonoBehaviour
             else{
                 selecting=false;
                 HideSelectingCircle();
-                // OpenTroopOrdersMenu();
                 ShowWaypointOutline();
             }
             if(menuOpen){
@@ -98,14 +95,7 @@ public class TroopManagment : MonoBehaviour
 
     }
 
-    void OpenTroopOrdersMenu(){
-        if(selected.Count>0){
-            commandMenu.SetActive(true);
-            menuOpen = true;
-        }
-        
-        
-    }
+
 
     void ShowWaypointOutline(){
         if(selected.Count>0){
@@ -170,10 +160,6 @@ public class TroopManagment : MonoBehaviour
         
     }
 
-
-    void HideTroopOrdersMenu(){
-        commandMenu.SetActive(false);
-    }
 
     void SetWaypoint(){
         GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,-3f), transform.rotation);

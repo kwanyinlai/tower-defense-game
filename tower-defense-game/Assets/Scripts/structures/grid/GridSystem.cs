@@ -73,10 +73,8 @@ public class GridSystem : MonoBehaviour
         {
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-
                 if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z] || territoryGrid[x, z] != 2)
                 {
-
                     return false; 
                 }
             }

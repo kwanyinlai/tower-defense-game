@@ -10,10 +10,11 @@ public class Barracks : MonoBehaviour
     private int currentTroops = 0;
     private Transform troopEmptyObject;
 
-    public int range = 10; //for territory purposes, can also be used as actual range
+    [SerializeField] private int range = 10; //for territory purposes, can also be used as actual range
 
     private void Start(){
         troopEmptyObject = GameObject.Find("troops").transform;
+        gameObject.GetComponent<Building>().range = range;
     }
 
     private void Update()

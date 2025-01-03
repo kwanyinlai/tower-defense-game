@@ -6,11 +6,12 @@ public class SnapToGrid : MonoBehaviour
     private Placeable placeable;
     private BuildMode buildMode;
 
-    private int offset = -6;
+    private int offset;
 
     void Start(){
         placeable = GetComponent<Placeable>();
         buildMode = commandingPlayer.GetComponent<BuildMode>();
+        offset = gameObject.GetComponent<Placeable>().offset;
     }
     
     void Update()
@@ -18,7 +19,7 @@ public class SnapToGrid : MonoBehaviour
         transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(commandingPlayer.position + commandingPlayer.forward * offset));
         transform.rotation = GridSystem.SnapRotation(commandingPlayer.rotation);
         
-        if(buildMode.building && !buildMode.buildMenu && placeable.IsBuildable(commandingPlayer.position + commandingPlayer.forward * offset)){
+        if(buildMode.isBuilding && !buildMode.buildMenu && placeable.IsBuildable(commandingPlayer.position + commandingPlayer.forward * offset)){
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{

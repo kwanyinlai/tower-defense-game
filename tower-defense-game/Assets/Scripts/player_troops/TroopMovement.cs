@@ -4,25 +4,35 @@ using System.Collections.Generic;
 
 public class TroopMovement : MonoBehaviour
 {
-    public float aggroRange = 10.0f;
-    public Transform target;
-    [SerializeField] private Transform commander;
-    private NavMeshAgent agent;
+    public float aggroRange = 10.0f; // range which troop engages enemy
+    public Transform enemyTarget;
     private BattleSystem targetStats;
+
+    private NavMeshAgent agent;
+
     private Vector3 idleTransform;
     private Vector3 idleStartPos;
-    [SerializeField] private bool inCombat = false;
     public float idleRange = 10.0f;
-    public float range = 5.0f;
+
+
+    private bool inCombat = false;
+    
+    public float attackRange = 5.0f;
     public int dmg = 10;
     private float atkCooldown = 1.5f;
     private float atkTimer = 0f;
-    public static List<GameObject> troops = new List<GameObject>();
     public GameObject bulletPrefab; 
+
+
+    public static List<GameObject> troops = new List<GameObject>();
+
+
     [SerializeField] private GameObject selectorCircle;
     public bool underSelection=false;
+
+
     public GameObject commandingPlayer;
-    public GameObject waypoint;
+    public GameObject waypoint; // maybe these shouldn't be public?
     
 
 
@@ -54,15 +64,17 @@ public class TroopMovement : MonoBehaviour
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){
             ActivateSelectingCircle();
+            
         }
         else{
+
             DeactivateSelectingCircle();
         }
         Transform copy = GetClosestEnemyInRange();
         if (copy != null)
         {
             inCombat = true;
-            target = copy;
+            enemyTarget = copy;
         }
         else
         {   
@@ -134,7 +146,7 @@ public class TroopMovement : MonoBehaviour
             BulletScript bulletScript = bullet.GetComponent<BulletScript>();
             if (bulletScript != null)
             {
-                bulletScript.SetTarget(target);
+                bulletScript.SetTarget(enemyTarget);
             }
         }
         atkTimer = atkCooldown;
@@ -143,9 +155,9 @@ public class TroopMovement : MonoBehaviour
   
     void FightEnemyInRange(){
         
-        targetStats = target.GetComponent<BattleSystem>(); 
-        float distance = Vector3.Distance(transform.position, target.position);
-        if (distance <= range && agent.velocity.magnitude <= 0.1f) {
+        targetStats = enemyTarget.GetComponent<BattleSystem>(); 
+        float distance = Vector3.Distance(transform.position, enemyTarget.position);
+        if (distance <= attackRange && agent.velocity.magnitude <= 0.1f) {
             agent.isStopped = true;
             if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)  { 
                 Attack(); 
@@ -153,15 +165,15 @@ public class TroopMovement : MonoBehaviour
         }
         else{ 
             agent.isStopped = false;
-            agent.SetDestination(target.position); 
+            agent.SetDestination(enemyTarget.position); 
         }
     }
 
 
     Transform GetClosestEnemyInRange()
     {
-        if (agent.isStopped && target!=null){
-            return target;
+        if (agent.isStopped && enemyTarget!=null){
+            return enemyTarget;
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
@@ -234,7 +246,7 @@ public class TroopMovement : MonoBehaviour
 
     
     void ActivateSelectingCircle(){
-        selectorCircle.transform.localScale= new Vector3(3,0.01f,3);
+        selectorCircle.transform.localScale= new Vector3(1,0.1f,1);
     }
 
     void DeactivateSelectingCircle(){

@@ -8,11 +8,15 @@ public class Placeable : MonoBehaviour
     public Vector2Int size;
     protected Vector2Int gridCoords;
     public GameObject prefab;
+    public int offset;
+    public int range;
 
     void Start(){
         meshRenderer = GetComponent<MeshRenderer>();
         size = CalculateOccupyingSize();
+        offset = CalculateOffset();
     }
+
 
     Vector2Int CalculateOccupyingSize(){
         return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
@@ -21,5 +25,9 @@ public class Placeable : MonoBehaviour
 
     public bool IsBuildable(Vector3 placementPosition){
         return GridSystem.IsTileAreaBuildable(placementPosition, size);
+    }
+
+    int CalculateOffset(){
+        return (System.Math.Max(size.x, size.y)/2) -6 ;
     }
 }

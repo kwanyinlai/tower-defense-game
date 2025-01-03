@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8187163844130606057}
   - component: {fileID: 7857123235583494790}
   - component: {fileID: 3550839501583598772}
+  - component: {fileID: -9110334081217531445}
   m_Layer: 0
   m_Name: barracks
   m_TagString: Untagged
@@ -124,3 +125,17 @@ MonoBehaviour:
   troopPrefab: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
   spawnInterval: 3
   maxTroops: 10
+  range: 10
+--- !u!114 &-9110334081217531445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 117855511310969354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517342cd28fc94830a0ae227231b1439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 10

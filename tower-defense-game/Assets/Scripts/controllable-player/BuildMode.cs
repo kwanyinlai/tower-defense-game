@@ -61,11 +61,12 @@ public class BuildMode : MonoBehaviour
         Vector3 placementPosition = transform.position + transform.forward * offset;
 
         Placeable temp = selectedBuilding.GetComponent<Placeable>();
-        Debug.Log(temp);
         if (temp.IsBuildable(placementPosition))
         {
-            Instantiate(temp.prefab, GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(placementPosition)), GridSystem.SnapRotation(transform.rotation));
-            GridSystem.OccupyArea(placementPosition,temp.size);
+            Instantiate(temp.prefab, GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(placementPosition)), 
+                    GridSystem.SnapRotation(transform.rotation));
+            Barracks barrackScript = temp.prefab.GetComponent<Barracks>();
+            GridSystem.OccupyArea(placementPosition,temp.size, barrackScript.getRange());
         }
         else
         {

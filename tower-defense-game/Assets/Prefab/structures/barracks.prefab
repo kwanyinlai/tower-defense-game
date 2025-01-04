@@ -124,8 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   troopPrefab: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
   spawnInterval: 3
-  maxTroops: 10
-  range: 10
+  maxTroops: 2
 --- !u!114 &-9110334081217531445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,4 +137,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 517342cd28fc94830a0ae227231b1439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 10

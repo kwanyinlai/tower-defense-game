@@ -8,8 +8,8 @@ using Unity.VisualScripting;
 public class EnemyMovement : MonoBehaviour
 {
     public float aggroRange = 10.0f;
-    public Transform target;
-    public Transform enemy_target;
+    public Transform baseTarget;
+    public Transform troopTarget;
     private NavMeshAgent agent;
     private BattleSystem targetStats;
     public float range = 5.0f;
@@ -29,9 +29,9 @@ public class EnemyMovement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
 
 
-        if (target != null)
+        if (baseTarget != null)
         {
-            targetStats = target.GetComponent<BattleSystem>(); 
+            targetStats = baseTarget.GetComponent<BattleSystem>(); 
         }
        
     }
@@ -39,38 +39,38 @@ public class EnemyMovement : MonoBehaviour
     void Update()
     {
 
-        enemy_target = GetClosestEnemyInRange();
-        if (enemy_target != null)
+        troopTarget = GetClosestEnemyInRange();
+        if (troopTarget != null)
         {
-            targetStats = enemy_target.GetComponent<BattleSystem>(); 
-            float distance = Vector3.Distance(transform.position, enemy_target.position);
+            targetStats = troopTarget.GetComponent<BattleSystem>(); 
+            float distance = Vector3.Distance(transform.position, troopTarget.position);
             if (distance <= range){ 
                 agent.isStopped = true;
                 if (atkTimer <= 0f){
-                    Attack(enemy_target);
+                    Attack(troopTarget);
                 }
             }
             else{ 
                 agent.isStopped = false;
-                agent.SetDestination(enemy_target.position); 
+                agent.SetDestination(troopTarget.position); 
             }
         }
-        else if (target != null) {
+        else if (baseTarget != null) {
             
-            float distance = Vector3.Distance(agent.transform.position, target.position);
+            float distance = Vector3.Distance(agent.transform.position, baseTarget.position);
             if (distance <= range) 
             {
                 agent.isStopped = true;
                 if( agent.velocity.magnitude <= 0.1f){
                     if (atkTimer <= 0f){
-                        Attack(target);
+                        Attack(baseTarget);
                     }
                 }
                
             }
             else { 
                 agent.isStopped = false; 
-                agent.SetDestination(target.position);
+                agent.SetDestination(baseTarget.position);
             }
         }
         if (atkTimer > 0f) {
@@ -103,9 +103,9 @@ public class EnemyMovement : MonoBehaviour
 
     Transform GetClosestEnemyInRange()
     {
-        if (agent.isStopped && enemy_target != null)
+        if (agent.isStopped && troopTarget != null)
         {
-            return enemy_target;
+            return troopTarget;
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &7338481829607000787
+--- !u!1001 &7779754398210173838
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 86925410923215179, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.234631
+      value: 4.7451515
       objectReference: {fileID: 0}
     - target: {fileID: 86925410923215179, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.9674716
+      value: 9.866937
       objectReference: {fileID: 0}
     - target: {fileID: 86925410923215179, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.947071
+      value: -8.51525
       objectReference: {fileID: 0}
     - target: {fileID: 86925410923215179, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       propertyPath: m_LocalRotation.w
@@ -68,49 +68,51 @@ PrefabInstance:
     - {fileID: 3631018139976100572, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     - {fileID: 8363124638678097964, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     m_RemovedGameObjects:
-    - {fileID: 5154190539701572675, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
+    - {fileID: 7663351754719727365, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
+    - {fileID: 7266250942620803564, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 616172689346916720}
+      addedObject: {fileID: 8491833000665746621}
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6010224889364962950}
+      addedObject: {fileID: 3885593972662341968}
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2201204520418350857}
+      addedObject: {fileID: 2052587566374734930}
   m_SourcePrefab: {fileID: 100100000, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
---- !u!1 &8045826729611782434 stripped
+--- !u!1 &7027937552822798463 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
-  m_PrefabInstance: {fileID: 7338481829607000787}
+  m_PrefabInstance: {fileID: 7779754398210173838}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &616172689346916720
+--- !u!114 &8491833000665746621
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8045826729611782434}
+  m_GameObject: {fileID: 7027937552822798463}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 700e422f34b66478bbd055dd10634ccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   aggroRange: 10
-  target: {fileID: 0}
-  enemy_target: {fileID: 0}
+  baseTarget: {fileID: 4297677168834720841, guid: 87d723e00b62349bba774cf272424160, type: 3}
+  troopTarget: {fileID: 0}
   range: 5
   dmg: 10
+  atkTimer: 0
   bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
---- !u!114 &6010224889364962950
+--- !u!114 &3885593972662341968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8045826729611782434}
+  m_GameObject: {fileID: 7027937552822798463}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a654ef1a08674510bb5e25f892ccc58, type: 3}
@@ -118,11 +120,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
---- !u!33 &2201204520418350857
+--- !u!33 &2052587566374734930
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8045826729611782434}
+  m_GameObject: {fileID: 7027937552822798463}
   m_Mesh: {fileID: -2432090755550338912, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}

@@ -28,6 +28,7 @@ public class TroopMovement : MonoBehaviour
 
 
     [SerializeField] private GameObject selectorCircle;
+    [SerializeField] private GameObject indicator;
     public bool underSelection=false;
 
 
@@ -88,6 +89,7 @@ public class TroopMovement : MonoBehaviour
             FightEnemyInRange();
         } 
         else {      
+
             if(underSelection){
                
                 FollowCommander();
@@ -95,6 +97,8 @@ public class TroopMovement : MonoBehaviour
             else{
                 if(waypoint!=null){
                     GoToWaypoint();
+                    
+                    
                 }
                 else{
                     Idle();
@@ -105,6 +109,9 @@ public class TroopMovement : MonoBehaviour
             
             
         }
+        Debug.Log(agent.isStopped);
+
+        PointIndicatorTowardsCommander();
 
 
         
@@ -120,11 +127,13 @@ public class TroopMovement : MonoBehaviour
         if (dist >= idleRange)
         {
             idleStartPos = transform.position;
+            Debug.Log("we're here though??");
         }
         if (dist >= idleRange || dist2 <= 3f)
         {
             idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
             agent.SetDestination(idleTransform);
+            Debug.Log("are we here?");
         }
     }
 
@@ -253,7 +262,20 @@ public class TroopMovement : MonoBehaviour
         selectorCircle.transform.localScale= new Vector3(0f,0f,0f);
     }
     
-
+    void PointIndicatorTowardsCommander(){
+        if(underSelection || waypoint !=null){
+            indicator.transform.localScale = new Vector3(1f,1f,1f);
+            if(underSelection){
+                indicator.transform.LookAt(commandingPlayer.transform);
+            }
+            else{
+                indicator.transform.LookAt(waypoint.transform);
+            }
+        }
+        else{
+            indicator.transform.localScale = Vector3.zero;
+        }
+    }
     
 
 }

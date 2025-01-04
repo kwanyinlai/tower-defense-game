@@ -32,12 +32,11 @@ public class BuildMode : MonoBehaviour
                     OpenBuildMenu();
                 }
                 else{
-                    ShowBuildingOutline();
                     
                     if (Input.GetKeyDown(KeyCode.Return)){
                         
                         PlaceBuilding();
-                        CloseBuildMenu();
+                        // CloseBuildMenu();
                     }
                 }
 
@@ -45,7 +44,6 @@ public class BuildMode : MonoBehaviour
 
             }
             else{
-                HideBuildingOutline();
                 if (Input.GetKeyDown(KeyCode.B))
                 {
                     isBuilding = true;
@@ -69,28 +67,17 @@ public class BuildMode : MonoBehaviour
             GameObject building = Instantiate(placeable.prefab, 
                             selectedBuilding.transform.position, 
                             selectedBuilding.transform.rotation);
-            Debug.Log(selectedBuilding.transform.position);
             GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
         }
         else
         {
-            Debug.Log("not buildable?");
+        Debug.Log("not buildable?");
             
         }
     }
 
-    void ShowBuildingOutline(){
-        
-      
-        selectedBuilding.transform.localScale= new Vector3(2f,2f,2f);
-            
-        
-    }
 
-    void HideBuildingOutline(){
-        selectedBuilding.transform.localScale= new Vector3(0f,0f,0f);
-    }
 
     void OpenBuildMenu()
     {

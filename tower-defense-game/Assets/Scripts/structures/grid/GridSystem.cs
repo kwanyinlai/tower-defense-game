@@ -95,6 +95,9 @@ public class GridSystem : MonoBehaviour
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
                     grid[x, z] = false;
+                    Debug.Log("x="+x);
+                    Debug.Log("z="+z);
+                    
 
                 }
             }

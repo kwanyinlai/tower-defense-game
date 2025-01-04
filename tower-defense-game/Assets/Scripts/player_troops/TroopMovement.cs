@@ -255,7 +255,7 @@ public class TroopMovement : MonoBehaviour
 
     
     void ActivateSelectingCircle(){
-        selectorCircle.transform.localScale= new Vector3(1,0.1f,1);
+        selectorCircle.transform.localScale= new Vector3(1,0.001f,1);
     }
 
     void DeactivateSelectingCircle(){
@@ -264,13 +264,14 @@ public class TroopMovement : MonoBehaviour
     
     void PointIndicatorTowardsCommander(){
         if(underSelection || waypoint !=null){
-            indicator.transform.localScale = new Vector3(1f,1f,1f);
+            indicator.transform.localScale = new Vector3(1f,0.001f,1f);
             if(underSelection){
                 indicator.transform.LookAt(commandingPlayer.transform);
             }
             else{
                 indicator.transform.LookAt(waypoint.transform);
             }
+            indicator.transform.rotation *= Quaternion.Euler(0f, -90f, 0f);
         }
         else{
             indicator.transform.localScale = Vector3.zero;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BuildMode : MonoBehaviour
 {
-
+    private GameObject structureParentClass;
 
     public bool isBuilding = false;
     [SerializeField] private GameObject selectedBuilding;
@@ -15,6 +15,7 @@ public class BuildMode : MonoBehaviour
     void Start(){
         buildMenu = true; 
         isBuilding=false;
+        structureParentClass=GameObject.Find("structures");
     }
     
     void Update()
@@ -69,7 +70,8 @@ public class BuildMode : MonoBehaviour
         {
             GameObject building = Instantiate(placeable.prefab, 
                             selectedBuilding.transform.position, 
-                            selectedBuilding.transform.rotation);
+                            selectedBuilding.transform.rotation,
+                            structureParentClass.transform);
             GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
         }

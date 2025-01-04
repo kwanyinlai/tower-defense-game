@@ -68,17 +68,15 @@ public class TroopManagment : MonoBehaviour
                         break;
                         */
                     case bool _ when Input.GetKeyDown(KeyCode.Return):
-                        Debug.Log("test");
                         SetWaypoint();
-                        ValidMenuSelection();
+                        ValidInput();
                         break;
                     case bool _ when Input.GetKeyDown(KeyCode.Space):
                         placingWaypoint = false; // close menu but keep selecting
                         isSelecting = true;
                         break;
                     case bool _ when Input.GetKeyDown(KeyCode.Escape):
-                        placingWaypoint = false; // cancel selecting and menu if escape
-                        StopAndClearSelecting();
+                        ValidInput(); // do nothing just close menu
                         break;
                 }
                 
@@ -155,7 +153,7 @@ public class TroopManagment : MonoBehaviour
         selectorCircle.transform.localScale = new Vector3(0,0,0);
     }
 
-    void ValidMenuSelection(){
+    void ValidInput(){
         placingWaypoint = false;
         StopAndClearSelecting();
         

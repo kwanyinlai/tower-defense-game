@@ -29,7 +29,7 @@ public class TroopBattleSystem : BattleSystem
                     
 
                 foreach(GameObject player in Player.players){
-                    List<GameObject> selected = player.GetComponent<TroopManagment>().selected;
+                    List<GameObject> selected = player.GetComponent<TroopManagment>().selectedTroops;
                     if(selected.Contains(troop)){
                         selected.Remove(troop);
                     }

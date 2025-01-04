@@ -12,7 +12,7 @@ public class EnemyBattleSystem : BattleSystem
         
         EnemyMovement.enemies.Remove(gameObject);
         foreach(GameObject player in Player.players){
-            List<GameObject> list = player.GetComponent<TroopManagment>().selected;
+            List<GameObject> list = player.GetComponent<TroopManagment>().selectedTroops;
             if (list.Contains(gameObject)){
                 list.Remove(gameObject);
                 break;

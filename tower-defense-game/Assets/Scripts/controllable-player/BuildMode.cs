@@ -20,10 +20,12 @@ public class BuildMode : MonoBehaviour
     void Update()
     {
 
-        if(!gameObject.GetComponent<TroopManagment>().inProgress){
+        if(!gameObject.GetComponent<TroopManagment>().managingTroops){
             
 
+
             if(isBuilding){
+               
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     CloseBuildMenu();
@@ -47,6 +49,7 @@ public class BuildMode : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.B))
                 {
                     isBuilding = true;
+                    
                 }
 
             }

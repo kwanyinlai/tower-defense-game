@@ -693,7 +693,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 517342cd28fc94830a0ae227231b1439, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 10
 --- !u!1 &273975657
 GameObject:
   m_ObjectHideFlags: 0
@@ -2542,7 +2541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBuilding: 0
-  selectedBuilding: {fileID: 7042392463264359992, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+  selectedBuilding: {fileID: 2031011743}
   buildMenu: 0
   barracksPrefab: {fileID: 117855511310969354, guid: cd9e86375175b4fae93f4caedcd63103, type: 3}
 --- !u!1 &1228363591
@@ -2804,6 +2803,11 @@ GameObject:
 Transform:
   m_CorrespondingSourceObject: {fileID: 473078795802067802, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
   m_PrefabInstance: {fileID: 638059551}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2031011743 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7042392463264359992, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+  m_PrefabInstance: {fileID: 758419812}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2059617724
 PrefabInstance:

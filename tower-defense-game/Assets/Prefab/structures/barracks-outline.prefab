@@ -138,4 +138,3 @@ MonoBehaviour:
   size: {x: 0, y: 0}
   prefab: {fileID: 117855511310969354, guid: cd9e86375175b4fae93f4caedcd63103, type: 3}
   offset: 0
-  range: 0

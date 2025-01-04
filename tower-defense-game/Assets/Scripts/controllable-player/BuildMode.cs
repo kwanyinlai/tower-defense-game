@@ -36,7 +36,7 @@ public class BuildMode : MonoBehaviour
                     
                     if (Input.GetKeyDown(KeyCode.Return)){
                         
-                        PlaceBuilding(selectedBuilding);
+                        PlaceBuilding();
                         CloseBuildMenu();
                     }
                 }
@@ -56,19 +56,21 @@ public class BuildMode : MonoBehaviour
        
     }
 
-    public void PlaceBuilding(GameObject selectedBuilding) // call the outline
+    public void PlaceBuilding() // call the outline
     {
         
         Placeable placeable = selectedBuilding.GetComponent<Placeable>();
-        int offset = placeable.offset;
-        Vector3 placementPosition = transform.position + transform.forward * offset;
 
-        if (placeable.IsBuildable(placementPosition))
+
+        
+
+        if (placeable.IsBuildable(selectedBuilding.transform.position))
         {
             GameObject building = Instantiate(placeable.prefab, 
-                            GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(placementPosition)), 
-                            GridSystem.SnapRotation(transform.rotation));
-            GridSystem.OccupyArea(placementPosition, placeable.size, 
+                            selectedBuilding.transform.position, 
+                            selectedBuilding.transform.rotation);
+            Debug.Log(selectedBuilding.transform.position);
+            GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
         }
         else

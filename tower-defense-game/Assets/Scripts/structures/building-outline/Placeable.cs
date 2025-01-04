@@ -9,12 +9,12 @@ public class Placeable : MonoBehaviour
     protected Vector2Int gridCoords;
     public GameObject prefab;
     public int offset;
-    public int range;
 
     void Start(){
         meshRenderer = GetComponent<MeshRenderer>();
         size = CalculateOccupyingSize();
         offset = CalculateOffset();
+        Debug.Log("offset = " + offset);
     }
 
 
@@ -28,6 +28,6 @@ public class Placeable : MonoBehaviour
     }
 
     int CalculateOffset(){
-        return (System.Math.Max(size.x, size.y)/2) -6 ;
+        return -(System.Math.Max(size.x, size.y)/2) -6 ;
     }
 }

@@ -18,8 +18,8 @@ public class SnapToGrid : MonoBehaviour
     {
         transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(commandingPlayer.position + commandingPlayer.forward * offset));
         transform.rotation = GridSystem.SnapRotation(commandingPlayer.rotation);
-        
-        if(buildMode.isBuilding && !buildMode.buildMenu && placeable.IsBuildable(commandingPlayer.position + commandingPlayer.forward * offset)){
+        Debug.Log("outline: "+ transform.position);
+        if(buildMode.isBuilding && !buildMode.buildMenu && placeable.IsBuildable(transform.position)){
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{

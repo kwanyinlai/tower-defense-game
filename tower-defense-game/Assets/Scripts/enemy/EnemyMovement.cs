@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using System.Runtime.Serialization.Json;
 
 
 
@@ -10,6 +11,7 @@ public class EnemyMovement : MonoBehaviour
     public float aggroRange = 10.0f;
     public Transform baseTarget;
     public Transform troopTarget;
+    public Transform barracksTarget;
     private NavMeshAgent agent;
     private BattleSystem targetStats;
     public float range = 5.0f;
@@ -73,6 +75,27 @@ public class EnemyMovement : MonoBehaviour
                 agent.SetDestination(baseTarget.position);
             }
         }
+        else if (barracksTarget != null)
+            {
+            float distance = Vector3.Distance(agent.transform.position, barracksTarget.position);
+            if (distance <= range)
+            {
+                agent.isStopped = true;
+                if (atkTimer <= 0f)
+                {
+                    Attack(barracksTarget);
+                }
+            }
+            else
+            {
+                agent.isStopped = false;
+                agent.SetDestination(barracksTarget.position);
+            }
+            }
+         else
+            {
+             agent.isStopped = true;
+            }
         if (atkTimer > 0f) {
             atkTimer -= Time.deltaTime;
         } else

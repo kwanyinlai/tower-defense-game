@@ -22,8 +22,8 @@ public class HealthBar : MonoBehaviour
         health = target.GetComponent<BattleSystem>();
         healthSlider = GetComponent<Slider>();
         UpdateHealthBar();
+        Debug.Log(transform.parent.gameObject.name);
         opacity = transform.parent.gameObject.GetComponent<CanvasGroup>();
-        Debug.Log(opacity.alpha);
     }
 
     void Update()
@@ -66,6 +66,7 @@ public class HealthBar : MonoBehaviour
     void ShowHealthBar()
     {
         gameObject.transform.localScale = new Vector3(1f,1f, 1f);
+        Debug.Log(opacity);
         opacity.alpha = 1f; 
     }
 

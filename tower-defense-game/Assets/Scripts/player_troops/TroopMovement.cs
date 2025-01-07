@@ -16,6 +16,9 @@ public class TroopMovement : MonoBehaviour
 
 
     private bool inCombat = false;
+    public bool InCombat{
+        get{ return inCombat; }
+    }
     
     public float attackRange = 5.0f;
     public int dmg = 10;
@@ -109,7 +112,6 @@ public class TroopMovement : MonoBehaviour
             
             
         }
-        Debug.Log(agent.isStopped);
 
         PointIndicatorTowardsCommander();
 
@@ -127,13 +129,11 @@ public class TroopMovement : MonoBehaviour
         if (dist >= idleRange)
         {
             idleStartPos = transform.position;
-            Debug.Log("we're here though??");
         }
         if (dist >= idleRange || dist2 <= 3f)
         {
             idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
             agent.SetDestination(idleTransform);
-            Debug.Log("are we here?");
         }
     }
 
@@ -146,6 +146,7 @@ public class TroopMovement : MonoBehaviour
 
     void Attack()
     {
+        transform.LookAt(enemyTarget);
         Vector3 bulletPos = transform.position;
         Collider collider = this.GetComponent<Collider>();
         bulletPos.y += collider.bounds.size.y * (0.75f);
@@ -179,9 +180,10 @@ public class TroopMovement : MonoBehaviour
     }
 
 
-    Transform GetClosestEnemyInRange()
+    public Transform GetClosestEnemyInRange()
     {
-        if (agent.isStopped && enemyTarget!=null){
+
+        if (agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
             return enemyTarget;
         }
         GameObject closestEnemy = null;
@@ -189,10 +191,11 @@ public class TroopMovement : MonoBehaviour
         if (EnemyMovement.enemies.Count == 0 ){
             return null;
         }
+
         foreach (var enemy in EnemyMovement.enemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
-
+            
             if (distance <= aggroRange && distance < closestDistance)
             {
                 closestEnemy = enemy;
@@ -200,9 +203,13 @@ public class TroopMovement : MonoBehaviour
             }
         }
         
-        if (closestEnemy == null) { return null; }
+        if (closestEnemy == null) {
+            return enemyTarget; 
+        }
+
         return closestEnemy.transform;
     }
+
     void GoToWaypoint(){
         if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 5f){
             DeleteFromWaypoint();

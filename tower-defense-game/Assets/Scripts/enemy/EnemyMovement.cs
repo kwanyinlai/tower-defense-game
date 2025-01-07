@@ -24,7 +24,7 @@ public class EnemyMovement : MonoBehaviour
 
  
 
-     void Start()
+    void Start()
     {
         enemies.Add(gameObject);
     
@@ -107,7 +107,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Attack(Transform bulletTarget)
     {
-        
+        transform.LookAt(bulletTarget);
         Vector3 bulletPos = transform.position;
         Collider collider = this.GetComponent<Collider>();
         bulletPos.y += collider.bounds.size.y * (0.75f);

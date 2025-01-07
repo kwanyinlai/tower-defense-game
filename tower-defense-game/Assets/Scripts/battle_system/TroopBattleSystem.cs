@@ -41,4 +41,24 @@ public class TroopBattleSystem : BattleSystem
 
         base.Die();
     }
+
+    public override void TakeDamage(int damage)
+    {
+
+        base.TakeDamage(damage);
+
+        TroopMovement temp = gameObject.GetComponent<TroopMovement>();
+
+        float tempRange = temp.aggroRange;
+        temp.aggroRange = 100f; // large enough to encapsulate any enemy but to avoid
+                                // damage from artillery 
+        temp.enemyTarget = temp.GetClosestEnemyInRange();
+        temp.aggroRange = tempRange;
+
+        
+        
+
+
+    }
+    
 }

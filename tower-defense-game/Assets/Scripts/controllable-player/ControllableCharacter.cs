@@ -63,4 +63,6 @@ public class CharacterMovement : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
     }
+
+    
 }

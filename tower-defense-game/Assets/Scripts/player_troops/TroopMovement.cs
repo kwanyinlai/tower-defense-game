@@ -183,7 +183,7 @@ public class TroopMovement : MonoBehaviour
     public Transform GetClosestEnemyInRange()
     {
 
-        if (agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
+        if (agent!=null && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
             return enemyTarget;
         }
         GameObject closestEnemy = null;
@@ -211,7 +211,7 @@ public class TroopMovement : MonoBehaviour
     }
 
     void GoToWaypoint(){
-        if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 5f){
+        if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 1f){
             DeleteFromWaypoint();
         }
         else{
@@ -222,7 +222,8 @@ public class TroopMovement : MonoBehaviour
         
     }
 
-    public void DeleteFromWaypoint(){
+    public void DeleteFromWaypoint()
+    {
         if (waypoint!=null){
             waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
             waypoint = null;

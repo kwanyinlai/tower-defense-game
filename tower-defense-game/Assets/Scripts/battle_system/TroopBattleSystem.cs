@@ -50,8 +50,9 @@ public class TroopBattleSystem : BattleSystem
         TroopMovement temp = gameObject.GetComponent<TroopMovement>();
 
         float tempRange = temp.aggroRange;
-        temp.aggroRange = 100f; // large enough to encapsulate any enemy but to avoid
-                                // damage from artillery 
+        temp.aggroRange += 50f; // large enough to encapsulate any enemy but to avoid
+                                // damage from artillery (in case we implement super
+                                // long-range units)
         temp.enemyTarget = temp.GetClosestEnemyInRange();
         temp.aggroRange = tempRange;
 

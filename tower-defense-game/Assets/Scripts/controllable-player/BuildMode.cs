@@ -74,10 +74,11 @@ public class BuildMode : MonoBehaviour
                             structureParentClass.transform);
             GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
+            building.GetComponent<Building>().InstantiateBuilding(placeable.TempResource1, placeable.TempResource2);
         }
         else
         {
-        Debug.Log("not buildable?");
+            Debug.Log("not buildable?");
             
         }
     }

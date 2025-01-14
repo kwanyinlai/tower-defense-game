@@ -9,6 +9,15 @@ public class Placeable : MonoBehaviour
     protected Vector2Int gridCoords;
     public GameObject prefab;
     public int offset;
+    [SerializeField] private int tempResource1; 
+    public int TempResource1{
+        get{ return tempResource1;}
+    }
+    public int TempResource2{
+        get{ return tempResource2;}
+    }
+
+    [SerializeField] private int tempResource2;
 
     void Start(){
         meshRenderer = GetComponent<MeshRenderer>();

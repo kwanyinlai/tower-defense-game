@@ -8,6 +8,8 @@ public class SnapToGrid : MonoBehaviour
     private Placeable placeable;
     private BuildMode buildMode;
 
+
+
     private Vector3[] TILEOFFSET = {new Vector3(0f,0f,4f), new Vector3(0f,0f,-4f), 
                                   new Vector3(4f,0f,0f), new Vector3(-4f,0f,0f)};
 
@@ -23,6 +25,10 @@ public class SnapToGrid : MonoBehaviour
     {
         transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(commandingPlayer.position + commandingPlayer.forward * offset));
         transform.rotation = GridSystem.SnapRotation(commandingPlayer.rotation);
+
+ 
+
+
 
         if(buildMode.isBuilding && !buildMode.buildMenu && placeable.IsBuildable(gameObject.transform.position))
         {

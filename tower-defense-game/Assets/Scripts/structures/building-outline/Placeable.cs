@@ -9,15 +9,34 @@ public class Placeable : MonoBehaviour
     protected Vector2Int gridCoords;
     public GameObject prefab;
     public int offset;
-    [SerializeField] private int tempResource1; 
+    
+    [SerializeField] private Material bankruptMat;
+    [SerializeField] private Material normalMat;
+
+
+    [SerializeField] private int tempResource1 = 5; 
+
     public int TempResource1{
         get{ return tempResource1;}
     }
+
+    [SerializeField] private int tempResource2 = 5;
+
     public int TempResource2{
         get{ return tempResource2;}
     }
 
-    [SerializeField] private int tempResource2;
+    
+    void Update(){
+        if(ResourcePool.EnoughResources(tempResource1, tempResource2))
+        {
+            meshRenderer.material = normalMat;
+        
+        }
+        else{
+            meshRenderer.material = bankruptMat;
+        }
+    }
 
     void Start(){
         meshRenderer = GetComponent<MeshRenderer>();

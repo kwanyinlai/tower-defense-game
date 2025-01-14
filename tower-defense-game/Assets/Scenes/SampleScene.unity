@@ -783,7 +783,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 361362710}
-  - component: {fileID: 361362709}
+  - component: {fileID: 361362711}
   m_Layer: 0
   m_Name: shared-resource-pool
   m_TagString: Untagged
@@ -791,18 +791,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &361362709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 361362708}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73307d20b45764797b53dfbe55d3a16b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &361362710
 Transform:
   m_ObjectHideFlags: 0
@@ -818,6 +806,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &361362711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361362708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03477ef1421f0407bbdc3c4346356bd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1299,6 +1299,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1061572914}
     m_Modifications:
+    - target: {fileID: 484398474819610536, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+      propertyPath: normalMat
+      value: 
+      objectReference: {fileID: 2100000, guid: a5692cbc034fe4c8698198a73f6f147b, type: 2}
+    - target: {fileID: 484398474819610536, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+      propertyPath: bankruptMat
+      value: 
+      objectReference: {fileID: 2100000, guid: 8ec7a937664bf46b7b417847b570f634, type: 2}
+    - target: {fileID: 484398474819610536, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+      propertyPath: tempResource1
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 484398474819610536, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+      propertyPath: tempResource2
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1683215387745304613, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

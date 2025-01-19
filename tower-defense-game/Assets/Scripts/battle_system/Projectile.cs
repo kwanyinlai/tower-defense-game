@@ -4,6 +4,7 @@ public class BulletScript : MonoBehaviour
 {
     public float projectileSpeed = 10f;
     public int dmg = 10;
+
     [SerializeField]
     private Transform target;
     private Vector3 targetPos;

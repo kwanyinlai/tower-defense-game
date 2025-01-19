@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360d220152b3b401394f6aee3f844cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aggroRange: 5
+  aggroRange: 40
   enemyTarget: {fileID: 0}
   idleRange: 10
   attackRange: 5

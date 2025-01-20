@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class WaveTextScript : MonoBehaviour
+public class TextUIScript : MonoBehaviour
 {
     public TextMeshProUGUI waveText;
     public GameObject waveSystem;

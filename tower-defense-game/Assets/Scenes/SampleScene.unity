@@ -264,6 +264,8 @@ GameObject:
   - component: {fileID: 56384013}
   - component: {fileID: 56384012}
   - component: {fileID: 56384011}
+  - component: {fileID: 56384015}
+  - component: {fileID: 56384014}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -354,6 +356,32 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &56384014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56384009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 328e6f96a99041d4eb9025deb59bb8b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &56384015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 56384009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e86e1128c86f066418e616d497513548, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveText: {fileID: 1861386293}
+  waveSystem: {fileID: 1960461984}
 --- !u!1 &111092828
 GameObject:
   m_ObjectHideFlags: 0
@@ -2604,7 +2632,6 @@ GameObject:
   - component: {fileID: 1861386291}
   - component: {fileID: 1861386294}
   - component: {fileID: 1861386293}
-  - component: {fileID: 1861386292}
   m_Layer: 5
   m_Name: Wave Text
   m_TagString: Untagged
@@ -2631,20 +2658,6 @@ RectTransform:
   m_AnchoredPosition: {x: 100, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1861386292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1861386290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c82603297e566eb4f9be6db7abd23fba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waveText: {fileID: 1861386293}
-  waveSystem: {fileID: 1960461984}
 --- !u!114 &1861386293
 MonoBehaviour:
   m_ObjectHideFlags: 0

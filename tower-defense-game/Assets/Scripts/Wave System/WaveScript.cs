@@ -29,6 +29,7 @@ public class WaveScript : MonoBehaviour
             waveTimer = 0;
             EnemySpawnScript spawner = waveManager.GetComponent<EnemySpawnScript>();
             spawner.spawnEnemies(waveNum);
+            GridSystem.updateWaveTerritory();
         }
     }
 }

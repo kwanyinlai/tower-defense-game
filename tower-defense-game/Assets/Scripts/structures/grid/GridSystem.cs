@@ -82,6 +82,22 @@ public class GridSystem : MonoBehaviour
         return true;
     }
 
+    public static void updateWaveTerritory()
+    {
+        for(int i = 0; i < territoryGrid.GetLength(0); i++)
+        {
+            for(int j = 0; j < territoryGrid.GetLength(1); j++)
+            {
+                if (territoryGrid[i, j] == 1)
+                {
+                    territoryGrid[i, j] = 2;
+                } else if (territoryGrid[i, j] == 3)
+                {
+                    territoryGrid[i, j] = 4;
+                }
+            }
+        }
+    }
 
     public static void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
     {
@@ -95,10 +111,6 @@ public class GridSystem : MonoBehaviour
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
                     grid[x, z] = false;
-                    Debug.Log("x="+x);
-                    Debug.Log("z="+z);
-                    
-
                 }
             }
         }
@@ -110,7 +122,7 @@ public class GridSystem : MonoBehaviour
                 float distSquared = Mathf.Pow(i - gridPos.x - size.x/2, 2) + Mathf.Pow(j - gridPos.z - size.y/2, 2);
                 if (distSquared < Mathf.Pow(range, 2) && territoryGrid[i, j] != 2) //Territory radius of 3 around the target
                 {
-                    territoryGrid[i, j] = 2; //TODO: When implementing wave system, change to 1
+                    territoryGrid[i, j] = 1;
                 }
             }
         }

@@ -319,6 +319,8 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  timeToFade: 10
+  fadeTime: 10
 --- !u!1 &8461883299926002394
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,6 +334,7 @@ GameObject:
   - component: {fileID: 3655607998315927334}
   - component: {fileID: 6900767893359084357}
   - component: {fileID: 3087104007152008998}
+  - component: {fileID: 4031579210168498746}
   m_Layer: 5
   m_Name: health-bar-canvas (2)
   m_TagString: Untagged
@@ -435,3 +438,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
+--- !u!225 &4031579210168498746
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8461883299926002394}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

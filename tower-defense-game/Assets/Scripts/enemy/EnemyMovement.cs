@@ -7,7 +7,7 @@ public abstract class EnemyMovement : MonoBehaviour
 {
     public static List<GameObject> enemies = new List<GameObject>(); 
     public float aggroRange = 10.0f;
-    public Transform baseTarget;
+    public GameObject baseTarget;
     public Transform troopTarget;
     public Transform barracksTarget;
     protected UnityEngine.AI.NavMeshAgent agent;
@@ -25,16 +25,20 @@ public abstract class EnemyMovement : MonoBehaviour
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
 
-        if (baseTarget != null)
-        {
-            targetStats = baseTarget.GetComponent<BattleSystem>(); 
-        }
+        
        
     }
  
     void Update()
     {
 
+        if (baseTarget == null){
+            baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+        }
+        else{
+            targetStats = baseTarget.GetComponent<BattleSystem>(); 
+        }
+        
         troopTarget = GetClosestEnemyInRange();
         barracksTarget = GetClosestBarracksInRange();
         if (troopTarget != null)
@@ -54,20 +58,20 @@ public abstract class EnemyMovement : MonoBehaviour
         }
         else if (baseTarget != null) {
             
-            float distance = Vector3.Distance(agent.transform.position, baseTarget.position);
+            float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
             if (distance <= range) 
             {
                 agent.isStopped = true;
                 if( agent.velocity.magnitude <= 0.1f){
                     if (atkTimer <= 0f){
-                        Attack(baseTarget);
+                        Attack(baseTarget.transform);
                     }
                 }
                
             }
             else { 
                 agent.isStopped = false; 
-                agent.SetDestination(baseTarget.position);
+                agent.SetDestination(baseTarget.transform.position);
             }
         }
         else if (barracksTarget != null)

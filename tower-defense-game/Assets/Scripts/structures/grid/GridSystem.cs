@@ -11,11 +11,15 @@ public class GridSystem : MonoBehaviour
     private static bool[,] grid;
     private static int[,] territoryGrid; //0 for not territory, 1 not -> territory, 2 for territory, 3 for territory -> not
     public GameObject target;
+    private bool starterTerritoryIsAssigned;
 
-
+    public void StarterTerritoryNotAssigned(){
+        starterTerritoryIsAssigned = false;
+    }
     void Start()
     {
         //make all squares buidable
+    
         grid = new bool[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
@@ -27,13 +31,16 @@ public class GridSystem : MonoBehaviour
                 territoryGrid[x, z] = 0;
             }
         }
-        setStarterTerritory();
+        starterTerritoryIsAssigned = false;
         
         
     }
+    
 
-    void setStarterTerritory()
+
+    void SetStarterTerritory()
     {
+       
         Vector3 pos = target.transform.position;
         Vector3Int gridPos = CoordinatesToGrid(pos);
         for(int i = gridPos.x - 5; i <= gridPos.x + 5; i++)
@@ -47,6 +54,19 @@ public class GridSystem : MonoBehaviour
                 }
             }
         }
+    }
+
+    void Update(){
+        if(target==null){
+            target = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+        }
+        else{
+            if(!starterTerritoryIsAssigned){
+                SetStarterTerritory();
+                starterTerritoryIsAssigned = true;
+            }
+        }
+       
     }
 
 

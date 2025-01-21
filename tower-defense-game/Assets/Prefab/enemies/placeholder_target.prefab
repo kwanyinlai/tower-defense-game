@@ -133,6 +133,8 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  timeToFade: 10
+  fadeTime: 10
 --- !u!1 &3301065875759964040
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,7 +263,7 @@ GameObject:
   - component: {fileID: 6436285080798538964}
   - component: {fileID: 165750894513332467}
   - component: {fileID: 4542991278563306310}
-  - component: {fileID: 7220042482048247343}
+  - component: {fileID: 6192319775681049818}
   m_Layer: 0
   m_Name: placeholder_target
   m_TagString: Untagged
@@ -279,7 +281,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16.64, y: 0.99, z: -7.45}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7630895876647728659}
@@ -359,7 +361,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7220042482048247343
+--- !u!114 &6192319775681049818
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -368,11 +370,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5016562727076625669}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 359b9c747b5a04bca9f95895e6507166, type: 3}
+  m_Script: {fileID: 11500000, guid: fd6bc3a7bbf8d4f3a952b0f08603e63c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 0
+  currentHealth: -80
 --- !u!1 &5335319987279837176
 GameObject:
   m_ObjectHideFlags: 0

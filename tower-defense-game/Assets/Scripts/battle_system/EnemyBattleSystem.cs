@@ -17,8 +17,7 @@ public class EnemyBattleSystem : BattleSystem
                 list.Remove(gameObject);
                 break;
             }
-        } 
-        EnemyMovement.enemies.Remove(gameObject);
+        }
 
         base.Die();
     }

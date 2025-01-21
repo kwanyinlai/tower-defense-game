@@ -36,6 +36,7 @@ public abstract class EnemyMovement : MonoBehaviour
     {
 
         troopTarget = GetClosestEnemyInRange();
+        barracksTarget = GetClosestBarracksInRange();
         if (troopTarget != null)
         {
             targetStats = troopTarget.GetComponent<BattleSystem>(); 
@@ -122,5 +123,30 @@ public abstract class EnemyMovement : MonoBehaviour
         }
         if (closestEnemy == null) { return null; }
         return closestEnemy.transform;
+    }
+    public Transform GetClosestBarracksInRange()
+    {
+        if (barracksTarget != null)
+        {
+            return barracksTarget;
+        }
+        GameObject closestBarrack = null;
+        float closestDistance = aggroRange;
+        if (StructureBattleSystem.barracks.Count == 0)
+        {
+            return null;
+        }
+        foreach (var barrack in StructureBattleSystem.barracks)
+        {
+            float distance = Vector3.Distance(transform.position, barrack.transform.position);
+
+            if (distance <= aggroRange && distance < closestDistance)
+            {
+                closestBarrack = barrack;
+                closestDistance = distance;
+            }
+        }
+        if (closestBarrack == null) { return null; }
+        return closestBarrack.transform;
     }
 }

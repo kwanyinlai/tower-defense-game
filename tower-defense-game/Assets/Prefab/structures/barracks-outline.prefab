@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 8402850729352469539}
   - component: {fileID: 8727382702700250641}
   - component: {fileID: 484398474819610536}
-  - component: {fileID: 4266002973248569771}
   m_Layer: 0
   m_Name: barracks-outline
   m_TagString: Untagged
@@ -143,17 +142,3 @@ MonoBehaviour:
   normalMat: {fileID: 0}
   tempResource1: 5
   tempResource2: 5
---- !u!114 &4266002973248569771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7042392463264359992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 359b9c747b5a04bca9f95895e6507166, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0

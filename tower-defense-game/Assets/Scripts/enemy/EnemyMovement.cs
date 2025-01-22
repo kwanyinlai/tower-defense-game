@@ -83,6 +83,7 @@ public abstract class EnemyMovement : MonoBehaviour
                 if (atkTimer <= 0f)
                 {
                     Attack(barracksTarget);
+                    Debug.Log("attacking barracks");
                 }
             }
             else

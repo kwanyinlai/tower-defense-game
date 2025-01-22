@@ -968,7 +968,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   basePrefab: {fileID: 5016562727076625669, guid: 5a69574f93ad548e7a21b6b5f8140a61, type: 3}
-  instantiatePos: {x: 0, y: 2, z: 0}
+  instantiatePos: {x: 4, y: 2, z: 0}
 --- !u!4 &406839350
 Transform:
   m_ObjectHideFlags: 0

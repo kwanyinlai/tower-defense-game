@@ -183,7 +183,7 @@ public class TroopMovement : MonoBehaviour
     public Transform GetClosestEnemyInRange()
     {
 
-        if (agent!=null && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
+        if (agent!=null && agent.isOnNavMesh && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
             return enemyTarget;
         }
         GameObject closestEnemy = null;

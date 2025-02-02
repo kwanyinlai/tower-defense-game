@@ -102,6 +102,7 @@ MonoBehaviour:
   aggroRange: 10
   baseTarget: {fileID: 4297677168834720841, guid: 87d723e00b62349bba774cf272424160, type: 3}
   troopTarget: {fileID: 0}
+  barracksTarget: {fileID: 0}
   range: 5
   dmg: 10
   atkTimer: 0
@@ -120,6 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+  viewableTagList:
+  - Enemy
 --- !u!33 &2052587566374734930
 MeshFilter:
   m_ObjectHideFlags: 0

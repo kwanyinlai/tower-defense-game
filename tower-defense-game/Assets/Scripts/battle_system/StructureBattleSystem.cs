@@ -8,6 +8,7 @@ public class StructureBattleSystem : BattleSystem
     {
         barracks.Add(gameObject);
         currentHealth = maxHealth;
+        tagList = new HashSet<string>(viewableTagList);
     }
     protected override void Die()
     {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BulletScript : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class BulletScript : MonoBehaviour
     private Transform target;
     private Vector3 targetPos;
     private bool hasHit = false;
+
+    private HashSet<string> exceptionList; // List of Tags that the Bullet Cannot Hit, Uses a Set for Efficiency When Looking At Overlaps
+
 
     public void SetTarget(Transform bulletTarget)
     {
@@ -26,17 +30,16 @@ public class BulletScript : MonoBehaviour
 
     void Update()
     {
+        // Check if target is still alive
         if (target != null && !hasHit)
         {
             Vector3 dir = (targetPos - transform.position).normalized;
             transform.Translate(dir * projectileSpeed * Time.deltaTime, Space.World);  
 
-
+            // Failsafe for when target has moved from original posistion
             if (Vector3.Distance(transform.position, targetPos) <= 0.1f)
             {
-                
-                hasHit = true;
-                HitTarget();
+                Destroy(gameObject);
             }
         }
         else{
@@ -58,9 +61,20 @@ public class BulletScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform == target && !hasHit)
+        BattleSystem sys = collision.gameObject.GetComponent<BattleSystem>();
+        // Should only hit target if it is a hitable object (aka with a BattleSystem)
+        if(sys != null && exceptionList != null)
         {
-            HitTarget();
+            // Overlaps is very efficient and thus why using HashSets
+            if(!sys.GetTagList().Overlaps(exceptionList))
+            {
+                HitTarget();
+            }
         }
+    }
+
+    public void SetExceptionList(HashSet<string> tags)
+    {
+        exceptionList = tags;
     }
 }

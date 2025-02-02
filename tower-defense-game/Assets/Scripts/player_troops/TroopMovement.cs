@@ -25,6 +25,7 @@ public class TroopMovement : MonoBehaviour
     private float atkCooldown = 1.5f;
     private float atkTimer = 0f;
     public GameObject bulletPrefab; 
+    private HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
 
 
     public static List<GameObject> troops = new List<GameObject>();
@@ -156,6 +157,7 @@ public class TroopMovement : MonoBehaviour
             BulletScript bulletScript = bullet.GetComponent<BulletScript>();
             if (bulletScript != null)
             {
+                bulletScript.SetExceptionList(exceptionBulletList);
                 bulletScript.SetTarget(enemyTarget);
             }
         }

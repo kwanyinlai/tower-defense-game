@@ -147,6 +147,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+  viewableTagList:
+  - Troop
 --- !u!64 &4164009545557612017
 MeshCollider:
   m_ObjectHideFlags: 0

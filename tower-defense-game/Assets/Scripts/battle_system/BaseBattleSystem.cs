@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BaseBattleSystem : BattleSystem
 {
@@ -7,6 +8,7 @@ public class BaseBattleSystem : BattleSystem
     void Start()
     {
         currentHealth = maxHealth;
+        tagList = new HashSet<string>(viewableTagList);
     }
     protected override void Die()
     {

@@ -12,6 +12,7 @@ public class TroopBattleSystem : BattleSystem
     void Start()
     {
         currentHealth = maxHealth;
+        tagList = new HashSet<string>(viewableTagList);
     }
      
     protected override void Die(){

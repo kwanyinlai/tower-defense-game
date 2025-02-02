@@ -1,11 +1,14 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public abstract class BattleSystem : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;
 
-    
+    public string[] viewableTagList; // A Viewable List To Easily Modify Tags
+
+    protected HashSet<string> tagList;  // Uses a Set for Efficiency When Looking For Overlaps
 
     public float GetPercentageHP()
     {
@@ -28,6 +31,12 @@ public abstract class BattleSystem : MonoBehaviour
         Debug.Log($"{gameObject.name} has died!");
         Destroy(gameObject);  
     }
+
+    public HashSet<string> GetTagList() 
+    {
+        return tagList;
+    }
+
 }
 
 

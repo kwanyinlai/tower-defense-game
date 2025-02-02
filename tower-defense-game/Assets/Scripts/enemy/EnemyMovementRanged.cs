@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Json;
 public class EnemyMovementRanged : EnemyMovement
 {
     public GameObject bulletPrefab;
+    private HashSet<string> exceptionBulletList = new HashSet<string>{"Enemy"};
     
     public override void Attack(Transform bulletTarget)
     {
@@ -20,6 +21,7 @@ public class EnemyMovementRanged : EnemyMovement
             BulletScript bulletScript = bullet.GetComponent<BulletScript>();
             if (bulletScript != null)
             {
+                bulletScript.SetExceptionList(exceptionBulletList);
                 bulletScript.SetTarget(bulletTarget);
             }
         }

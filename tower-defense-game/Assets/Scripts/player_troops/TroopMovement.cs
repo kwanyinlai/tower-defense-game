@@ -2,42 +2,42 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
-public class TroopMovement : MonoBehaviour
+public abstract class TroopMovement : MonoBehaviour
 {
     public float aggroRange = 10.0f; // range which troop engages enemy
     public Transform enemyTarget;
-    private BattleSystem targetStats;
+    protected BattleSystem targetStats;
 
-    private NavMeshAgent agent;
+    protected NavMeshAgent agent;
 
-    private Vector3 idleTransform;
-    private Vector3 idleStartPos;
+    protected Vector3 idleTransform;
+    protected Vector3 idleStartPos;
     public float idleRange = 10.0f;
 
 
-    private bool inCombat = false;
+    protected bool inCombat = false;
     public bool InCombat{
         get{ return inCombat; }
     }
     
     public float attackRange = 5.0f;
     public int dmg = 10;
-    private float atkCooldown = 1.5f;
-    private float atkTimer = 0f;
-    public GameObject bulletPrefab; 
-    private HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
+    protected float atkCooldown = 1.5f;
+    protected float atkTimer = 0f;
+    protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
 
 
     public static List<GameObject> troops = new List<GameObject>();
 
 
-    [SerializeField] private GameObject selectorCircle;
-    [SerializeField] private GameObject indicator;
+    [SerializeField] protected GameObject selectorCircle;
+    [SerializeField] protected GameObject indicator;
     public bool underSelection=false;
 
 
     public GameObject commandingPlayer;
     public GameObject waypoint; // maybe these shouldn't be public?
+    public abstract void Attack();
     
 
 
@@ -143,33 +143,14 @@ public class TroopMovement : MonoBehaviour
         agent.SetDestination(commandingPlayer.transform.position); 
 
 
-    }
-
-    void Attack()
-    {
-        transform.LookAt(enemyTarget);
-        Vector3 bulletPos = transform.position;
-        Collider collider = this.GetComponent<Collider>();
-        bulletPos.y += collider.bounds.size.y * (0.75f);
-        if (bulletPrefab != null)
-        {
-            GameObject bullet = Instantiate(bulletPrefab, bulletPos, transform.rotation);
-            BulletScript bulletScript = bullet.GetComponent<BulletScript>();
-            if (bulletScript != null)
-            {
-                bulletScript.SetExceptionList(exceptionBulletList);
-                bulletScript.SetTarget(enemyTarget);
-            }
-        }
-        atkTimer = atkCooldown;
-    }
+    } 
 
   
     void FightEnemyInRange(){
         
         targetStats = enemyTarget.GetComponent<BattleSystem>(); 
         float distance = Vector3.Distance(transform.position, enemyTarget.position);
-        if (distance <= attackRange && agent.velocity.magnitude <= 0.1f) {
+        if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/) {
             agent.isStopped = true;
             if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)  { 
                 Attack(); 
@@ -287,9 +268,4 @@ public class TroopMovement : MonoBehaviour
             indicator.transform.localScale = Vector3.zero;
         }
     }
-    
-
 }
-
-
-

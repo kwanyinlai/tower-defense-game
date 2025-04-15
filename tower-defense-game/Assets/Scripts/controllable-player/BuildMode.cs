@@ -64,10 +64,10 @@ public class BuildMode : MonoBehaviour
         Placeable placeable = selectedBuilding.GetComponent<Placeable>();
 
 
-        
+
 
         if (placeable.IsBuildable(selectedBuilding.transform.position) &&
-            ResourcePool.EnoughResources(placeable.TempResource1, placeable.TempResource2))
+            ResourcePool.EnoughResources(placeable.RequiredResources))
         {
             GameObject building = Instantiate(placeable.prefab, 
                             selectedBuilding.transform.position, 
@@ -75,9 +75,8 @@ public class BuildMode : MonoBehaviour
                             structureParentClass.transform);
             GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
-            building.GetComponent<Building>().InstantiateBuilding(placeable.TempResource1, placeable.TempResource2);
-            ResourcePool.DepleteResource1(placeable.TempResource1);
-            ResourcePool.DepleteResource2(placeable.TempResource2);
+            building.GetComponent<Building>().InstantiateBuilding(placeable.RequiredResources);
+            ResourcePool.DepleteResource(placeable.RequiredResources);
         }
         else
         {

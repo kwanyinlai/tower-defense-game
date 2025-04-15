@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Placeable : MonoBehaviour
@@ -13,22 +14,14 @@ public class Placeable : MonoBehaviour
     [SerializeField] private Material bankruptMat;
     [SerializeField] private Material normalMat;
 
-
-    [SerializeField] private int tempResource1 = 5; 
-
-    public int TempResource1{
-        get{ return tempResource1;}
-    }
-
-    [SerializeField] private int tempResource2 = 5;
-
-    public int TempResource2{
-        get{ return tempResource2;}
-    }
-
+    private Dictionary<string, int> requiredResources = new Dictionary<string, int>();
     
+    public Dictionary<string, int> RequiredResources
+    {
+        get { return requiredResources; }
+    }
     void Update(){
-        if(ResourcePool.EnoughResources(tempResource1, tempResource2))
+        if(ResourcePool.EnoughResources(RequiredResources))
         {
             meshRenderer.material = normalMat;
         
@@ -43,6 +36,10 @@ public class Placeable : MonoBehaviour
         size = CalculateOccupyingSize();
         offset = CalculateOffset();
         Debug.Log("offset = " + offset);
+
+        //TODO: Remove and replace with code to actually add the correct resources based on building
+        requiredResources.Add("TestResource1", 5);
+        requiredResources.Add("TestResource2", 5);
     }
 
 

@@ -1,56 +1,71 @@
+using System.Collections.Generic;
+using Mono.Cecil;
 using UnityEngine;
 
 public class ResourcePool : MonoBehaviour
 {
-    [SerializeField] private static int tempResource1 = 10; // we can rename to whatever more appropriate when we 
-    [SerializeField] private static int tempResource2 = 10; // get to that stage e.g. wood
-
-
     
+    private static int numResources = 3;
+    private static Dictionary<string, int> resources = new Dictionary<string, int>();
+
+
+    //make sure to initialize all types of resources to a default value in start
+    private void Start()
+    {
+        resources["TestResource1"] = 10;
+        resources["TestResource2"] = 10;
+        resources["TestResource3"] = 10;
+    }
+
     void Update()
     {
         
     }
 
-    public static bool EnoughResources(int resource1, int resource2)
+    public static void AddResource(string resource, int amount)
     {
-        return resource1 <= tempResource1 && resource2 <= tempResource2;
+        resources[resource] += amount;
     }
 
-    public static void AddResource1(int resourceAmount) // rename as appropriate
+    public static bool DepleteResource(Dictionary<string, int> required)
     {
-        tempResource1 += resourceAmount;
-
+        if(EnoughResources(required) == false)
+        {
+            return false;
+        }
+        foreach (var elem in required)
+        {
+            resources[elem.Key] -= elem.Value;
+        }
+        return true;
     }
 
-    public static bool DepleteResource1(int resourceAmount)
-    {   
-        if(tempResource1 - resourceAmount >= 0){
-            tempResource1 -= resourceAmount;
-            Debug.Log(tempResource1);
-            Debug.Log("decrease by " + resourceAmount);
+    public static bool DepleteResource(string resource, int amount)
+    {
+        if(EnoughResources(resource, amount))
+        {
+            resources[resource] -= amount;
             return true;
         }
         return false;
-       
     }
 
-    public static void AddResource2(int resourceAmount) // again rename as appropriate
+
+    public static bool EnoughResources(Dictionary<string, int> required)
     {
-        tempResource2 += resourceAmount;
-
-    }
-
-    public static bool DepleteResource2(int resourceAmount)
-    {   
-        if(tempResource2 - resourceAmount >= 0){
-            tempResource2 -= resourceAmount;
-            return true;
+        foreach(var elem in required)
+        {
+            if (resources[elem.Key] < elem.Value)
+            {
+                return false;
+            }
         }
-        return false;
-       
+        return true;
     }
 
-    
-    
+    public static bool EnoughResources(string resource, int amount)
+    {
+        return resources[resource] >= amount;
+    }
+
 }

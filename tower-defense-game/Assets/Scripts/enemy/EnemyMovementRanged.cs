@@ -11,10 +11,14 @@ public class EnemyMovementRanged : EnemyMovement
     
     public override void Attack(Transform bulletTarget)
     {
-        transform.LookAt(bulletTarget);
-        Vector3 bulletPos = transform.position;
+
+        transform.LookAt(bulletTarget); 
+        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
+
+        
         Collider collider = this.GetComponent<Collider>();
-        bulletPos.y += collider.bounds.size.y * (0.75f);
+        Vector3 bulletPos = transform.position + new Vector3(0f, collider.bounds.size.y * (0.75f), 0); // Adds Vector For Y Axis To Shift Bullet To Head Level
+        // bulletPos.y += collider.bounds.size.y * (0.75f);
         if (bulletPrefab != null)
         {
             GameObject bullet = Instantiate(bulletPrefab, bulletPos, transform.rotation);

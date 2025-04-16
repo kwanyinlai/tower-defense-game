@@ -8,6 +8,8 @@ public class TroopMovementRanged : TroopMovement
     public override void Attack()
     {
         transform.LookAt(enemyTarget);
+        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
+        
         Vector3 bulletPos = transform.position;
         Collider collider = this.GetComponent<Collider>();
         bulletPos.y += collider.bounds.size.y * (0.75f);

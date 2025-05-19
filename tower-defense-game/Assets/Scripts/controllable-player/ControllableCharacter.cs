@@ -17,6 +17,7 @@ public class CharacterMovement : MonoBehaviour
     private int cameraState;
     private Vector3 posWhole;
     private Quaternion rotWhole;
+    private float camSpeed = 50f;
 
 
 
@@ -39,20 +40,24 @@ public class CharacterMovement : MonoBehaviour
         {
             cameraState++;
             cameraState %= 3;
-            movementType = "character";
         }
 
-        if(cameraState == 0)
+        if (cameraState == 0)
         {
-            camera.orthographicSize = 20f;;
+            camera.orthographicSize = 20f; ;
             cam.position = posWhole;
-        } else if (cameraState == 1)
+            movementType = "character";
+        }
+        else if (cameraState == 1)
         {
             camera.orthographicSize = 50f;
             cam.position = transform.position + posWhole;
-        } else
+            movementType = "observer";
+        }
+        else
         {
             cameraMovement();
+            movementType = "observer";
         }
 
         if (movementType == "character")
@@ -77,7 +82,6 @@ public class CharacterMovement : MonoBehaviour
     
     void cameraMovement()
     {
-        movementType = "observer";
         Vector3 moveCamera = new Vector3(0, 0, 0);
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
@@ -95,7 +99,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 dir = forward * vert + right * horiz;
         dir.Normalize(); 
 
-        moveCamera = dir * moveSpeed * Time.deltaTime;
+        moveCamera = dir * camSpeed * Time.deltaTime;
         cam.position += moveCamera;
     }
 

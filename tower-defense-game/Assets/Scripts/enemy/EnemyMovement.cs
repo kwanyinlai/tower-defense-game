@@ -25,7 +25,6 @@ public abstract class EnemyMovement : MonoBehaviour
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
 
 
-        
        
     }
  
@@ -33,6 +32,7 @@ public abstract class EnemyMovement : MonoBehaviour
     {
 
         if (baseTarget == null){
+            Debug.Log("No base found!");
             baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
         }
         else{
@@ -41,41 +41,49 @@ public abstract class EnemyMovement : MonoBehaviour
         
         troopTarget = GetClosestEnemyInRange();
         barracksTarget = GetClosestBarracksInRange();
+        
         if (troopTarget != null)
         {
-            targetStats = troopTarget.GetComponent<BattleSystem>(); 
+            targetStats = troopTarget.GetComponent<BattleSystem>();
             float distance = Vector3.Distance(transform.position, troopTarget.position);
-            if (distance <= range){ 
+            if (distance <= range)
+            {
                 agent.isStopped = true;
-                if (atkTimer <= 0f){
+                if (atkTimer <= 0f)
+                {
                     Attack(troopTarget);
                 }
             }
-            else{ 
+            else
+            {
                 agent.isStopped = false;
-                agent.SetDestination(troopTarget.position); 
+                agent.SetDestination(troopTarget.position);
             }
         }
-        else if (baseTarget != null) {
-            
+        else if (baseTarget != null)
+        {
+
             float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
-            if (distance <= range) 
+            if (distance <= range)
             {
                 agent.isStopped = true;
-                if( agent.velocity.magnitude <= 0.1f){
-                    if (atkTimer <= 0f){
+                if (agent.velocity.magnitude <= 0.1f)
+                {
+                    if (atkTimer <= 0f)
+                    {
                         Attack(baseTarget.transform);
                     }
                 }
-               
+
             }
-            else { 
-                agent.isStopped = false; 
+            else
+            {
+                agent.isStopped = false;
                 agent.SetDestination(baseTarget.transform.position);
             }
         }
         else if (barracksTarget != null)
-            {
+        {
             float distance = Vector3.Distance(agent.transform.position, barracksTarget.position);
             if (distance <= range)
             {
@@ -91,11 +99,11 @@ public abstract class EnemyMovement : MonoBehaviour
                 agent.isStopped = false;
                 agent.SetDestination(barracksTarget.position);
             }
-            }
-         else
-            {
-             agent.isStopped = true;
-            }
+        }
+        else
+        {
+            agent.isStopped = true;
+        }
         if (atkTimer > 0f) {
             atkTimer -= Time.deltaTime;
         } else

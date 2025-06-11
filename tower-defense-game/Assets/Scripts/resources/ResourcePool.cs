@@ -8,7 +8,6 @@ public class ResourcePool : MonoBehaviour
     private static int numResources = 3;
     private static Dictionary<string, int> resources = new Dictionary<string, int>();
 
-
     // make sure to initialize all types of resources to a default value in start
     private void Start()
     {

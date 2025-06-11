@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
-public abstract class TroopMovement : MonoBehaviour
+public abstract class TroopAI : MonoBehaviour
 {
     public float aggroRange = 10.0f; // range which troop engages enemy
     public Transform enemyTarget;
-    protected BattleSystem targetStats;
+    protected CombatSystem targetStats;
 
     protected NavMeshAgent agent;
 
@@ -148,7 +148,7 @@ public abstract class TroopMovement : MonoBehaviour
   
     void FightEnemyInRange(){
         
-        targetStats = enemyTarget.GetComponent<BattleSystem>(); 
+        targetStats = enemyTarget.GetComponent<CombatSystem>(); 
         float distance = Vector3.Distance(transform.position, enemyTarget.position);
         if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/) {
             agent.isStopped = true;
@@ -171,11 +171,11 @@ public abstract class TroopMovement : MonoBehaviour
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
-        if (EnemyMovement.enemies.Count == 0 ){
+        if (EnemyAI.enemies.Count == 0 ){
             return null;
         }
 
-        foreach (var enemy in EnemyMovement.enemies)
+        foreach (var enemy in EnemyAI.enemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
             

@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class BaseBattleSystem : BattleSystem
+public class BaseBattleSystem : CombatSystem
 {
 
     void Start()

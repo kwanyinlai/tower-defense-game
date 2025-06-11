@@ -50,10 +50,10 @@ public class BulletScript : MonoBehaviour
 
     private void HitTarget()
     {
-        BattleSystem battleSystem = target.GetComponent<BattleSystem>();
-        if (battleSystem != null)
+        CombatSystem combatSystem = target.GetComponent<CombatSystem>();
+        if (combatSystem != null)
         {
-            battleSystem.TakeDamage(dmg);
+            combatSystem.TakeDamage(dmg);
         }
 
         Destroy(gameObject);
@@ -61,7 +61,7 @@ public class BulletScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        BattleSystem sys = collision.gameObject.GetComponent<BattleSystem>();
+        CombatSystem sys = collision.gameObject.GetComponent<CombatSystem>();
         // Should only hit target if it is a hitable object (aka with a BattleSystem)
         if(sys != null && exceptionList != null)
         {

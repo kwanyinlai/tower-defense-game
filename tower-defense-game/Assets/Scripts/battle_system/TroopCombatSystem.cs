@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TroopBattleSystem : BattleSystem
+public class TroopCombatSystem : CombatSystem
 {
     private Barracks barracks;
 
@@ -18,12 +18,12 @@ public class TroopBattleSystem : BattleSystem
     protected override void Die(){
         
         barracks.DecrementTroops();
-        foreach (GameObject troop in TroopMovement.troops)
+        foreach (GameObject troop in TroopAI.troops)
         {
             if (troop == gameObject)
             {
-                TroopMovement.troops.Remove(troop);
-                GameObject temp = gameObject.GetComponent<TroopMovement>().waypoint;
+                TroopAI.troops.Remove(troop);
+                GameObject temp = gameObject.GetComponent<TroopAI>().waypoint;
                 if (temp!=null){
                     temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
                 }
@@ -48,7 +48,7 @@ public class TroopBattleSystem : BattleSystem
 
         base.TakeDamage(damage);
 
-        TroopMovement temp = gameObject.GetComponent<TroopMovement>();
+        /*TroopAI temp = gameObject.GetComponent<TroopAI>();
 
         float tempRange = temp.aggroRange;
         temp.aggroRange += 50f; // large enough to encapsulate any enemy but to avoid
@@ -56,6 +56,11 @@ public class TroopBattleSystem : BattleSystem
                                 // long-range units)
         temp.enemyTarget = temp.GetClosestEnemyInRange();
         temp.aggroRange = tempRange;
+        */
+
+        // commenting this out for now because I don't know if we want this actually
+        // just to make the player do more and have more control rather than having
+        // AI go berserk
 
         
         

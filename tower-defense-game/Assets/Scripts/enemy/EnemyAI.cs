@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
-public abstract class EnemyMovement : MonoBehaviour
+public abstract class EnemyAI : MonoBehaviour
 {
     public static List<GameObject> enemies = new List<GameObject>(); 
     public float aggroRange = 10.0f;
@@ -11,7 +11,7 @@ public abstract class EnemyMovement : MonoBehaviour
     public Transform troopTarget;
     public Transform barracksTarget;
     protected UnityEngine.AI.NavMeshAgent agent;
-    protected BattleSystem targetStats;
+    protected CombatSystem targetStats;
     public float range = 5.0f;
     public int dmg = 10;
     protected float atkCooldown = 1.5f;
@@ -36,7 +36,7 @@ public abstract class EnemyMovement : MonoBehaviour
             baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
         }
         else{
-            targetStats = baseTarget.GetComponent<BattleSystem>(); 
+            targetStats = baseTarget.GetComponent<CombatSystem>(); 
         }
         
         troopTarget = GetClosestEnemyInRange();
@@ -44,7 +44,7 @@ public abstract class EnemyMovement : MonoBehaviour
         
         if (troopTarget != null)
         {
-            targetStats = troopTarget.GetComponent<BattleSystem>();
+            targetStats = troopTarget.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(transform.position, troopTarget.position);
             if (distance <= range)
             {
@@ -120,11 +120,11 @@ public abstract class EnemyMovement : MonoBehaviour
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
-        if (TroopMovement.troops.Count == 0)
+        if (TroopAI.troops.Count == 0)
         {
             return null;
         }
-        foreach (var enemy in TroopMovement.troops)
+        foreach (var enemy in TroopAI.troops)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class BattleSystem : MonoBehaviour
+public abstract class CombatSystem : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float currentHealth;

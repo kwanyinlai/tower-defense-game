@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EnemyBattleSystem : BattleSystem
+public class EnemyCombatSystem : CombatSystem
 {
     void Start()
     {
@@ -11,7 +11,7 @@ public class EnemyBattleSystem : BattleSystem
 
     protected override void Die(){
         
-        EnemyMovement.enemies.Remove(gameObject);
+        EnemyAI.enemies.Remove(gameObject);
         foreach(GameObject player in Player.players){
             List<GameObject> list = player.GetComponent<TroopManagment>().selectedTroops;
             if (list.Contains(gameObject)){

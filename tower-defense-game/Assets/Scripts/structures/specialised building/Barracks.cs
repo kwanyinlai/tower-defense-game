@@ -49,7 +49,7 @@ public class Barracks : Building
                 break;
         }
         GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
-        troop.GetComponent<TroopBattleSystem>().setBarracks(this);
+        troop.GetComponent<TroopCombatSystem>().setBarracks(this);
         currentTroops++; 
     }
 

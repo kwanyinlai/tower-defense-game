@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Cinemachine;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -9,28 +10,23 @@ public class CharacterMovement : MonoBehaviour
 
     private CharacterController characterController;
 
-    private string movementType = "character"; // movementType is either "observer", "character" or "disabled"
-
-    [SerializeField] private Camera camera;
-    private Transform cam;
+    [SerializeField] private string movementType = "character"; // movementType is either "observer", "character" or "disabled"
 
     private int cameraState;
     private Vector3 posWhole;
     private Quaternion rotWhole;
     private float camSpeed = 50f;
 
-
+    [SerializeField] private Camera cam;
+    [SerializeField] private CinemachineVirtualCamera virtualCamera;
 
     void Start()
     {
-        cam = camera.transform;
+        
         characterController = GetComponent<CharacterController>();
         gravCalculation = Vector3.zero;
-        posWhole = new Vector3(10f, 8f, -10f);
-        rotWhole = Quaternion.Euler(new Vector3(20f, 210f, 0f));
-        cam.position = posWhole;
-        cam.rotation = rotWhole;
-        cameraState = 0;
+        virtualCamera = GetComponent<CinemachineVirtualCamera>();
+        virtualCamera.Follow = transform;
     }
 
     void Update()
@@ -41,36 +37,36 @@ public class CharacterMovement : MonoBehaviour
             cameraState++;
             cameraState %= 3;
         }
-
+        /*
         if (cameraState == 0)
         {
-            camera.orthographicSize = 20f; ;
+            GetComponent<Camera>().orthographicSize = 20f; ;
             cam.position = posWhole;
             movementType = "character";
         }
         else if (cameraState == 1)
         {
-            camera.orthographicSize = 50f;
+            GetComponent<Camera>().orthographicSize = 50f;
             cam.position = transform.position + posWhole;
             movementType = "observer";
         }
         else
         {
-            cameraMovement();
+            CameraMovement();
             movementType = "observer";
         }
-
+        */
         if (movementType == "character")
         {
             Character();
         }
         else if (movementType == "observer")
         {
-            Debug.Log("");
+            Debug.Log("observer");
         }
         else if (movementType == "disabled")
         {
-            Debug.Log("");
+            Debug.Log("disabled");
         }
         else
         {
@@ -80,38 +76,17 @@ public class CharacterMovement : MonoBehaviour
 
     }
     
-    void cameraMovement()
-    {
-        Vector3 moveCamera = new Vector3(0, 0, 0);
-        float horiz = Input.GetAxis("Horizontal");
-        float vert = Input.GetAxis("Vertical");
-
-        Vector3 forward = cam.forward;
-        Vector3 right = cam.right;
-
-        forward.y = 0f;
-        right.y = 0f;
-
-        forward.Normalize();
-        right.Normalize();
-
-       
-        Vector3 dir = forward * vert + right * horiz;
-        dir.Normalize(); 
-
-        moveCamera = dir * camSpeed * Time.deltaTime;
-        cam.position += moveCamera;
-    }
+    
 
 
     void Character()
     {
-
+        
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
-        Vector3 forward = cam.forward;
-        Vector3 right = cam.right;
+        Vector3 forward = virtualCamera.transform.forward;
+        Vector3 right = virtualCamera.transform.right;
 
         forward.y = 0f;
         right.y = 0f;
@@ -145,6 +120,7 @@ public class CharacterMovement : MonoBehaviour
             Quaternion rotateDir = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
+        
     }
 
     

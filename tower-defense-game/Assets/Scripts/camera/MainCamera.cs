@@ -4,19 +4,11 @@ using System.Collections.Generic;
 
 public class MainCamera : MonoBehaviour
 {
+    /*
     public Transform cam;
     private Vector2 lastMousePosition;
 
     [SerializeField]
-    private float mouseSensitivity = 2f;
-
-    private bool mouseDown = false;
-    private float moveSpeed = 2f;
-
-
-    private float zoomSpeed = 20f; 
-    private float minZoom = 5f; 
-    private float maxZoom = 50f;
     private float targetSize=14;
 
     private Vector3 posWhole; //Constant position for the camera overseeing the entire game
@@ -24,6 +16,7 @@ public class MainCamera : MonoBehaviour
     private int cameraState;
     public GameObject player;
 
+    */
 
     /*private bool isSelecting = false;
     private bool dontComplete = false;
@@ -39,6 +32,7 @@ public class MainCamera : MonoBehaviour
     private MeshCollider meshCollider;
     */
 
+    /*
     private Camera camera;
 
     void Start()
@@ -52,6 +46,7 @@ public class MainCamera : MonoBehaviour
         cam.position = posWhole;
         cam.rotation = rotWhole;
         cameraState = 0;
+        maxZoom = 10f;
         targetSize = maxZoom;
 
         lastMousePosition = (Vector2)Input.mousePosition;
@@ -59,7 +54,8 @@ public class MainCamera : MonoBehaviour
         camera.orthographic = true;
         camera.orthographicSize = 10f;
     }
-
+    */
+    /*
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
@@ -103,10 +99,11 @@ public class MainCamera : MonoBehaviour
             return;
         }
         */
-    }
-
+    // } 
     
 
+    
+    /*
     void cameraMovement()
     {
 
@@ -148,6 +145,7 @@ public class MainCamera : MonoBehaviour
             camera.orthographicSize = targetSize;
         }
     }
+    
 
 
     /* void LassoSelection()
@@ -316,8 +314,7 @@ public class MainCamera : MonoBehaviour
     }
     */ 
     // scrapped selection mechanic
-
-
+    
 
 }
 

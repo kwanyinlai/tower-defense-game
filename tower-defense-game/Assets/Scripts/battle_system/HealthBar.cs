@@ -6,7 +6,7 @@ using System.Collections;
 public class HealthBar : MonoBehaviour
 {
     public GameObject target;  
-    private BattleSystem health;  
+    private CombatSystem health;  
     private Slider healthSlider;
     public Gradient gradient;
     private float timer;
@@ -19,7 +19,7 @@ public class HealthBar : MonoBehaviour
 
     void Start()
     {
-        health = target.GetComponent<BattleSystem>();
+        health = target.GetComponent<CombatSystem>();
         healthSlider = GetComponent<Slider>();
         UpdateHealthBar();
         

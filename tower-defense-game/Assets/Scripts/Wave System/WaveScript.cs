@@ -23,7 +23,7 @@ public class WaveScript : MonoBehaviour
         waveTimer += Time.deltaTime;
 
         //Default set to 60 seconds per wave, change later for more/less time between waves.
-        if (waveTimer >= 60 || (waveNum > 0 && EnemyMovement.enemies.Count == 0) || (waveNum == 0 && waveTimer >= 10))
+        if (waveTimer >= 60 || (waveNum > 0 && EnemyAI.enemies.Count == 0) || (waveNum == 0 && waveTimer >= 10))
         {
             waveNum++;
             waveTimer = 0;

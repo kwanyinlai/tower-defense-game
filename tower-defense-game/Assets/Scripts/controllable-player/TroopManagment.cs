@@ -110,7 +110,7 @@ public class TroopManagment : MonoBehaviour
     void StopAndClearSelecting(){
         isSelecting = false;
         foreach(GameObject troop in selectedTroops){
-            TroopMovement troopScript = troop.GetComponent<TroopMovement>();
+            TroopAI troopScript = troop.GetComponent<TroopAI>();
             troopScript.underSelection=false;
             troopScript.commandingPlayer=null;
 
@@ -121,14 +121,14 @@ public class TroopManagment : MonoBehaviour
 
     void SelectTroops(){
                 
-        foreach (GameObject troop in TroopMovement.troops)
+        foreach (GameObject troop in TroopAI.troops)
         {
             Vector3 playerPosition = transform.position;
             Vector3 troopPosition = troop.transform.position;
             playerPosition.y = 0f;
             troopPosition.y = 0f;
 
-            TroopMovement troopScript = troop.GetComponent<TroopMovement>();
+            TroopAI troopScript = troop.GetComponent<TroopAI>();
             if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && 
                     !selectedTroops.Contains(troop) && 
                    troopScript.underSelection==false)
@@ -144,6 +144,7 @@ public class TroopManagment : MonoBehaviour
         Debug.Log("Selected Troops: " + selectedTroops.Count);
     }
 
+    
     void ShowSelectingCircle(){
         selectorCircle.transform.localScale = new Vector3(15f,0.0002f,15f);
     }
@@ -152,6 +153,7 @@ public class TroopManagment : MonoBehaviour
     void HideSelectingCircle(){
         selectorCircle.transform.localScale = new Vector3(0,0,0);
     }
+
 
     void ValidInput(){
         placingWaypoint = false;
@@ -164,7 +166,7 @@ public class TroopManagment : MonoBehaviour
         GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,-3f), transform.rotation);
         foreach (GameObject troop in selectedTroops)
         {
-            TroopMovement troopScript = troop.GetComponent<TroopMovement>();
+            TroopAI troopScript = troop.GetComponent<TroopAI>();
             troopScript.commandingPlayer = null;
             troopScript.waypoint = deployedPoint;
             deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);

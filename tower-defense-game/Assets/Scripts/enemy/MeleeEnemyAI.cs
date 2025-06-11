@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Json;
 
 
 
-public class EnemyMovementMelee : EnemyMovement
+public class MeleeEnemyAI : EnemyAI
 {
     // public float range = 2.7f;
     
@@ -15,10 +15,10 @@ public class EnemyMovementMelee : EnemyMovement
         transform.LookAt(target);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
         
-        BattleSystem battleSystem = target.GetComponent<BattleSystem>(); // interacts directly with the target rather than creating a projectile
-        if (battleSystem != null)
+        CombatSystem combatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
+        if (combatSystem != null)
         {
-            battleSystem.TakeDamage(dmg);
+            combatSystem.TakeDamage(dmg);
         }
         atkTimer = atkCooldown;
     }

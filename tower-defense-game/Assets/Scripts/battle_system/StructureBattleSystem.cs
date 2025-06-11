@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StructureBattleSystem : BattleSystem
+public class StructureBattleSystem : CombatSystem
 {
     public static List<GameObject> barracks = new List<GameObject>();
     void Start()

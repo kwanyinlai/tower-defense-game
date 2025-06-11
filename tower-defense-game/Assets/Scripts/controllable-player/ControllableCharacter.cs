@@ -17,16 +17,23 @@ public class CharacterMovement : MonoBehaviour
     private Quaternion rotWhole;
     private float camSpeed = 50f;
 
-    [SerializeField] private Camera cam;
-    [SerializeField] private CinemachineVirtualCamera virtualCamera;
+    private CinemachineVirtualCamera overhead;
+    [SerializeField] private GameObject overheadCam;
+
+    private CinemachineVirtualCamera above;
+    [SerializeField] private GameObject aboveCam;
+
+    private CinemachineVirtualCamera wide;
+    [SerializeField] private GameObject wideCam;
 
     void Start()
     {
         
         characterController = GetComponent<CharacterController>();
         gravCalculation = Vector3.zero;
-        virtualCamera = GetComponent<CinemachineVirtualCamera>();
-        virtualCamera.Follow = transform;
+        overhead = overheadCam.GetComponent<CinemachineVirtualCamera>();
+        wide = wideCam.GetComponent<CinemachineVirtualCamera>();
+        above = aboveCam.GetComponent<CinemachineVirtualCamera>();
     }
 
     void Update()
@@ -37,25 +44,25 @@ public class CharacterMovement : MonoBehaviour
             cameraState++;
             cameraState %= 3;
         }
-        /*
+    
         if (cameraState == 0)
         {
-            GetComponent<Camera>().orthographicSize = 20f; ;
-            cam.position = posWhole;
             movementType = "character";
+            // overhead.m_Priority = 5;
+            // wide.m_Priority = 4;
+            // above.m_Priority = 3;
         }
-        else if (cameraState == 1)
-        {
-            GetComponent<Camera>().orthographicSize = 50f;
-            cam.position = transform.position + posWhole;
+        else if (cameraState == 1){
             movementType = "observer";
+            
         }
         else
         {
-            CameraMovement();
             movementType = "observer";
+        
         }
-        */
+        
+
         if (movementType == "character")
         {
             Character();
@@ -76,8 +83,6 @@ public class CharacterMovement : MonoBehaviour
 
     }
     
-    
-
 
     void Character()
     {
@@ -85,8 +90,8 @@ public class CharacterMovement : MonoBehaviour
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
-        Vector3 forward = virtualCamera.transform.forward;
-        Vector3 right = virtualCamera.transform.right;
+        Vector3 forward = overheadCam.transform.forward;
+        Vector3 right = overheadCam.transform.right;
 
         forward.y = 0f;
         right.y = 0f;

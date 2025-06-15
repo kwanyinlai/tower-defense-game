@@ -98,8 +98,8 @@ public class CharacterMovement : MonoBehaviour
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
-        Vector3 forward = overheadCam.transform.forward;
-        Vector3 right = overheadCam.transform.right;
+        Vector3 forward = transform.forward;
+        Vector3 right = transform.right;
 
         forward.y = 0f;
         right.y = 0f;
@@ -131,7 +131,7 @@ public class CharacterMovement : MonoBehaviour
         {
             dir *= -1;
             Quaternion rotateDir = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
+            // transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
         
     }

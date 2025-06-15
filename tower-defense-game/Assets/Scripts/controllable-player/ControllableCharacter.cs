@@ -34,6 +34,9 @@ public class CharacterMovement : MonoBehaviour
         overhead = overheadCam.GetComponent<CinemachineVirtualCamera>();
         wide = wideCam.GetComponent<CinemachineVirtualCamera>();
         above = aboveCam.GetComponent<CinemachineVirtualCamera>();
+        overheadCam.SetActive(true);
+        aboveCam.SetActive(false);
+        wideCam.SetActive(false);
     }
 
     void Update()
@@ -48,18 +51,23 @@ public class CharacterMovement : MonoBehaviour
         if (cameraState == 0)
         {
             movementType = "character";
-            // overhead.m_Priority = 5;
-            // wide.m_Priority = 4;
-            // above.m_Priority = 3;
+            overheadCam.SetActive(true);
+            aboveCam.SetActive(false);
+            wideCam.SetActive(false);
         }
         else if (cameraState == 1){
             movementType = "observer";
-            
+            overheadCam.SetActive(false);
+            aboveCam.SetActive(true);
+            wideCam.SetActive(false);
         }
         else
         {
             movementType = "observer";
-        
+
+            overheadCam.SetActive(false);
+            aboveCam.SetActive(false);
+            wideCam.SetActive(true);
         }
         
 

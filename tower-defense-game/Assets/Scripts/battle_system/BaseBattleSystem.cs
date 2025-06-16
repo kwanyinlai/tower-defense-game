@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class BaseBattleSystem : CombatSystem
 {
@@ -10,6 +11,15 @@ public class BaseBattleSystem : CombatSystem
         currentHealth = maxHealth;
         tagList = new HashSet<string>(viewableTagList);
     }
+
+    void Update()
+    {
+        if(currentHealth <= 0)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+
     protected override void Die()
     {
         GameObject.Find("grid-manager").GetComponent<GridSystem>().StarterTerritoryNotAssigned();

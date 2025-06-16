@@ -15,5 +15,4 @@ public class BaseManager : MonoBehaviour
         return currBase;
     }
 
-
 }

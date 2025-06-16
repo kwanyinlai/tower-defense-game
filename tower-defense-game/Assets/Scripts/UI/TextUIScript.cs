@@ -3,26 +3,29 @@ using UnityEngine;
 
 public class TextUIScript : MonoBehaviour
 {
-    public TextMeshProUGUI waveText;
+    public TextMeshProUGUI infoText;
     public GameObject waveSystem;
+    private WaveScript waveScript;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        updateWaveText();
+        waveScript = waveSystem.GetComponent<WaveScript>();
+        updateText();
     }
 
     // Update is called once per frame
     void Update()
     {
-        updateWaveText();
-
+        updateText();
     }
 
-    public void updateWaveText()
+    public void updateText()
     {
-        WaveScript waveScript = waveSystem.GetComponent<WaveScript>();
         int wave = waveScript.waveNum;
-        waveText.text = "Wave: " + wave;
+        string text = "Wave: " + wave + "\n";
+        text += ResourcePool.getResourceText();
+        text += "Base health: " + BaseBattleSystem.getHealth() + "\n";
+        infoText.text = text;
     }
 }

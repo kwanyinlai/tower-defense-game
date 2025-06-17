@@ -67,4 +67,14 @@ public class ResourcePool : MonoBehaviour
         return resources[resource] >= amount;
     }
 
+    public static string getResourceText()
+    {
+        string result = "";
+        foreach (KeyValuePair<string, int> pair in resources)
+        {
+            result += pair.Key + ": " + pair.Value + "\n";
+        }
+        return result;
+    }
+
 }

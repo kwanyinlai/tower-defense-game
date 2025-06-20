@@ -17,10 +17,6 @@ public class BaseBattleSystem : CombatSystem
     void Update()
     {
         health = currentHealth;
-        if(currentHealth <= 0)
-        {
-            SceneManager.LoadScene("GameOver");
-        }
     }
 
     public static int getHealth()
@@ -31,6 +27,10 @@ public class BaseBattleSystem : CombatSystem
     protected override void Die()
     {
         GameObject.Find("grid-manager").GetComponent<GridSystem>().StarterTerritoryNotAssigned();
+        if (this.gameObject.tag == "Target")
+        {
+            SceneManager.LoadScene("GameOver");
+        }
         Destroy(gameObject);
 
     }

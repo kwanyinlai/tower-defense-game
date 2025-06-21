@@ -28,7 +28,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Start()
     {
-        
+
         characterController = GetComponent<CharacterController>();
         gravCalculation = Vector3.zero;
         overhead = overheadCam.GetComponent<CinemachineVirtualCamera>();
@@ -47,7 +47,7 @@ public class CharacterMovement : MonoBehaviour
             cameraState++;
             cameraState %= 3;
         }
-    
+
         if (cameraState == 0)
         {
             movementType = "character";
@@ -55,7 +55,8 @@ public class CharacterMovement : MonoBehaviour
             aboveCam.SetActive(false);
             wideCam.SetActive(false);
         }
-        else if (cameraState == 1){
+        else if (cameraState == 1)
+        {
             movementType = "observer";
             overheadCam.SetActive(false);
             aboveCam.SetActive(true);
@@ -69,7 +70,7 @@ public class CharacterMovement : MonoBehaviour
             aboveCam.SetActive(false);
             wideCam.SetActive(true);
         }
-        
+
 
         if (movementType == "character")
         {
@@ -87,14 +88,12 @@ public class CharacterMovement : MonoBehaviour
         {
             Debug.Log("Invalid movement type " + movementType);
         }
-
-
     }
-    
+
 
     void Character()
     {
-        
+
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
@@ -107,33 +106,37 @@ public class CharacterMovement : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
-       
+
         Vector3 dir = forward * vert + right * horiz;
-        dir.Normalize(); 
+        dir.Normalize();
 
 
         if (characterController.isGrounded)
         {
-            gravCalculation.y = -0.5f;  
+            gravCalculation.y = -0.5f;
         }
         else
         {
-            gravCalculation.y += GRAVITY * Time.deltaTime; 
+            gravCalculation.y += GRAVITY * Time.deltaTime;
         }
 
         Vector3 movement = dir * moveSpeed + gravCalculation;
         characterController.Move(movement * Time.deltaTime);
-    
 
 
-        
+
+
         if (dir != Vector3.zero)
         {
             Quaternion rotateDir = Quaternion.LookRotation(dir);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
-        
+
     }
 
-    
+    void OnMouseDown()
+    {
+        Debug.Log("Pressed!");
+    }
+
 }

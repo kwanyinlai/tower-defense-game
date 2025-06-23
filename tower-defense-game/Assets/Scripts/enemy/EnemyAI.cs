@@ -17,17 +17,35 @@ public abstract class EnemyAI : MonoBehaviour
     protected float atkCooldown = 1.5f;
     public float atkTimer = 0f;
     public abstract void Attack(Transform target);
-    
+    private LineRenderer pathIndicator;
+
     void Start()
     {
         enemies.Add(gameObject);
     
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        pathIndicator= GetComponent<LineRenderer>();
 
 
-       
     }
- 
+
+
+    void MoveTowardsTarget(Transform target)
+    {
+
+        agent.isStopped = false;
+        agent.SetDestination(target.position);
+        NavMeshPath path = new NavMeshPath();
+        NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+
+        pathIndicator.positionCount = path.corners.Length;
+        for (int i = 0; i < path.corners.Length; i++)
+        {
+            pathIndicator.SetPosition(i, path.corners[i]);
+        }
+    }
+
+
     void Update()
     {
 
@@ -56,8 +74,7 @@ public abstract class EnemyAI : MonoBehaviour
             }
             else
             {
-                agent.isStopped = false;
-                agent.SetDestination(troopTarget.position);
+            MoveTowardsTarget(troopTarget);
             }
         }
         else if (baseTarget != null)
@@ -78,8 +95,7 @@ public abstract class EnemyAI : MonoBehaviour
             }
             else
             {
-                agent.isStopped = false;
-                agent.SetDestination(baseTarget.transform.position);
+                MoveTowardsTarget(baseTarget.transform);
             }
         }
         else if (barracksTarget != null)
@@ -96,8 +112,7 @@ public abstract class EnemyAI : MonoBehaviour
             }
             else
             {
-                agent.isStopped = false;
-                agent.SetDestination(barracksTarget.position);
+                MoveTowardsTarget(barracksTarget);
             }
         }
         else

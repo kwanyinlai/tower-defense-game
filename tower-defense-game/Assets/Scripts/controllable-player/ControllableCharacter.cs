@@ -79,6 +79,7 @@ public class CharacterMovement : MonoBehaviour
         else if (movementType == "observer")
         {
             Debug.Log("observer");
+            Observer();
         }
         else if (movementType == "disabled")
         {
@@ -90,6 +91,29 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    void Observer()
+    {
+        float horiz = Input.GetAxis("Horizontal");
+        float vert = Input.GetAxis("Vertical");
+
+        Vector3 forward = overheadCam.transform.forward;
+        Vector3 right = overheadCam.transform.right;
+
+        forward.y = 0f;
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+
+
+        Vector3 dir = forward * vert + right * horiz;
+        dir.Normalize();
+        dir.y = 0;
+        Vector3 movement = dir * moveSpeed;
+        aboveCam.transform.Translate(movement * Time.deltaTime, Space.World);
+
+
+    }
 
     void Character()
     {
@@ -122,6 +146,7 @@ public class CharacterMovement : MonoBehaviour
 
         Vector3 movement = dir * moveSpeed + gravCalculation;
         characterController.Move(movement * Time.deltaTime);
+        
 
 
 

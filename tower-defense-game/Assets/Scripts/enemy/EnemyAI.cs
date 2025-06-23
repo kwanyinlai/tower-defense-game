@@ -25,6 +25,7 @@ public abstract class EnemyAI : MonoBehaviour
     
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         pathIndicator= GetComponent<LineRenderer>();
+        pathIndicator.enabled = false;
 
 
     }
@@ -37,12 +38,18 @@ public abstract class EnemyAI : MonoBehaviour
         agent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-
+        pathIndicator.enabled = true;
         pathIndicator.positionCount = path.corners.Length;
         for (int i = 0; i < path.corners.Length; i++)
         {
             pathIndicator.SetPosition(i, path.corners[i]);
         }
+    }
+
+    void StopMoving()
+    {
+        agent.isStopped = true;
+        pathIndicator.enabled = false;
     }
 
 
@@ -66,7 +73,7 @@ public abstract class EnemyAI : MonoBehaviour
             float distance = Vector3.Distance(transform.position, troopTarget.position);
             if (distance <= range)
             {
-                agent.isStopped = true;
+                StopMoving();
                 if (atkTimer <= 0f)
                 {
                     Attack(troopTarget);
@@ -83,7 +90,7 @@ public abstract class EnemyAI : MonoBehaviour
             float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
             if (distance <= range)
             {
-                agent.isStopped = true;
+                StopMoving();
                 if (agent.velocity.magnitude <= 0.1f)
                 {
                     if (atkTimer <= 0f)
@@ -103,7 +110,7 @@ public abstract class EnemyAI : MonoBehaviour
             float distance = Vector3.Distance(agent.transform.position, barracksTarget.position);
             if (distance <= range)
             {
-                agent.isStopped = true;
+                StopMoving();
                 if (atkTimer <= 0f)
                 {
                     Attack(barracksTarget);
@@ -117,7 +124,7 @@ public abstract class EnemyAI : MonoBehaviour
         }
         else
         {
-            agent.isStopped = true;
+            StopMoving();
         }
         if (atkTimer > 0f) {
             atkTimer -= Time.deltaTime;

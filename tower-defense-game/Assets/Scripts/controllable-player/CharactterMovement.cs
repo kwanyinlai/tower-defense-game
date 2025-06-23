@@ -26,6 +26,8 @@ public class CharacterMovement : MonoBehaviour
     private CinemachineVirtualCamera wide;
     [SerializeField] private GameObject wideCam;
 
+    public float selectionDistance = 2f;
+
     void Start()
     {
 
@@ -37,6 +39,11 @@ public class CharacterMovement : MonoBehaviour
         overheadCam.SetActive(true);
         aboveCam.SetActive(false);
         wideCam.SetActive(false);
+    }
+
+    public bool IsControllable()
+    {
+        return movementType == "character";
     }
 
     void Update()
@@ -146,7 +153,7 @@ public class CharacterMovement : MonoBehaviour
 
         Vector3 movement = dir * moveSpeed + gravCalculation;
         characterController.Move(movement * Time.deltaTime);
-        
+
 
 
 
@@ -157,11 +164,14 @@ public class CharacterMovement : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotateDir, angularSpeed * Time.deltaTime);
         }
 
+
     }
 
     void OnMouseDown()
     {
         Debug.Log("Pressed!");
     }
+
+
 
 }

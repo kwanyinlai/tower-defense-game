@@ -26,12 +26,12 @@ public class TroopManagment : MonoBehaviour
         HideWaypointOutline();
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        if (!gameObject.GetComponent<BuildMode>().isBuilding){
+        if (!gameObject.GetComponent<BuildMode>().isBuilding &&
+            GetComponent<CharacterMovement>().IsControllable()){
             
-        
             if(Input.GetKey(KeyCode.Space)){
                 isSelecting = true;
                 managingTroops = true;

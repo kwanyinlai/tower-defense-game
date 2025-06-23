@@ -122,17 +122,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 360d220152b3b401394f6aee3f844cbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aggroRange: 40
+  aggroRange: 10
   enemyTarget: {fileID: 0}
   idleRange: 10
   attackRange: 5
   dmg: 10
-  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
   selectorCircle: {fileID: 7266250942620803564}
   indicator: {fileID: 7663351754719727365}
   underSelection: 0
   commandingPlayer: {fileID: 0}
   waypoint: {fileID: 0}
+  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
 --- !u!114 &8363124638678097964
 MonoBehaviour:
   m_ObjectHideFlags: 0

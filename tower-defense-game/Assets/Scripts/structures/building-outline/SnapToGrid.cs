@@ -19,11 +19,15 @@ public class SnapToGrid : MonoBehaviour
         placeable = gameObject.GetComponent<Placeable>();
         buildMode = commandingPlayer.GetComponent<BuildMode>();
         offset = gameObject.GetComponent<Placeable>().offset;
+        Debug.Log("offset is " + offset);
     }
     
     void Update()
     {
-        transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(commandingPlayer.position + commandingPlayer.forward * offset));
+        transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(
+            commandingPlayer.position + commandingPlayer.forward * offset));
+        // for this model, the centre of the model is off for some reason so it looks wrong. i'm pretty sure
+        // it works correctly though, if we replace it with another model for exmaple
         transform.rotation = GridSystem.SnapRotation(commandingPlayer.rotation);
 
  

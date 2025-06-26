@@ -53,6 +53,6 @@ public class Placeable : MonoBehaviour
     }
 
     int CalculateOffset(){
-        return -(System.Math.Max(size.x, size.y)/2) -6 ;
+        return (System.Math.Max(size.x, size.y)/2) + 2;
     }
 }

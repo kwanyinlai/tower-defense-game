@@ -163,7 +163,7 @@ public class TroopManagment : MonoBehaviour
 
 
     void SetWaypoint(){
-        GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,-3f), transform.rotation);
+        GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,3f), transform.rotation);
         foreach (GameObject troop in selectedTroops)
         {
             TroopAI troopScript = troop.GetComponent<TroopAI>();

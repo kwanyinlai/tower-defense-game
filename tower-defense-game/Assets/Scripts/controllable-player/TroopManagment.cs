@@ -176,7 +176,11 @@ public class TroopManagment : MonoBehaviour
             Debug.Log("hit something");
             if (troop != null)
             {
+                troop.underSelection = true;
+                troop.commandingPlayer = gameObject;
+                troop.DeleteFromWaypoint();
                 troop.Selected();
+                selectedTroops.Add(troop.gameObject);
             }
         }
     }

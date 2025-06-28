@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
 // TODO:
 // SOME SORT OF COLOR CODING MECHANIC FOR LOCAL CO-OP WITH THE UNIT SELECTION 
 
@@ -9,12 +8,13 @@ public class TroopManagment : MonoBehaviour
 {
     [SerializeField] private GameObject selectorCircle;
     public List<GameObject> selectedTroops = new List<GameObject>();
-    public float selectionRadius = 8f;
+    public float selectionRadius = 100f;
     private bool placingWaypoint = false;
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject outlineWaypoint;
     public bool managingTroops = false;
     // private float menuTime; // for timing how long menu is up for before it closes
+    [SerializeField] private LayerMask selectableLayer;
     
 
 
@@ -82,7 +82,8 @@ public class TroopManagment : MonoBehaviour
             }
 
             if(managingTroops){
-                SelectTroops();
+                // SelectTroops();
+                RaySelect();
             }
         }
 
@@ -161,6 +162,22 @@ public class TroopManagment : MonoBehaviour
             troopScript.commandingPlayer = null;
             troopScript.waypoint = deployedPoint;
             deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);
+        }
+    }
+
+    void RaySelect()
+    {
+        RaycastHit hit;
+        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
+        Debug.DrawRay(transform.position + new Vector3(0f, 2f, 0f), forward, Color.red, 1000.0f);
+        if (Physics.Raycast(transform.position + new Vector3(0f, 2f, 0f), forward, out hit, 10000f, selectableLayer))
+        {
+            TroopAI troop = hit.collider.GetComponent<TroopAI>();
+            Debug.Log("hit something");
+            if (troop != null)
+            {
+                troop.Selected();
+            }
         }
     }
 }

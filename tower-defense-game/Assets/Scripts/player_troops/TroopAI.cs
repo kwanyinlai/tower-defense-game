@@ -101,7 +101,8 @@ public abstract class TroopAI : MonoBehaviour
                     
                 }
                 else{
-                    Idle();
+                    // Idle();
+                    ;
                 }
 
             }
@@ -233,7 +234,11 @@ public abstract class TroopAI : MonoBehaviour
     }
     */
 
-    
+
+    public void Selected()
+    {
+        Debug.Log("hello");
+    }
 
     
 }

@@ -2859,6 +2859,9 @@ MonoBehaviour:
   waypoint: {fileID: 998503910232365536, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
   outlineWaypoint: {fileID: 1854583100}
   managingTroops: 0
+  selectableLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!65 &1155523882
 BoxCollider:
   m_ObjectHideFlags: 0

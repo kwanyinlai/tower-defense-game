@@ -91,8 +91,8 @@ public abstract class TroopAI : MonoBehaviour
         else {      
 
             if(underSelection){
-               
-                FollowCommander();
+
+                ;
             }
             else{
                 if(waypoint!=null){
@@ -133,12 +133,6 @@ public abstract class TroopAI : MonoBehaviour
         }
     }
 
-    void FollowCommander(){
-
-        agent.SetDestination(commandingPlayer.transform.position); 
-
-
-    } 
 
   
     void FightEnemyInRange(){

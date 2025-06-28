@@ -9,7 +9,6 @@ public class TroopManagment : MonoBehaviour
 {
     [SerializeField] private GameObject selectorCircle;
     public List<GameObject> selectedTroops = new List<GameObject>();
-    private bool isSelecting;
     public float selectionRadius = 8f;
     private bool placingWaypoint = false;
     [SerializeField] private GameObject waypoint;
@@ -22,7 +21,7 @@ public class TroopManagment : MonoBehaviour
     
     void Start()
     {
-        isSelecting = false;
+        managingTroops = false;
         HideWaypointOutline();
     }
 
@@ -33,13 +32,9 @@ public class TroopManagment : MonoBehaviour
             GetComponent<CharacterMovement>().IsControllable()){
             
             if(Input.GetKey(KeyCode.Space)){
-                isSelecting = true;
                 managingTroops = true;
-                ShowSelectingCircle();
             }
             else{
-                isSelecting=false;
-                HideSelectingCircle();
                 ShowWaypointOutline();
             }
             if(placingWaypoint){
@@ -50,6 +45,7 @@ public class TroopManagment : MonoBehaviour
 
 
                 switch(true){
+
                     /*case bool _ when Input.GetKeyDown(KeyCode.Alpha1):
                         SetWaypoint();
                         ValidMenuSelection();
@@ -73,7 +69,6 @@ public class TroopManagment : MonoBehaviour
                         break;
                     case bool _ when Input.GetKeyDown(KeyCode.Space):
                         placingWaypoint = false; // close menu but keep selecting
-                        isSelecting = true;
                         break;
                     case bool _ when Input.GetKeyDown(KeyCode.Escape):
                         ValidInput(); // do nothing just close menu
@@ -86,7 +81,7 @@ public class TroopManagment : MonoBehaviour
                 HideWaypointOutline();
             }
 
-            if(isSelecting){
+            if(managingTroops){
                 SelectTroops();
             }
         }
@@ -96,9 +91,14 @@ public class TroopManagment : MonoBehaviour
 
 
     void ShowWaypointOutline(){
-        if(selectedTroops.Count>0){
-            outlineWaypoint.transform.localScale= new Vector3(1f,1f,1f);
+        if (selectedTroops.Count > 0)
+        {
+            outlineWaypoint.transform.localScale = new Vector3(1f, 1f, 1f);
             placingWaypoint = true;
+        }
+        else
+        {
+            managingTroops = false;
         }
     }
 
@@ -108,7 +108,6 @@ public class TroopManagment : MonoBehaviour
     }
 
     void StopAndClearSelecting(){
-        isSelecting = false;
         foreach(GameObject troop in selectedTroops){
             TroopAI troopScript = troop.GetComponent<TroopAI>();
             troopScript.underSelection=false;
@@ -144,15 +143,7 @@ public class TroopManagment : MonoBehaviour
         Debug.Log("Selected Troops: " + selectedTroops.Count);
     }
 
-    
-    void ShowSelectingCircle(){
-        selectorCircle.transform.localScale = new Vector3(15f,0.0002f,15f);
-    }
 
-    
-    void HideSelectingCircle(){
-        selectorCircle.transform.localScale = new Vector3(0,0,0);
-    }
 
 
     void ValidInput(){

@@ -30,8 +30,6 @@ public abstract class TroopAI : MonoBehaviour
     public static List<GameObject> troops = new List<GameObject>();
 
 
-    [SerializeField] protected GameObject selectorCircle;
-    [SerializeField] protected GameObject indicator;
     public bool underSelection=false;
 
 
@@ -41,7 +39,7 @@ public abstract class TroopAI : MonoBehaviour
     
 
 
-    public Vector3 getRandomPosition(Vector3 center, float idleRange)
+    public Vector3 GetRandomPosition(Vector3 center, float idleRange)
     {
         Vector3 randomTransform;
         randomTransform.y = 0;
@@ -59,7 +57,6 @@ public abstract class TroopAI : MonoBehaviour
         idleStartPos = this.transform.position;
         agent = GetComponent<NavMeshAgent>();
         troops.Add(gameObject);
-        DeactivateSelectingCircle();
 
     }
 
@@ -68,12 +65,11 @@ public abstract class TroopAI : MonoBehaviour
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){
-            ActivateSelectingCircle();
-            
+            ;
         }
         else{
 
-            DeactivateSelectingCircle();
+            ;
         }
         Transform copy = GetClosestEnemyInRange();
         if (copy != null)
@@ -114,7 +110,6 @@ public abstract class TroopAI : MonoBehaviour
             
         }
 
-        PointIndicatorTowardsCommander();
 
 
         
@@ -133,7 +128,7 @@ public abstract class TroopAI : MonoBehaviour
         }
         if (dist >= idleRange || dist2 <= 3f)
         {
-            idleTransform = idleStartPos + getRandomPosition(idleStartPos, idleRange);
+            idleTransform = idleStartPos + GetRandomPosition(idleStartPos, idleRange);
             agent.SetDestination(idleTransform);
         }
     }
@@ -245,27 +240,6 @@ public abstract class TroopAI : MonoBehaviour
     */
 
     
-    void ActivateSelectingCircle(){
-        selectorCircle.transform.localScale= new Vector3(1,0.001f,1);
-    }
 
-    void DeactivateSelectingCircle(){
-        selectorCircle.transform.localScale= new Vector3(0f,0f,0f);
-    }
     
-    void PointIndicatorTowardsCommander(){
-        if(underSelection || waypoint !=null){
-            indicator.transform.localScale = new Vector3(1f,0.001f,1f);
-            if(underSelection){
-                indicator.transform.LookAt(commandingPlayer.transform);
-            }
-            else{
-                indicator.transform.LookAt(waypoint.transform);
-            }
-            indicator.transform.rotation *= Quaternion.Euler(0f, -90f, 0f);
-        }
-        else{
-            indicator.transform.localScale = Vector3.zero;
-        }
-    }
 }

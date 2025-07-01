@@ -36,6 +36,8 @@ public abstract class TroopAI : MonoBehaviour
     public GameObject commandingPlayer;
     public GameObject waypoint; // maybe these shouldn't be public?
     public abstract void Attack();
+
+    [SerializeField] private GameObject selectedCircle;
     
 
 
@@ -57,6 +59,7 @@ public abstract class TroopAI : MonoBehaviour
         idleStartPos = this.transform.position;
         agent = GetComponent<NavMeshAgent>();
         troops.Add(gameObject);
+        HideCircle();
 
     }
 
@@ -97,11 +100,10 @@ public abstract class TroopAI : MonoBehaviour
             else{
                 if(waypoint!=null){
                     GoToWaypoint();
-                    
+                    HideCircle();
                     
                 }
                 else{
-                    // Idle();
                     ;
                 }
 
@@ -204,6 +206,17 @@ public abstract class TroopAI : MonoBehaviour
         
     }
 
+    public void ShowCircle()
+    {
+        selectedCircle.SetActive(true);
+    }
+
+    public void HideCircle()
+    {
+        selectedCircle.SetActive(false);
+    }
+
+    
 
     /*
     public static void inSelection(MeshCollider collider, Transform cam){

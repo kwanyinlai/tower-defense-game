@@ -169,7 +169,7 @@ public class TroopManagment : MonoBehaviour
     {
         RaycastHit hit;
         Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-        Debug.DrawRay(transform.position + new Vector3(0f, 2f, 0f), forward, Color.red, 1000.0f);
+        Debug.DrawRay(transform.position + new Vector3(0f, 2f, 0f), forward, Color.red, 5);
         if (Physics.Raycast(transform.position + new Vector3(0f, 2f, 0f), forward, out hit, 10000f, selectableLayer))
         {
             TroopAI troop = hit.collider.GetComponent<TroopAI>();
@@ -181,6 +181,8 @@ public class TroopManagment : MonoBehaviour
                 troop.DeleteFromWaypoint();
                 troop.Selected();
                 selectedTroops.Add(troop.gameObject);
+                troop.ShowCircle();
+                return;
             }
         }
     }

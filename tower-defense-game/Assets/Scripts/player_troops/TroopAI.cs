@@ -26,6 +26,8 @@ public abstract class TroopAI : MonoBehaviour
     protected float atkTimer = 0f;
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
 
+    private LineRenderer pathIndicator;
+
 
     public static List<GameObject> troops = new List<GameObject>();
 
@@ -60,6 +62,8 @@ public abstract class TroopAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         troops.Add(gameObject);
         HideCircle();
+        pathIndicator = GetComponent<LineRenderer>();
+        pathIndicator.enabled = false;
 
     }
 
@@ -186,11 +190,22 @@ public abstract class TroopAI : MonoBehaviour
     }
 
     void GoToWaypoint(){
-        if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 1f){
+        if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 3f){
             DeleteFromWaypoint();
+            Debug.Log("waypoint test");
+            pathIndicator.enabled = false;
         }
         else{
-            agent.SetDestination(waypoint.transform.position); 
+            agent.SetDestination(waypoint.transform.position);
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(transform.position, waypoint.transform.position, NavMesh.AllAreas, path);
+            pathIndicator.enabled = true;
+            pathIndicator.positionCount = path.corners.Length;
+            for (int i = 0; i < path.corners.Length; i++)
+            {
+                pathIndicator.SetPosition(i, path.corners[i]);
+            }
+
         }
 
         // indicator towards waypoint
@@ -199,6 +214,7 @@ public abstract class TroopAI : MonoBehaviour
 
     public void DeleteFromWaypoint()
     {
+        
         if (waypoint!=null){
             waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
             waypoint = null;

@@ -26,7 +26,12 @@ public class CharacterMovement : MonoBehaviour
     private CinemachineVirtualCamera wide;
     [SerializeField] private GameObject wideCam;
 
+    private CinemachineVirtualCamera build;
+    [SerializeField] private GameObject buildCam;
+
     public float selectionDistance = 2f;
+
+    private GameObject currentActiveCam;
 
     void Start()
     {
@@ -39,6 +44,8 @@ public class CharacterMovement : MonoBehaviour
         overheadCam.SetActive(true);
         aboveCam.SetActive(false);
         wideCam.SetActive(false);
+        buildCam.SetActive(false);
+        currentActiveCam = overheadCam;
     }
 
     public bool IsControllable()
@@ -61,6 +68,7 @@ public class CharacterMovement : MonoBehaviour
             overheadCam.SetActive(true);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);
+            currentActiveCam = overheadCam;
         }
         else if (cameraState == 1)
         {
@@ -68,6 +76,7 @@ public class CharacterMovement : MonoBehaviour
             overheadCam.SetActive(false);
             aboveCam.SetActive(true);
             wideCam.SetActive(false);
+            currentActiveCam = overheadCam;
         }
         else
         {
@@ -76,6 +85,7 @@ public class CharacterMovement : MonoBehaviour
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(true);
+            currentActiveCam = wideCam;
         }
 
 
@@ -171,6 +181,20 @@ public class CharacterMovement : MonoBehaviour
     {
         Debug.Log("Pressed!");
     }
+
+    public void ActivateBuildCam()
+    {
+        buildCam.SetActive(true);
+        currentActiveCam.SetActive(false);
+    }
+
+    public void DeactivateBuildCam()
+    {
+        currentActiveCam.SetActive(true);
+        buildCam.SetActive(false);
+
+    }
+
 
 
 

@@ -28,7 +28,11 @@ public class structureMenu : MonoBehaviour
 
     public void EnableUI(GameObject highlightedStructure)
     {
-        structureMenuUI.SetActive(true);
+        foreach(Transform child in transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+        // structureMenuUI.SetActive(true);
         if (selectedStructure != null)
         {
             selectedStructure.GetComponent<Building>().building_model.GetComponent<Renderer>().material = defaultMaterial;
@@ -52,16 +56,29 @@ public class structureMenu : MonoBehaviour
             selectedStructure = null;
             defaultMaterial = null;
         }
-        structureMenuUI.SetActive(false);
+        // structureMenuUI.SetActive(false);
+        
+        foreach(Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
     }
 
     public void SellButton()
     {
         Debug.Log("Sell");
-        ResourcePool.AddResource(selectedStructure.GetComponent<Building>().getRequiredResources());
+        ResourcePool.AddResource(selectedStructure.GetComponent<Building>().getSellResources());
+        GridSystem.StopOccupying(selectedStructure.transform.position, CalculateOccupyingSize());
         selectedStructure.GetComponent<StructureBattleSystem>().TakeDamage(100000);
         selectedStructure = null;
         defaultMaterial = null;
         DisableUI();
+    }
+
+
+    Vector2Int CalculateOccupyingSize(){
+        MeshRenderer meshRenderer = selectedStructure.GetComponent<MeshRenderer>();
+        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
+                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridSystem.tileSize) );
     }
 }

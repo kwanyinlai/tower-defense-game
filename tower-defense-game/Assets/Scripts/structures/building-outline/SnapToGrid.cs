@@ -34,7 +34,7 @@ public class SnapToGrid : MonoBehaviour
 
 
 
-        if(buildMode.isBuilding && !buildMode.buildMenu && placeable.IsBuildable(gameObject.transform.position))
+        if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
         {
 
             transform.localScale=new Vector3(2f,2f,2f);

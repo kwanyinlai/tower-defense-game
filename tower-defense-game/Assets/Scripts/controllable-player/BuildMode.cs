@@ -1,19 +1,25 @@
+using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 public class BuildMode : MonoBehaviour
 {
     private GameObject structureParentClass;
+    public List<GameObject> allStructuresPrefabs = new List<GameObject>();
 
     public bool isBuilding = false;
     [SerializeField] private GameObject selectedBuilding;
-    public bool buildMenu;
+    private GameObject buildMenu;
+    public bool buildMenuOpen;
 
     [Header("Building Prefabs")]
     public GameObject barracksPrefab;
 
 
     void Start(){
-        buildMenu = true; 
+        buildMenu = GameObject.Find("BuildMenu");
+        buildMenu.SetActive(false);
+        buildMenuOpen = false;
         isBuilding=false;
         structureParentClass=GameObject.Find("structures");
     }
@@ -22,35 +28,20 @@ public class BuildMode : MonoBehaviour
     {
 
         if(!gameObject.GetComponent<TroopManagment>().managingTroops){
-            
-
-
             if(isBuilding){
                
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    CloseBuildMenu();
+                    isBuilding = false;
                 }
-                if(buildMenu){
-                    OpenBuildMenu();
+                else if (Input.GetKeyDown(KeyCode.Return)){
+                    PlaceBuilding();
                 }
-                else{
-                    
-                    if (Input.GetKeyDown(KeyCode.Return)){
-                        
-                        PlaceBuilding();
-                        // CloseBuildMenu();
-                    }
-                }
-
-
-
             }
             else{
                 if (Input.GetKeyDown(KeyCode.B))
                 {
-                    isBuilding = true;
-                    
+                    OpenBuildMenu();
                 }
 
             }
@@ -87,17 +78,22 @@ public class BuildMode : MonoBehaviour
 
 
 
-    void OpenBuildMenu()
+    public void OpenBuildMenu()
     {
-        buildMenu=false; // change this set buildMenu to false AFTER building is selected
-        // only when build menu is implemented
+        buildMenu.SetActive(true);
+        buildMenuOpen = true;
     }
     
-    void CloseBuildMenu()
+    public void CloseBuildMenu()
     {
-        buildMenu = true;
-        isBuilding = false;
-        // selectedBuilding = null;
+        buildMenu.SetActive(false);
+        buildMenuOpen = false;
+        isBuilding = true;
+    }
+
+    public void setActiveBuilding(int selection)
+    {
+        selectedBuilding = allStructuresPrefabs[selection];
     }
     
 }

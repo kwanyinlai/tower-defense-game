@@ -11,6 +11,7 @@ public class TroopCombatSystem : CombatSystem
 
     void Start()
     {
+        base.Start();
         currentHealth = maxHealth;
         tagList = new HashSet<string>(viewableTagList);
     }

@@ -5,6 +5,7 @@ public class EnemyCombatSystem : CombatSystem
 {
     void Start()
     {
+        base.Start();
         currentHealth = maxHealth;
         tagList = new HashSet<string>(viewableTagList);
     }

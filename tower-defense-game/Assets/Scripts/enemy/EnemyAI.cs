@@ -31,7 +31,7 @@ public abstract class EnemyAI : MonoBehaviour
     }
 
 
-    void MoveTowardsTarget(Transform target)
+    protected void MoveTowardsTarget(Transform target)
     {
 
         agent.isStopped = false;
@@ -46,7 +46,7 @@ public abstract class EnemyAI : MonoBehaviour
         }
     }
 
-    void StopMoving()
+    protected void StopMoving()
     {
         agent.isStopped = true;
         pathIndicator.enabled = false;

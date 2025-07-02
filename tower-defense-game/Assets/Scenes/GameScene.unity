@@ -3577,6 +3577,7 @@ MonoBehaviour:
   overheadCam: {fileID: 830137118}
   aboveCam: {fileID: 505278737}
   wideCam: {fileID: 1981213924}
+  buildCam: {fileID: 0}
   selectionDistance: 2
 --- !u!143 &1155523877
 CharacterController:
@@ -3892,11 +3893,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8618420403570746369, guid: cd9e86375175b4fae93f4caedcd63103, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8618420403570746369, guid: cd9e86375175b4fae93f4caedcd63103, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

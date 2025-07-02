@@ -75,8 +75,7 @@ public abstract class TroopAI : MonoBehaviour
             ;
         }
         else{
-
-            ;
+            HideCircle();
         }
         Transform copy = GetClosestEnemyInRange();
         if (copy != null)

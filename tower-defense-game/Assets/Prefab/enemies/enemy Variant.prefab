@@ -70,6 +70,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 7663351754719727365, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     - {fileID: 7266250942620803564, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
+    - {fileID: 2343332585344418765, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
@@ -124,6 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+  shield: 0
   viewableTagList:
   - Enemy
 --- !u!33 &2052587566374734930

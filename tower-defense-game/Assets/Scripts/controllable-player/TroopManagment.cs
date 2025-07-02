@@ -30,12 +30,20 @@ public class TroopManagment : MonoBehaviour
     {
         if (!gameObject.GetComponent<BuildMode>().isBuilding &&
             GetComponent<CharacterMovement>().IsControllable()){
-            
-            if(Input.GetKeyDown(KeyCode.Space)){
-                
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (!(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && selectedTroops.Count > 1)
+                {
+                    StopAndClearSelecting();
+                }
+
                 managingTroops = true;
-                
             }
+               
+                
+                
+            
 
             if(placingWaypoint){
                 // timeMenu += time.deltaTime;
@@ -84,10 +92,8 @@ public class TroopManagment : MonoBehaviour
             {
                 // SelectTroops();
                 RaySelect();
-                if (!(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)))
-                {
-                    managingTroops = false;
-                }
+                managingTroops = false;
+                
             }
         }
 
@@ -158,8 +164,10 @@ public class TroopManagment : MonoBehaviour
         GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,3f), transform.rotation);
         foreach (GameObject troop in selectedTroops)
         {
+           
             TroopAI troopScript = troop.GetComponent<TroopAI>();
             troopScript.commandingPlayer = null;
+            troopScript.DeleteFromWaypoint();
             troopScript.waypoint = deployedPoint;
             deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);
         }
@@ -179,7 +187,6 @@ public class TroopManagment : MonoBehaviour
             {
                 troop.underSelection = true;
                 troop.commandingPlayer = gameObject;
-                troop.DeleteFromWaypoint();
                 selectedTroops.Add(troop.gameObject);
                 troop.ShowCircle();
                 destroyedRay = true;

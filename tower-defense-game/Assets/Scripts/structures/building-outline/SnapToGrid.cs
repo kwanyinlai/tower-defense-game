@@ -33,13 +33,14 @@ public class SnapToGrid : MonoBehaviour
  
 
 
-
+        Debug.Log("Hawdw");
         if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
         {
 
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{
+            Debug.Log("wowszefe0");
             if(!placeable.IsBuildable(gameObject.transform.position)){
                 
                 if ( NearestGrid() !=null){

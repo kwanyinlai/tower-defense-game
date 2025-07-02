@@ -55,8 +55,8 @@ public class BuildMode : MonoBehaviour
         Placeable placeable = selectedBuilding.GetComponent<Placeable>();
 
 
-
-
+        Vector3 placementPosition = selectedBuilding.transform.position;
+        Debug.Log("Doing It For Place Building at : " + placementPosition.x + " : " + placementPosition.y + " :" + placementPosition.z);
         if (placeable.IsBuildable(selectedBuilding.transform.position) &&
             ResourcePool.EnoughResources(placeable.RequiredResources))
         {
@@ -66,12 +66,11 @@ public class BuildMode : MonoBehaviour
                             structureParentClass.transform);
             GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
-            building.GetComponent<Building>().InstantiateBuilding(placeable.RequiredResources);
             ResourcePool.DepleteResource(placeable.RequiredResources);
         }
         else
         {
-            Debug.Log("not buildable?");
+            Debug.Log("not buildable? becaues\nIsBuildable => " + placeable.IsBuildable(selectedBuilding.transform.position) + "\nResources => " + ResourcePool.EnoughResources(placeable.RequiredResources));
             
         }
     }

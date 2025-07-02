@@ -49,6 +49,7 @@ public class Placeable : MonoBehaviour
     }
 
     public bool IsBuildable(Vector3 placementPosition){
+        Debug.Log("Hey Mine for " + placementPosition.x + " : " + placementPosition.y + " :" + placementPosition.z);
         return GridSystem.IsTileAreaBuildable(placementPosition, size);
     }
 

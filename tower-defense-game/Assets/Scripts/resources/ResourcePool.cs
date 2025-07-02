@@ -11,9 +11,9 @@ public class ResourcePool : MonoBehaviour
     // make sure to initialize all types of resources to a default value in start
     private void Start()
     {
-        resources["TestResource1"] = 10;
-        resources["TestResource2"] = 10;
-        resources["TestResource3"] = 10;
+        resources["TestResource1"] = 510;
+        resources["TestResource2"] = 510;
+        resources["TestResource3"] = 510;
     }
 
     void Update()

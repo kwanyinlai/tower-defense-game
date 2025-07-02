@@ -88,6 +88,7 @@ public class GridSystem : MonoBehaviour
 
     public static bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
     {
+        // Debug.Log("checking for => " + coordinates.x + " : " + coordinates.y + " :" + coordinates.z);
         Vector3 gridCoords = CoordinatesToGrid(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
         {
@@ -95,10 +96,15 @@ public class GridSystem : MonoBehaviour
             {
                 if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z] || territoryGrid[x, z] != 2)
                 {
+                    if(!grid[x, z])
+                    {
+                        Debug.Log("Something's Wrong for " + coordinates.x + " : " + coordinates.y + " :" + coordinates.z);
+                    }
                     return false; 
                 }
             }
         }
+        Debug.Log("True for " + coordinates.x + " : " + coordinates.y + " :" + coordinates.z);
         return true;
     }
 
@@ -121,6 +127,7 @@ public class GridSystem : MonoBehaviour
 
     public static void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
     {
+        Debug.Log("built in => " + coordinates.x + " : " + coordinates.y + " :" + coordinates.z);
         Vector3Int gridPos = CoordinatesToGrid(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
         {
@@ -149,6 +156,7 @@ public class GridSystem : MonoBehaviour
     }
     public static void StopOccupying(Vector2Int gridCoords, Vector2Int size)
     {
+        Debug.Log("translated  => " + gridCoords.x + " : " + gridCoords.y + " ... " + size.x + " : " + size.y);
         for (int x = gridCoords.x; x < gridCoords.x + size.x; x++)
         {
             for (int z = gridCoords.y; z < gridCoords.y + size.y; z++)
@@ -157,10 +165,19 @@ public class GridSystem : MonoBehaviour
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
  
+                    Debug.Log("Freed " + x + " : " + z);
                     grid[x, z] = true;
+                    territoryGrid[x, z] = 2;
                 }
             }
         }
+    }
+
+    public static void StopOccupying(Vector3 gridCoords, Vector2Int size)
+    {
+        Debug.Log("called  => " + gridCoords.x + " : " + gridCoords.y + " ... " + size.x + " : " + size.y);
+        // StopOccupying((Vector2Int)CoordinatesToGrid(gridCoords), size);
+        StopOccupying(new Vector2Int((int)gridCoords.x, (int)gridCoords.y), size);
     }
 
     public static Vector3Int CoordinatesToGrid(Vector3 coordinates)

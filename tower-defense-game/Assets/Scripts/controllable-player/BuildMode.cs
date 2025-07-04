@@ -29,13 +29,20 @@ public class BuildMode : MonoBehaviour
 
         if(!gameObject.GetComponent<TroopManagment>().managingTroops){
             if(isBuilding){
-               
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     isBuilding = false;
                 }
-                else if (Input.GetKeyDown(KeyCode.Return)){
+                else if (Input.GetKeyDown(KeyCode.Return))
+                {
                     PlaceBuilding();
+                }
+            } else if (buildMenuOpen)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    isBuilding = false;
+                    CloseBuildMenu();
                 }
             }
             else{

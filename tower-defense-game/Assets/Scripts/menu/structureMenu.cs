@@ -12,10 +12,12 @@ public class structureMenu : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            DisableUI();
+        }
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Pressed left-click.");
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6))
             { // 1<<6 Gets The 6th Layer Which Are For Buildables

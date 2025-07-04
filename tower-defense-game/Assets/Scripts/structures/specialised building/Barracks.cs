@@ -1,29 +1,33 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Barracks : Building
 {
     public GameObject troopPrefab;
-    public float spawnInterval = 3f;
-    public float maxTroops = 10f;
-    private float timer = 0f;
-    private int currentTroops = 0;
-    private Transform troopEmptyObject;
+    protected float spawnInterval = 3f;
+    protected float maxTroops = 10f;
+    protected float timer = 0f;
+    protected int currentTroops = 0;
+    protected Transform troopEmptyObject;
+    public Dictionary<string, int> troopResources = new Dictionary<string, int>();
 
-    
-    private void Start(){
+
+    new protected void Start(){
         base.Start();
+        InitializeTroopResources();
         troopEmptyObject = GameObject.Find("troops").transform;
+    }
+
+    protected virtual void InitializeTroopResources()
+    {
     }
 
     protected override void IntializeSellResources()
     {
-        //TODO: Remove and replace with code to actually add the correct resources based on building
-        sellResources.Add("TestResource1", 100);
-        sellResources.Add("TestResource2", 100);
     }
 
-    private void Update()
+    protected void Update()
     {
         timer += Time.deltaTime;
         if (timer >= spawnInterval && currentTroops < maxTroops)
@@ -34,7 +38,7 @@ public class Barracks : Building
     }
 
 
-    private void SpawnTroop()
+    protected void SpawnTroop()
     {
         int direction = (int) Mathf.Round(transform.eulerAngles.y / 90); //0 for north (up), 1 for east (right) 2 for south (down), 3 for west (left).
         Vector3 spawnPos = transform.position;
@@ -56,9 +60,13 @@ public class Barracks : Building
                 Debug.Log("Error With Troop Spawn Direction");
                 break;
         }
-        GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
-        troop.GetComponent<TroopCombatSystem>().setBarracks(this);
-        currentTroops++; 
+        if (ResourcePool.EnoughResources(troopResources))
+        {
+            ResourcePool.DepleteResource(troopResources);
+            GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
+            troop.GetComponent<TroopCombatSystem>().setBarracks(this);
+            currentTroops++;
+        }
     }
 
     public void DecrementTroops(){

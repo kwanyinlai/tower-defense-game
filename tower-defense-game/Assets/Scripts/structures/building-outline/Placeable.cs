@@ -38,8 +38,8 @@ public class Placeable : MonoBehaviour
         Debug.Log("offset = " + offset);
 
         //TODO: Remove and replace with code to actually add the correct resources based on building
-        requiredResources.Add("TestResource1", 5);
-        requiredResources.Add("TestResource2", 5);
+        requiredResources.Add("TestResource1", 150);
+        requiredResources.Add("TestResource2", 150);
     }
 
 

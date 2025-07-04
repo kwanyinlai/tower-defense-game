@@ -31,23 +31,18 @@ public class SnapToGrid : MonoBehaviour
         transform.rotation = GridSystem.SnapRotation(commandingPlayer.rotation);
 
  
-
-
-        Debug.Log("Hawdw");
         if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
         {
 
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{
-            Debug.Log("wowszefe0");
             if(!placeable.IsBuildable(gameObject.transform.position)){
                 
                 if ( NearestGrid() !=null){
                     transform.position = (Vector3) NearestGrid();
                     return;
                 }
-                
             }
 
             transform.localScale=new Vector3(0f,0f,0f);

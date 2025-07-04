@@ -27,7 +27,6 @@ public class structureMenu : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6))
             { // 1<<6 Gets The 6th Layer Which Are For Buildables
                 // Use the hit variable to determine what was clicked on.
-                Debug.Log(hit.collider.gameObject.name + " was hit!");
                 EnableUI(hit.collider.gameObject);
             }
         }
@@ -65,8 +64,8 @@ public class structureMenu : MonoBehaviour
 
     public void SellButton()
     {
-        Debug.Log("Sell");
         ResourcePool.AddResource(selectedStructure.GetComponent<Building>().getSellResources());
+        Vector3Int structPost = GridSystem.CoordinatesToGrid(selectedStructure.transform.position);
         GridSystem.StopOccupying(selectedStructure.transform.position, CalculateOccupyingSize());
         selectedStructure.GetComponent<StructureBattleSystem>().TakeDamage(100000);
         selectedStructure = null;
@@ -76,7 +75,7 @@ public class structureMenu : MonoBehaviour
 
 
     Vector2Int CalculateOccupyingSize(){
-        MeshRenderer meshRenderer = selectedStructure.GetComponent<MeshRenderer>();
+        MeshRenderer meshRenderer = selectedStructure.GetComponent<Building>().building_model.GetComponent<MeshRenderer>();
         return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
                 Mathf.CeilToInt(meshRenderer.bounds.size.z / GridSystem.tileSize) );
     }

@@ -10,6 +10,11 @@ public class structureMenu : MonoBehaviour
     private GameObject selectedStructure = null;
     private Material defaultMaterial = null;
 
+    private void Start()
+    {
+        DisableUI();
+    }
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
@@ -30,11 +35,8 @@ public class structureMenu : MonoBehaviour
 
     public void EnableUI(GameObject highlightedStructure)
     {
-        foreach(Transform child in transform)
-        {
-            child.gameObject.SetActive(true);
-        }
-        // structureMenuUI.SetActive(true);
+
+        structureMenuUI.SetActive(true);
         if (selectedStructure != null)
         {
             selectedStructure.GetComponent<Building>().building_model.GetComponent<Renderer>().material = defaultMaterial;
@@ -58,12 +60,7 @@ public class structureMenu : MonoBehaviour
             selectedStructure = null;
             defaultMaterial = null;
         }
-        // structureMenuUI.SetActive(false);
-        
-        foreach(Transform child in transform)
-        {
-            child.gameObject.SetActive(false);
-        }
+        structureMenuUI.SetActive(false);
     }
 
     public void SellButton()

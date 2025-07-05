@@ -15,6 +15,9 @@ public class BuildMode : MonoBehaviour
     [Header("Building Prefabs")]
     public GameObject barracksPrefab;
 
+    private CharacterMovement camScript;
+
+
 
     void Start(){
         buildMenu = GameObject.Find("BuildMenu");
@@ -22,6 +25,7 @@ public class BuildMode : MonoBehaviour
         buildMenuOpen = false;
         isBuilding=false;
         structureParentClass=GameObject.Find("structures");
+        camScript = GetComponent<CharacterMovement>();
     }
     
     void Update()
@@ -32,20 +36,23 @@ public class BuildMode : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     isBuilding = false;
+                    camScript.DeactivateBuildCam();
                 }
-                else if (Input.GetKeyDown(KeyCode.Return))
+                else if (Input.GetMouseButtonDown(0))
                 {
                     PlaceBuilding();
                 }
-            } else if (buildMenuOpen)
+            }
+            else if (buildMenuOpen)
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     isBuilding = false;
                     CloseBuildMenu();
+                    camScript.DeactivateBuildCam();
                 }
             }
-            else{
+            else
                 if (Input.GetKeyDown(KeyCode.B))
                 {
                     OpenBuildMenu();
@@ -54,7 +61,7 @@ public class BuildMode : MonoBehaviour
             }
         }
        
-    }
+    
 
     public void PlaceBuilding() // call the outline
     {
@@ -90,11 +97,13 @@ public class BuildMode : MonoBehaviour
         buildMenu.SetActive(false);
         buildMenuOpen = false;
         isBuilding = true;
+        
     }
 
-    public void setActiveBuilding(int selection)
+    public void SetActiveBuilding(int selection)
     {
         selectedBuilding = allStructuresPrefabs[selection];
+        camScript.ActivateBuildCam();
     }
     
 }

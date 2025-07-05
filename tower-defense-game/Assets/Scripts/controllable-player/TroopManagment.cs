@@ -28,6 +28,10 @@ public class TroopManagment : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape) && selectedTroops.Count > 1)
+        {
+            StopAndClearSelecting();
+        }
         if (!gameObject.GetComponent<BuildMode>().isBuilding &&
             GetComponent<CharacterMovement>().IsControllable()){
 

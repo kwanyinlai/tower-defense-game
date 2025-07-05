@@ -4,9 +4,11 @@ using System.Linq;
 
 public class SnapToGrid : MonoBehaviour
 {
-    [SerializeField] private Transform commandingPlayer;
+    [SerializeField] private GameObject terrain;
     private Placeable placeable;
     private BuildMode buildMode;
+    [SerializeField] private GameObject commandingPlayer;
+    [SerializeField] private GameObject mainCamera;
 
 
 
@@ -24,11 +26,16 @@ public class SnapToGrid : MonoBehaviour
     
     void Update()
     {
+        Vector3 mousePos = GetMousePosOnPlane();
         transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(
-            commandingPlayer.position + commandingPlayer.forward * offset));
+            mousePos));
         // for this model, the centre of the model is off for some reason so it looks wrong. i'm pretty sure
         // it works correctly though, if we replace it with another model for exmaple
-        transform.rotation = GridSystem.SnapRotation(commandingPlayer.rotation);
+
+
+        // rotation needs to be figured out
+        // buggy position tracking with Vector.zero
+        // prevent from placing on player's position
 
  
         if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
@@ -54,34 +61,41 @@ public class SnapToGrid : MonoBehaviour
     Vector3? NearestGrid(){
  
         float[] distances = new float[4];
-        for(int i = 0; i<4 ; i++){
-
-        }
-        
-
         for(int i = 0 ; i<4 ; i++){
             if(placeable.IsBuildable( transform.position + TILEOFFSET[i] ) ){
-                distances[i] = Vector3.Distance(commandingPlayer.transform.position, transform.position + TILEOFFSET[i]);
+                distances[i] = Vector3.Distance(GetMousePosOnPlane(), transform.position + TILEOFFSET[i]);
             }
             else{
-                distances[i] = 999; // arbitrarily large;
+                distances[i] = float.MaxValue; 
             }
            
 
         } 
-        float secondMin = distances.OrderBy(n => n) // second min since the first min is the one the player is on
+        float minDistance = distances.OrderBy(n => n) 
                                     .Distinct()
-                                    .Skip(1)
                                     .FirstOrDefault();
-        if(secondMin == 999){
+        if(minDistance == float.MaxValue){
             return null;
         }
-        int ind = Array.IndexOf(distances, secondMin);
+        int ind = Array.IndexOf(distances, minDistance);
         
         if(ind==-1){
             return null;
         }
         return transform.position + TILEOFFSET[ind];
 
+    }
+
+    Vector3 GetMousePosOnPlane()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == terrain)
+        {
+           return hit.point; 
+            
+        }
+        return Vector3.zero;
     }
 }

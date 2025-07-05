@@ -31,7 +31,9 @@ public class CharacterMovement : MonoBehaviour
 
     public float selectionDistance = 2f;
 
-    private GameObject currentActiveCam;
+    private int currentActiveCam;
+
+    private BuildMode buildScript;
 
     void Start()
     {
@@ -45,7 +47,8 @@ public class CharacterMovement : MonoBehaviour
         aboveCam.SetActive(false);
         wideCam.SetActive(false);
         buildCam.SetActive(false);
-        currentActiveCam = overheadCam;
+
+        buildScript = GetComponent<BuildMode>();
     }
 
     public bool IsControllable()
@@ -55,7 +58,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-
+        
         if (Input.GetKeyDown(KeyCode.C))
         {
             cameraState++;
@@ -68,7 +71,9 @@ public class CharacterMovement : MonoBehaviour
             overheadCam.SetActive(true);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);
-            currentActiveCam = overheadCam;
+            buildCam.SetActive(false);
+            currentActiveCam = 0;
+
         }
         else if (cameraState == 1)
         {
@@ -76,17 +81,28 @@ public class CharacterMovement : MonoBehaviour
             overheadCam.SetActive(false);
             aboveCam.SetActive(true);
             wideCam.SetActive(false);
-            currentActiveCam = overheadCam;
+            buildCam.SetActive(false);
+            currentActiveCam = 1;
+
         }
-        else
+        else if (cameraState == 2)
         {
             movementType = "observer";
-
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(true);
-            currentActiveCam = wideCam;
+            buildCam.SetActive(false);
+            currentActiveCam = 2;
         }
+        else if (cameraState == 3)
+        {
+            movementType = "disabled";
+            overheadCam.SetActive(false);
+            aboveCam.SetActive(false);
+            wideCam.SetActive(false);
+            buildCam.SetActive(true);
+        }
+
 
 
         if (movementType == "character")
@@ -100,7 +116,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else if (movementType == "disabled")
         {
-            Debug.Log("disabled");
+            ;
         }
         else
         {
@@ -184,16 +200,17 @@ public class CharacterMovement : MonoBehaviour
 
     public void ActivateBuildCam()
     {
-        buildCam.SetActive(true);
-        currentActiveCam.SetActive(false);
+        cameraState = 3;
+
     }
 
     public void DeactivateBuildCam()
     {
-        currentActiveCam.SetActive(true);
-        buildCam.SetActive(false);
+        cameraState = currentActiveCam;
+        Debug.Log(currentActiveCam);
 
     }
+
 
 
 

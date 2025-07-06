@@ -47,9 +47,10 @@ public class BuildMode : MonoBehaviour
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    isBuilding = false;
+                    buildMenuOpen = false;
                     CloseBuildMenu();
                     camScript.DeactivateBuildCam();
+                    isBuilding = false;
                 }
             }
             else

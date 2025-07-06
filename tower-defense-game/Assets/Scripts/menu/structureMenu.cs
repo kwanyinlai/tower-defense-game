@@ -7,16 +7,27 @@ public class structureMenu : MonoBehaviour
     public TextMeshProUGUI structure_name_ui;
     public Material highlightMaterial;
 
+    private TextMeshProUGUI infoTextText; //Text of infoText
     private GameObject selectedStructure = null;
     private Material defaultMaterial = null;
+    private StructureBattleSystem selectedSBSScript = null;
+    private Building selectedBuildingScript = null;
+    private bool isMenuOpen = false;
+
+    private GameObject test;
 
     private void Start()
     {
+        test = transform.Find("structure-menu").Find("InfoText").gameObject;    
+        infoTextText = transform.Find("structure-menu").Find("InfoText").gameObject.GetComponent<TextMeshProUGUI>();
         DisableUI();
     }
 
     private void Update()
     {
+        if(isMenuOpen){ 
+            updateText(); 
+        }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             DisableUI();
@@ -32,9 +43,16 @@ public class structureMenu : MonoBehaviour
         }
     }
 
+    //Contains structure health
+    private void updateText()
+    {
+        infoTextText.text = "Health: " + selectedSBSScript.currentHealth + "/" + selectedSBSScript.maxHealth;
+    }
+
     public void EnableUI(GameObject highlightedStructure)
     {
-
+        selectedSBSScript = highlightedStructure.GetComponent<StructureBattleSystem>();
+        selectedBuildingScript = highlightedStructure.GetComponent<Building>(); 
         structureMenuUI.SetActive(true);
         if (selectedStructure != null)
         {
@@ -48,6 +66,7 @@ public class structureMenu : MonoBehaviour
         building_model.GetComponent<Renderer>().material = highlightMaterial;
 
         structure_name_ui.text = highlightedStructure.GetComponent<Building>().building_name;
+        isMenuOpen = true;
     }
 
     public void DisableUI()
@@ -60,6 +79,7 @@ public class structureMenu : MonoBehaviour
             defaultMaterial = null;
         }
         structureMenuUI.SetActive(false);
+        isMenuOpen = false;
     }
 
     public void SellButton()

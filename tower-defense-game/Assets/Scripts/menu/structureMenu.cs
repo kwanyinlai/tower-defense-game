@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 public class structureMenu : MonoBehaviour
 {
@@ -43,10 +44,13 @@ public class structureMenu : MonoBehaviour
         }
     }
 
+    
+
     //Contains structure health
     private void updateText()
     {
-        infoTextText.text = "Health: " + selectedSBSScript.currentHealth + "/" + selectedSBSScript.maxHealth;
+        infoTextText.text = "Health: " + selectedSBSScript.currentHealth + "/" + selectedSBSScript.maxHealth
+                            + "\nSell for:\n" + StaticScripts.resourcesToText(selectedBuildingScript.sellResources);
     }
 
     public void EnableUI(GameObject highlightedStructure)

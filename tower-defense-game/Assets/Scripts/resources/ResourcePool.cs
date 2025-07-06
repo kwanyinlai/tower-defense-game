@@ -77,12 +77,7 @@ public class ResourcePool : MonoBehaviour
 
     public static string getResourceText()
     {
-        string result = "";
-        foreach (KeyValuePair<string, int> pair in resources)
-        {
-            result += pair.Key + ": " + pair.Value + "\n";
-        }
-        return result;
+        return StaticScripts.resourcesToText(resources);
     }
 
 }

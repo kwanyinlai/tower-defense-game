@@ -8,7 +8,6 @@ using System.Runtime.Serialization.Json;
 
 public class BerserkerEnemyAI : EnemyAI
 {
-    public float range = 2f;
     public float hasteEffectDecimal = 0.10f;
     public float troopStrengthDecimal = 1.50f;
 

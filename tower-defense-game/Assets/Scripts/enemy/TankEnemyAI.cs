@@ -8,7 +8,6 @@ using System.Runtime.Serialization.Json;
 
 public class TankEnemyAI : EnemyAI
 {
-    public float range = 2f;
     public float slowEffectDecimal = 0.10f;
 
     protected void Start()

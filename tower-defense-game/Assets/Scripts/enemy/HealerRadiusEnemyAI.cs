@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class HealerEnemyAI : EnemyAI
+public class HealerRadiusEnemyAI : EnemyAI
 {
 
     public float healStrength = 10;
     public float healCooldown = 2;
+    protected List<GameObject> allyList = null;
 
     public override void Attack(Transform bulletTarget)
     {
-
         transform.LookAt(bulletTarget);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
 
@@ -21,80 +21,43 @@ public class HealerEnemyAI : EnemyAI
         atkTimer = atkCooldown;
     }
 
-    public void Heal(Transform bulletTarget)
+    public void Heal(List<GameObject> allyList)
     {
-        transform.LookAt(bulletTarget);
-        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
-
-        CombatSystem targetCombat = bulletTarget.GetComponent<CombatSystem>();
-        float previousHealStrength = targetCombat.GetEffectStrength("heal");
-        targetCombat.ApplyEffect("heal", healStrength, healCooldown);
-        targetCombat.AddHealth(healStrength - previousHealStrength);
+        CombatSystem targetCombat;
+        Debug.Log("Checking!");
+        foreach(var targetAlly in allyList)
+        {
+            targetCombat = targetAlly.GetComponent<CombatSystem>();
+            float previousHealStrength = targetCombat.GetEffectStrength("heal");
+            if(previousHealStrength < healStrength)
+            {
+                targetCombat.ApplyEffect("heal", healStrength, healCooldown);
+                Debug.Log("Healed");
+                targetCombat.AddHealth(healStrength - previousHealStrength);
+            }
+        }
 
         Collider collider = this.GetComponent<Collider>();
         atkTimer = atkCooldown;
     }
     
-    public Transform GetBestAllyInRange()
-    {
-        if (EnemyAI.enemies.Count == 0)
-        {
-            return null;
-        }
-
-        
-        List<GameObject> potentialAllies = new List<GameObject>();
+    public List<GameObject> GetAlliesInRange()
+    {        
+        List<GameObject> allies = new List<GameObject>();
 
         // adds allies within range
         foreach (var ally in EnemyAI.enemies)
         {
+            CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(transform.position, ally.transform.position);
 
-            if (distance <= aggroRange)
+            if (distance <= aggroRange && targetCombat.currentHealth != targetCombat.maxHealth)
             {
-                potentialAllies.Add(ally);
+                allies.Add(ally);
             }
         }
-
-        GameObject bestAlly = null;
-
-         // remove from potential if ally at 100% or is on cooldown
-        for(int i = potentialAllies.Count - 1; i >= 0; i--)
-        {
-            float currHealth = potentialAllies[i].GetComponent<CombatSystem>().currentHealth;
-            float currMaxHealth = potentialAllies[i].GetComponent<CombatSystem>().maxHealth;
-
-            if (currMaxHealth == currHealth || potentialAllies[i].GetComponent<CombatSystem>().GetEffectStrength("heal") != 0)
-            {
-                potentialAllies.RemoveAt(i);
-            }
-        }
-
-
-        if(potentialAllies.Count > 0)
-        {
-            bestAlly = potentialAllies[0];
-            float lowestHealth = bestAlly.GetComponent<CombatSystem>().currentHealth;
-            float maxHealth = bestAlly.GetComponent<CombatSystem>().maxHealth;
-            
-            // determines best ally
-            foreach (var ally in potentialAllies)
-            {
-                float distance = Vector3.Distance(transform.position, ally.transform.position);
-                float currHealth = ally.GetComponent<CombatSystem>().currentHealth;
-                float currMaxHealth = ally.GetComponent<CombatSystem>().maxHealth;
-
-                if (currHealth <= lowestHealth)
-                {
-                    bestAlly = ally;
-                    lowestHealth = currHealth;
-                    maxHealth = maxHealth;
-                }
-            }
-        }
-
-        if (bestAlly == null) { return null; }
-        return bestAlly.transform;
+        
+        return allies.Count == 0 ? null : allies;
     }
 
     void Update()
@@ -110,7 +73,17 @@ public class HealerEnemyAI : EnemyAI
             targetStats = baseTarget.GetComponent<CombatSystem>();
         }
         
-        troopTarget = GetBestAllyInRange();
+        allyList = GetAlliesInRange();
+
+        // sets troop target just in case something else depends on it
+        if(allyList == null)
+        {
+            troopTarget = null;
+        }
+        else
+        {
+            troopTarget = allyList[0].transform;
+        }
 
         barracksTarget = GetClosestBarracksInRange();
 
@@ -123,7 +96,7 @@ public class HealerEnemyAI : EnemyAI
                 StopMoving();
                 if (atkTimer <= 0f)
                 {
-                    Heal(troopTarget);
+                    Heal(allyList);
                 }
             }
             else

@@ -37,7 +37,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected void MoveTowardsTarget(Transform target)
     { 
         agent.isStopped = false;
-        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow") + combatSystem.GetEffectStrength("haste"));
         agent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);

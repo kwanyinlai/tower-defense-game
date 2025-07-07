@@ -474,11 +474,11 @@ GameObject:
   - component: {fileID: 5926374230740811391}
   - component: {fileID: 4402602086352875027}
   - component: {fileID: 3885593972662341968}
-  - component: {fileID: 8491833000665746621}
+  - component: {fileID: 3399870797475806624}
   - component: {fileID: 2052587566374734930}
   - component: {fileID: 6540427454544848809}
   m_Layer: 7
-  m_Name: enemy Variant
+  m_Name: enemy Berserker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -578,12 +578,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a654ef1a08674510bb5e25f892ccc58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 200
+  currentHealth: 200
   shield: 0
   viewableTagList:
   - Enemy
---- !u!114 &8491833000665746621
+--- !u!114 &3399870797475806624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -592,18 +592,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 7027937552822798463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 700e422f34b66478bbd055dd10634ccd, type: 3}
+  m_Script: {fileID: 11500000, guid: 69793664a18d9c846aaf9d5309e3f9c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   aggroRange: 10
-  baseTarget: {fileID: 4297677168834720841, guid: 87d723e00b62349bba774cf272424160, type: 3}
+  baseTarget: {fileID: 0}
   troopTarget: {fileID: 0}
   barracksTarget: {fileID: 0}
   range: 5
   maxSpeed: 3.5
   dmg: 10
   atkTimer: 0
-  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
+  range: 2
+  hasteEffectDecimal: 1
+  troopStrengthDecimal: 1.5
 --- !u!33 &2052587566374734930
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -87,6 +87,7 @@ public abstract class CombatSystem : MonoBehaviour
         // please initialize all effects hear, this is just to prevent situations where duplicate effects are added like "health" and "Health" by accident
         appliedEffects.Add("heal", new List<(float strength, float startTime, float durationSec)>());
         appliedEffects.Add("slow", new List<(float strength, float startTime, float durationSec)>());
+        appliedEffects.Add("haste", new List<(float strength, float startTime, float durationSec)>());
         appliedEffects.Add("burn", new List<(float strength, float startTime, float durationSec)>());
 
     }

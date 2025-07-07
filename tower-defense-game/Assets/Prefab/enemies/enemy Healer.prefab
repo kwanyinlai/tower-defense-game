@@ -74,10 +74,10 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2154473298026084711}
+      addedObject: {fileID: 3885593972662341968}
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3885593972662341968}
+      addedObject: {fileID: 2154473298026084711}
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2052587566374734930}
@@ -90,25 +90,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
   m_PrefabInstance: {fileID: 7779754398210173838}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2154473298026084711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7027937552822798463}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1be74316bf059474f96a38c6ad7e788a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aggroRange: 10
-  baseTarget: {fileID: 0}
-  troopTarget: {fileID: 0}
-  barracksTarget: {fileID: 0}
-  range: 5
-  dmg: 10
-  atkTimer: 0
 --- !u!114 &3885593972662341968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +107,28 @@ MonoBehaviour:
   shield: 0
   viewableTagList:
   - Enemy
+--- !u!114 &2154473298026084711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7027937552822798463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be74316bf059474f96a38c6ad7e788a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aggroRange: 10
+  baseTarget: {fileID: 0}
+  troopTarget: {fileID: 0}
+  barracksTarget: {fileID: 0}
+  range: 5
+  maxSpeed: 3.5
+  dmg: 10
+  atkTimer: 0
+  healStrength: 10
+  healCooldown: 2
 --- !u!33 &2052587566374734930
 MeshFilter:
   m_ObjectHideFlags: 0

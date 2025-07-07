@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       propertyPath: m_Name
-      value: enemy Variant
+      value: enemy Tank
       objectReference: {fileID: 0}
     - target: {fileID: 2162720256585892535, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       propertyPath: m_AnchorMax.x
@@ -64,9 +64,13 @@ PrefabInstance:
       propertyPath: m_StoppingDistance
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3631018139976100572, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
+      propertyPath: selectedCircle
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 3631018139976100572, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     - {fileID: 8363124638678097964, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
+    - {fileID: 3631018139976100572, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     m_RemovedGameObjects:
     - {fileID: 7663351754719727365, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
     - {fileID: 7266250942620803564, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
@@ -78,7 +82,7 @@ PrefabInstance:
       addedObject: {fileID: 3885593972662341968}
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8491833000665746621}
+      addedObject: {fileID: 8702303853260513744}
     - targetCorrespondingSourceObject: {fileID: 756326148550960113, guid: 62f5b83b57a5e4794b2f440b3527f3aa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2052587566374734930}
@@ -108,7 +112,7 @@ MonoBehaviour:
   shield: 0
   viewableTagList:
   - Enemy
---- !u!114 &8491833000665746621
+--- !u!114 &8702303853260513744
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -117,18 +121,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 7027937552822798463}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 700e422f34b66478bbd055dd10634ccd, type: 3}
+  m_Script: {fileID: 11500000, guid: 61d405f98889c264f9033062672bb4c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   aggroRange: 10
-  baseTarget: {fileID: 4297677168834720841, guid: 87d723e00b62349bba774cf272424160, type: 3}
+  baseTarget: {fileID: 0}
   troopTarget: {fileID: 0}
   barracksTarget: {fileID: 0}
-  range: 5
+  range: 2.5
   maxSpeed: 3.5
   dmg: 10
   atkTimer: 0
-  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
+  range: 2
+  slowEffectDecimal: 0.1
 --- !u!33 &2052587566374734930
 MeshFilter:
   m_ObjectHideFlags: 0

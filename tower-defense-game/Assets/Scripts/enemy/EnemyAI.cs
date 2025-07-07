@@ -13,28 +13,31 @@ public abstract class EnemyAI : MonoBehaviour
     protected UnityEngine.AI.NavMeshAgent agent;
     protected CombatSystem targetStats;
     public float range = 5.0f;
+    public float maxSpeed = 3.5f;
     public int dmg = 10;
     protected float atkCooldown = 1.5f;
     public float atkTimer = 0f;
     public abstract void Attack(Transform target);
     private LineRenderer pathIndicator;
+    protected CombatSystem combatSystem;
 
-    void Start()
+    protected void Start()
     {
         enemies.Add(gameObject);
     
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         pathIndicator= GetComponent<LineRenderer>();
+        combatSystem = gameObject.GetComponent<CombatSystem>();
+        
         pathIndicator.enabled = false;
-
-
+        agent.speed = maxSpeed;
     }
 
 
     protected void MoveTowardsTarget(Transform target)
-    {
-
+    { 
         agent.isStopped = false;
+        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
         agent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);

@@ -25,8 +25,7 @@ public class BerserkerEnemyAI : EnemyAI
         CombatSystem combatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
         if (combatSystem != null)
         {
-            Debug.Log((int)((float)dmg * ((troopTarget == null) ? 1.0f : troopStrengthDecimal)));
-            combatSystem.TakeDamage((int)((float)dmg * ((troopTarget == null) ? 1.0f : troopStrengthDecimal)));
+            combatSystem.TakeDamage((int)(dmg * ((troopTarget == null) ? 1.0f : troopStrengthDecimal) * (combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
         }
         atkTimer = atkCooldown;
     }

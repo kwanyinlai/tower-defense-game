@@ -89,6 +89,8 @@ public abstract class CombatSystem : MonoBehaviour
         appliedEffects.Add("slow", new List<(float strength, float startTime, float durationSec)>());
         appliedEffects.Add("haste", new List<(float strength, float startTime, float durationSec)>());
         appliedEffects.Add("burn", new List<(float strength, float startTime, float durationSec)>());
+        appliedEffects.Add("attackBuff", new List<(float strength, float startTime, float durationSec)>());
+        appliedEffects.Add("attackWeaken", new List<(float strength, float startTime, float durationSec)>());
 
     }
 

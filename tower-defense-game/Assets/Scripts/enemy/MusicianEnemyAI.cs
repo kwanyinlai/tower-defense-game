@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class HealerRadiusEnemyAI : EnemyAI
+public class MusicianEnemyAI : EnemyAI
 {
 
-    public float healStrength = 10;
-    public float healCooldown = 2;
+    public float attackBuffStrengthDecimal = 1.25f;
+    public float attackCooldown = 2f;
     protected List<GameObject> allyList = null;
 
     public override void Attack(Transform bulletTarget)
@@ -16,23 +16,16 @@ public class HealerRadiusEnemyAI : EnemyAI
         transform.LookAt(bulletTarget);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
 
-
         Collider collider = this.GetComponent<Collider>();
         atkTimer = atkCooldown;
     }
 
-    public void Heal(List<GameObject> allyList)
+    public void BuffAttack(List<GameObject> allyList)
     {
         CombatSystem targetCombat;
         foreach(var targetAlly in allyList)
         {
-            targetCombat = targetAlly.GetComponent<CombatSystem>();
-            float previousHealStrength = targetCombat.GetEffectStrength("heal");
-            if(previousHealStrength < healStrength)
-            {
-                targetCombat.ApplyEffect("heal", healStrength, healCooldown);
-                targetCombat.AddHealth(healStrength - previousHealStrength);
-            }
+            targetAlly.GetComponent<CombatSystem>().ApplyEffect("attackBuff", attackBuffStrengthDecimal, attackCooldown);
         }
 
         Collider collider = this.GetComponent<Collider>();
@@ -49,7 +42,7 @@ public class HealerRadiusEnemyAI : EnemyAI
             CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(transform.position, ally.transform.position);
 
-            if (distance <= aggroRange && targetCombat.currentHealth != targetCombat.maxHealth)
+            if (distance <= aggroRange)
             {
                 allies.Add(ally);
             }
@@ -94,7 +87,7 @@ public class HealerRadiusEnemyAI : EnemyAI
                 StopMoving();
                 if (atkTimer <= 0f)
                 {
-                    Heal(allyList);
+                    BuffAttack(allyList);
                 }
             }
             else

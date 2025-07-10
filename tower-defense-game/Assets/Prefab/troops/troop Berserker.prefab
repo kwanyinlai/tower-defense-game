@@ -151,7 +151,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Name
-      value: troop
+      value: troop Berserker
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Layer
@@ -178,7 +178,7 @@ PrefabInstance:
       addedObject: {fileID: 8363124638678097964}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3631018139976100572}
+      addedObject: {fileID: -78741873124562874}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4164009545557612017}
@@ -238,7 +238,7 @@ MonoBehaviour:
   shield: 0
   viewableTagList:
   - Troop
---- !u!114 &3631018139976100572
+--- !u!114 &-78741873124562874
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 756326148550960113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 360d220152b3b401394f6aee3f844cbf, type: 3}
+  m_Script: {fileID: 11500000, guid: 628dd99f0af66d947a36b929ad9ba27b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   aggroRange: 10
@@ -259,8 +259,9 @@ MonoBehaviour:
   underSelection: 0
   commandingPlayer: {fileID: 0}
   waypoint: {fileID: 0}
-  selectedCircle: {fileID: 2343332585344418765}
-  bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
+  selectedCircle: {fileID: 0}
+  hasteEffectDecimal: 0.1
+  troopStrengthDecimal: 1.5
 --- !u!64 &4164009545557612017
 MeshCollider:
   m_ObjectHideFlags: 0

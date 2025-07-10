@@ -18,7 +18,7 @@ public class MeleeEnemyAI : EnemyAI
         CombatSystem combatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
         if (combatSystem != null)
         {
-            combatSystem.TakeDamage((int)(dmg * (combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
+            combatSystem.TakeDamage((int)(dmg * (1 + combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
         }
         atkTimer = atkCooldown;
     }

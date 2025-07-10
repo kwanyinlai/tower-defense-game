@@ -6,15 +6,14 @@ using System.Runtime.Serialization.Json;
 
 
 
-public class BerserkerEnemyAI : EnemyAI
+public class TankTroopAI : TroopAI
 {
-    public float hasteEffectDecimal = 0.10f;
-    public float troopStrengthDecimal = 0.50f;
+    public float slowEffectDecimal = 0.10f;
 
     protected void Start()
     {
         base.Start();
-        combatSystem.ApplyEffect("haste", hasteEffectDecimal, -1);
+        combatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
     }
     
     public override void Attack(Transform target)
@@ -25,7 +24,7 @@ public class BerserkerEnemyAI : EnemyAI
         CombatSystem combatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
         if (combatSystem != null)
         {
-            combatSystem.TakeDamage((int)(dmg * ((troopTarget == null) ? 1.0f : 1 + troopStrengthDecimal) * (1 + combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
+            combatSystem.TakeDamage((int)(dmg * (1 + combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
         }
         atkTimer = atkCooldown;
     }

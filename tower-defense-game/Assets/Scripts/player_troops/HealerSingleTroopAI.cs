@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class HealerEnemyAI : EnemyAI
+public class HealerSingleTroopAI : TroopAI
 {
 
     public float healStrength = 10;
@@ -37,16 +37,15 @@ public class HealerEnemyAI : EnemyAI
     
     public Transform GetBestAllyInRange()
     {
-        if (EnemyAI.enemies.Count == 0)
+        if (TroopAI.troops.Count == 0)
         {
             return null;
         }
 
-        
         List<GameObject> potentialAllies = new List<GameObject>();
 
         // adds allies within range
-        foreach (var ally in EnemyAI.enemies)
+        foreach (var ally in TroopAI.troops)
         {
             float distance = Vector3.Distance(transform.position, ally.transform.position);
 
@@ -97,71 +96,69 @@ public class HealerEnemyAI : EnemyAI
         return bestAlly.transform;
     }
 
-    void Update()
-    {
 
-        if (baseTarget == null)
+    protected void Update()
+    {
+        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
+        if(underSelection){
+            ;
+        }
+        else{
+            HideCircle();
+        }
+        Transform copy = GetBestAllyInRange();
+        if (copy != null)
         {
-            Debug.Log("No base found!");
-            baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+            inCombat = true;
+            enemyTarget = copy;
         }
         else
+        {   
+            inCombat = false;  
+            agent.isStopped=false; 
+        }
+       
+        if (inCombat)
         {
-            targetStats = baseTarget.GetComponent<CombatSystem>();
+            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+            ApplyEffectToAlly();
+        } 
+        else {        
+            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+            if(underSelection){
+
+                ;
+            }
+            else{
+                if(waypoint!=null){
+                    GoToWaypoint();
+                    HideCircle();
+                    
+                }
+                else{
+                    ;
+                }
+
+            }   
+            
         }
         
-        troopTarget = GetBestAllyInRange();
+    }
 
-        barracksTarget = GetClosestBarracksInRange();
-
-        if (troopTarget != null)
-        {
-            targetStats = troopTarget.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(transform.position, troopTarget.position);
-            if (distance <= range)
-            {
-                StopMoving();
-                if (atkTimer <= 0f)
-                {
-                    Heal(troopTarget);
-                }
-            }
-            else
-            {
-                MoveTowardsTarget(troopTarget);
+    protected void ApplyEffectToAlly(){
+        
+        targetStats = enemyTarget.GetComponent<CombatSystem>(); 
+        float distance = Vector3.Distance(transform.position, enemyTarget.position);
+        if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/) {
+            agent.isStopped = true;
+            if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)  { 
+                Heal(enemyTarget); 
             }
         }
-        else if (baseTarget != null)
-        {
-
-            float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
-            if (distance <= range)
-            {
-                StopMoving();
-                if (agent.velocity.magnitude <= 0.1f)
-                {
-                    if (atkTimer <= 0f)
-                    {
-                        Attack(baseTarget.transform);
-                    }
-                }
-
-            }
-            else
-            {
-                MoveTowardsTarget(baseTarget.transform);
-            }
+        else{ 
+            agent.isStopped = false;
+            agent.SetDestination(enemyTarget.position); 
         }
-        else
-        {
-            StopMoving();
-        }
-        if (atkTimer > 0f) {
-            atkTimer -= Time.deltaTime;
-        } else
-        {
-            atkTimer = atkCooldown;
-        }
-    } 
+    }
 
 }

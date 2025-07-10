@@ -603,9 +603,8 @@ MonoBehaviour:
   maxSpeed: 3.5
   dmg: 10
   atkTimer: 0
-  range: 2
-  hasteEffectDecimal: 1
-  troopStrengthDecimal: 1.5
+  hasteEffectDecimal: 0.1
+  troopStrengthDecimal: 0.5
 --- !u!33 &2052587566374734930
 MeshFilter:
   m_ObjectHideFlags: 0

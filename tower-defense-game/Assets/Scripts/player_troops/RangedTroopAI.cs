@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class RangedTroopAI : TroopAI
 {
     public GameObject bulletPrefab; 
-    public override void Attack()
+    public override void Attack(Transform target)
     {
         transform.LookAt(enemyTarget);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move

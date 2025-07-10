@@ -24,6 +24,7 @@ public abstract class TroopAI : MonoBehaviour
     public int dmg = 10;
     protected float atkCooldown = 1.5f;
     protected float atkTimer = 0f;
+    public float maxSpeed = 3.5f;
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
 
     private LineRenderer pathIndicator;
@@ -34,10 +35,12 @@ public abstract class TroopAI : MonoBehaviour
 
     public bool underSelection=false;
 
+    protected CombatSystem combatSystem;
+
 
     public GameObject commandingPlayer;
     public GameObject waypoint; // maybe these shouldn't be public?
-    public abstract void Attack();
+    public abstract void Attack(Transform target);
 
     [SerializeField] private GameObject selectedCircle;
     
@@ -54,7 +57,7 @@ public abstract class TroopAI : MonoBehaviour
     }
 
 
-    void Start()
+    protected void Start()
     {
         
         idleTransform = this.transform.position;
@@ -65,10 +68,13 @@ public abstract class TroopAI : MonoBehaviour
         pathIndicator = GetComponent<LineRenderer>();
         pathIndicator.enabled = false;
 
+        combatSystem = gameObject.GetComponent<CombatSystem>();
+        agent.speed = maxSpeed;
+
     }
 
 
-    void Update()
+    protected void Update()
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){
@@ -91,11 +97,12 @@ public abstract class TroopAI : MonoBehaviour
        
         if (inCombat)
         {
+            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
             
             FightEnemyInRange();
         } 
-        else {      
-
+        else {        
+            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
             if(underSelection){
 
                 ;
@@ -125,7 +132,7 @@ public abstract class TroopAI : MonoBehaviour
 
 
 
-    void Idle(){
+    protected void Idle(){
         float dist = Mathf.Sqrt(Mathf.Pow(idleStartPos.x - transform.position.x, 2) + Mathf.Pow(idleStartPos.z - transform.position.z, 2));
         float dist2 = Mathf.Sqrt(Mathf.Pow(idleTransform.x - transform.position.x, 2) + Mathf.Pow(idleTransform.z - transform.position.z, 2));
         if (dist >= idleRange)
@@ -141,14 +148,14 @@ public abstract class TroopAI : MonoBehaviour
 
 
   
-    void FightEnemyInRange(){
+    protected void FightEnemyInRange(){
         
         targetStats = enemyTarget.GetComponent<CombatSystem>(); 
         float distance = Vector3.Distance(transform.position, enemyTarget.position);
         if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/) {
             agent.isStopped = true;
             if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)  { 
-                Attack(); 
+                Attack(enemyTarget); 
             }
         }
         else{ 
@@ -188,7 +195,7 @@ public abstract class TroopAI : MonoBehaviour
         return closestEnemy.transform;
     }
 
-    void GoToWaypoint(){
+    protected void GoToWaypoint(){
         if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 3f){
             DeleteFromWaypoint();
             Debug.Log("waypoint test");

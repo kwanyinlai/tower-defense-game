@@ -32,16 +32,20 @@ public class Placeable : MonoBehaviour
     }
 
     void Start(){
+        InitPlaceable();
+    }
+
+    // Created an Init Placeable Function So That Creating 
+    public void InitPlaceable() {
         meshRenderer = GetComponent<MeshRenderer>();
         size = CalculateOccupyingSize();
         offset = CalculateOffset();
         Debug.Log("offset = " + offset);
 
         //TODO: Remove and replace with code to actually add the correct resources based on building
-        requiredResources.Add("TestResource1", 150);
-        requiredResources.Add("TestResource2", 150);
+        requiredResources.TryAdd("TestResource1", 150);
+        requiredResources.TryAdd("TestResource2", 150);
     }
-
 
     Vector2Int CalculateOccupyingSize(){
         return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
@@ -54,5 +58,12 @@ public class Placeable : MonoBehaviour
 
     int CalculateOffset(){
         return (System.Math.Max(size.x, size.y)/2) + 2;
+    }
+
+    public void DebugStatement() {
+        Debug.Log("offset = " + offset);
+        Debug.Log("name of prefab selected is " + prefab.name);
+        Debug.Log("size is " + size.x + ", " + size.y);
+        Debug.Log("grid is " + gridCoords.x + ", " + gridCoords.y);
     }
 }

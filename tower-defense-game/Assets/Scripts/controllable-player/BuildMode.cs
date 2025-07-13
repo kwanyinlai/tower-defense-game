@@ -5,6 +5,7 @@ using UnityEngine;
 public class BuildMode : MonoBehaviour
 {
     private GameObject structureParentClass;
+    private GameObject structureOutlineParentClass;
     public List<GameObject> allStructuresPrefabs = new List<GameObject>();
 
     public bool isBuilding = false;
@@ -12,8 +13,11 @@ public class BuildMode : MonoBehaviour
     private GameObject buildMenu;
     public bool buildMenuOpen;
 
+    [SerializeField] private GameObject terrain;
+
     [Header("Building Prefabs")]
     public GameObject barracksPrefab;
+    
 
     private CharacterMovement camScript;
 
@@ -25,6 +29,7 @@ public class BuildMode : MonoBehaviour
         buildMenuOpen = false;
         isBuilding=false;
         structureParentClass=GameObject.Find("structures");
+        structureOutlineParentClass=GameObject.Find("structure-outlines");
         camScript = GetComponent<CharacterMovement>();
     }
     
@@ -71,6 +76,7 @@ public class BuildMode : MonoBehaviour
         if (placeable.IsBuildable(selectedBuilding.transform.position) &&
             ResourcePool.EnoughResources(placeable.RequiredResources))
         {
+            placeable.DebugStatement();
             GameObject building = Instantiate(placeable.prefab, 
                             selectedBuilding.transform.position, 
                             selectedBuilding.transform.rotation,
@@ -81,7 +87,7 @@ public class BuildMode : MonoBehaviour
         }
         else
         {
-            Debug.Log("not buildable?");
+            Debug.Log("not buildable? reason :" + (placeable.IsBuildable(selectedBuilding.transform.position) ? "" : " No Buildable Space") + (ResourcePool.EnoughResources(placeable.RequiredResources) ? "" : " Not Enough Resources"));
         }
     }
 
@@ -103,8 +109,14 @@ public class BuildMode : MonoBehaviour
 
     public void SetActiveBuilding(int selection)
     {
-        selectedBuilding = allStructuresPrefabs[selection];
+        GameObject old = selectedBuilding;
+        selectedBuilding = Instantiate(allStructuresPrefabs[selection], structureOutlineParentClass.transform);
+        selectedBuilding.GetComponent<SnapToGrid>().InitSnapToGrid(terrain, gameObject, null);
+        selectedBuilding.GetComponent<Placeable>().InitPlaceable();
+        if(old != null)
+        {
+            Destroy(old);
+        }
         camScript.ActivateBuildCam();
     }
-    
 }

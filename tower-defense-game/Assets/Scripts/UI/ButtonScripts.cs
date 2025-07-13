@@ -39,7 +39,7 @@ public class ButtonScripts : MonoBehaviour
     //Buttons for the build menu
     public void basicBarrackButton()
     {
-        buildMode.SetActiveBuilding(0);
+        buildMode.SetActiveBuilding(6);
         buildMode.CloseBuildMenu();
     }
 

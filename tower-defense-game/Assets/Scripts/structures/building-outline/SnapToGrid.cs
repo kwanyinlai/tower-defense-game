@@ -6,11 +6,9 @@ public class SnapToGrid : MonoBehaviour
 {
     [SerializeField] private GameObject terrain;
     private Placeable placeable;
-    private BuildMode buildMode;
+    [SerializeField] private BuildMode buildMode;
     [SerializeField] private GameObject commandingPlayer;
     [SerializeField] private GameObject mainCamera;
-
-
 
     private Vector3[] TILEOFFSET = {new Vector3(0f,0f,4f), new Vector3(0f,0f,-4f), 
                                   new Vector3(4f,0f,0f), new Vector3(-4f,0f,0f)};
@@ -18,9 +16,19 @@ public class SnapToGrid : MonoBehaviour
     private int offset;
 
     void Start(){
+        // Just a failsafe for when object is insantiated and needs to initialize variables 
+        if(commandingPlayer != null) 
+            InitSnapToGrid(terrain, commandingPlayer, mainCamera);
+    }
+
+    public void InitSnapToGrid(GameObject terrain, GameObject commandingPlayer, GameObject mainCamera) {
+        this.terrain = terrain;
+        this.commandingPlayer = commandingPlayer;
+        this.mainCamera = mainCamera;
+
         placeable = gameObject.GetComponent<Placeable>();
         buildMode = commandingPlayer.GetComponent<BuildMode>();
-        offset = gameObject.GetComponent<Placeable>().offset;
+        offset = placeable.offset;
         Debug.Log("offset is " + offset);
     }
     
@@ -37,10 +45,7 @@ public class SnapToGrid : MonoBehaviour
         // buggy position tracking with Vector.zero
         // prevent from placing on player's position
 
- 
-        if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
-        {
-
+        if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position)) {
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{

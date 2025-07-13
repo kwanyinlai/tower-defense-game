@@ -1156,7 +1156,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.004711756}
+  m_AnchoredPosition: {x: 0, y: -0.0042746146}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &312722151
@@ -2676,7 +2676,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.004112596}
+  m_AnchoredPosition: {x: 0, y: -0.0027979738}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &724483041
@@ -4962,10 +4962,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allStructuresPrefabs:
-  - {fileID: 2031011743}
+  - {fileID: 7042392463264359992, guid: 21e7967b0b86a48adb8da6b0d59b9c85, type: 3}
+  - {fileID: 7042392463264359992, guid: 528c5148bb2d0ce4d95250af63cdc4fd, type: 3}
+  - {fileID: 7042392463264359992, guid: 478cbd01756339c468f95e814c014dbe, type: 3}
+  - {fileID: 7042392463264359992, guid: 706978d68870b8e4fa365235db508cc6, type: 3}
+  - {fileID: 7042392463264359992, guid: 805245345e6fd524d8d3d19cca2eb458, type: 3}
+  - {fileID: 7042392463264359992, guid: 6deeab722593c91468924dd6525969cd, type: 3}
+  - {fileID: 7042392463264359992, guid: 70f03683079b53d469e3de06e4b79ebb, type: 3}
   isBuilding: 0
   selectedBuilding: {fileID: 2031011743}
   buildMenuOpen: 0
+  terrain: {fileID: 775036906}
   barracksPrefab: {fileID: 117855511310969354, guid: cd9e86375175b4fae93f4caedcd63103, type: 3}
 --- !u!1 &1173474162
 GameObject:

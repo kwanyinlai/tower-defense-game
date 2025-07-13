@@ -259,7 +259,7 @@ MonoBehaviour:
   underSelection: 0
   commandingPlayer: {fileID: 0}
   waypoint: {fileID: 0}
-  selectedCircle: {fileID: 0}
+  selectedCircle: {fileID: 2343332585344418765}
   healStrength: 10
   healCooldown: 2
 --- !u!64 &4164009545557612017

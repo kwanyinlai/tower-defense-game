@@ -6,13 +6,8 @@ public class SnapToGrid : MonoBehaviour
 {
     [SerializeField] private GameObject terrain;
     private Placeable placeable;
-    [SerializeField] private BuildMode buildMode;
+    private BuildMode buildMode;
     [SerializeField] private GameObject commandingPlayer;
-<<<<<<< Updated upstream
-    [SerializeField] private GameObject mainCamera;
-=======
-
->>>>>>> Stashed changes
 
     private Vector3[] TILEOFFSET = {new Vector3(0f,0f,4f), new Vector3(0f,0f,-4f), 
                                   new Vector3(4f,0f,0f), new Vector3(-4f,0f,0f)};
@@ -20,22 +15,25 @@ public class SnapToGrid : MonoBehaviour
     private int offset;
 
     void Start(){
-        // Just a failsafe for when object is insantiated and needs to initialize variables 
-        if(commandingPlayer != null) 
-            InitSnapToGrid(terrain, commandingPlayer, mainCamera);
+        //buildMode = commandingPlayer.GetComponent<BuildMode>();
+        //Just a failsafe for when object is insantiated and needs to initialize variables
+        //if (commandingPlayer != null)
+        //{
+        //    InitSnapToGrid(terrain, commandingPlayer);
+        //}
     }
 
-    public void InitSnapToGrid(GameObject terrain, GameObject commandingPlayer, GameObject mainCamera) {
+    public void InitSnapToGrid(GameObject terrain, GameObject commandingPlayer)
+    {
         this.terrain = terrain;
         this.commandingPlayer = commandingPlayer;
-        this.mainCamera = mainCamera;
 
         placeable = gameObject.GetComponent<Placeable>();
         buildMode = commandingPlayer.GetComponent<BuildMode>();
         offset = placeable.offset;
         Debug.Log("offset is " + offset);
     }
-    
+
     void Update()
     {
         Vector3? mouseNullCheck = GetMousePosOnPlane();
@@ -119,6 +117,7 @@ public class SnapToGrid : MonoBehaviour
            return hit.point; 
             
         }
+        Debug.Log(hit.collider.gameObject);
         return null;
     }
 }

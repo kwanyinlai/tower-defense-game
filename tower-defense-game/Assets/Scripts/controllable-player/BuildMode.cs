@@ -17,7 +17,8 @@ public class BuildMode : MonoBehaviour
 
     [Header("Building Prefabs")]
     public GameObject barracksPrefab;
-    
+
+    private GameObject outline;
 
     private CharacterMovement camScript;
 
@@ -41,6 +42,10 @@ public class BuildMode : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     isBuilding = false;
+                    if (outline != null)
+                    {
+                        Destroy(outline);
+                    }
                     camScript.DeactivateBuildCam();
                 }
                 else if (Input.GetMouseButtonDown(0))
@@ -72,22 +77,22 @@ public class BuildMode : MonoBehaviour
     public void PlaceBuilding() // call the outline
     {
         
-        Placeable placeable = selectedBuilding.GetComponent<Placeable>();
-        if (placeable.IsBuildable(selectedBuilding.transform.position) &&
+        Placeable placeable = outline.GetComponent<Placeable>();
+        if (placeable.IsBuildable(outline.transform.position) &&
             ResourcePool.EnoughResources(placeable.RequiredResources))
         {
             placeable.DebugStatement();
             GameObject building = Instantiate(placeable.prefab, 
-                            selectedBuilding.transform.position, 
-                            selectedBuilding.transform.rotation,
+                            outline.transform.position, 
+                            outline.transform.rotation,
                             structureParentClass.transform);
-            GridSystem.OccupyArea(selectedBuilding.transform.position, placeable.size, 
+            GridSystem.OccupyArea(outline.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
             ResourcePool.DepleteResource(placeable.RequiredResources);
         }
         else
         {
-            Debug.Log("not buildable? reason :" + (placeable.IsBuildable(selectedBuilding.transform.position) ? "" : " No Buildable Space") + (ResourcePool.EnoughResources(placeable.RequiredResources) ? "" : " Not Enough Resources"));
+            Debug.Log("not buildable? reason :" + (placeable.IsBuildable(outline.transform.position) ? "" : " No Buildable Space") + (ResourcePool.EnoughResources(placeable.RequiredResources) ? "" : " Not Enough Resources"));
         }
     }
 
@@ -109,14 +114,13 @@ public class BuildMode : MonoBehaviour
 
     public void SetActiveBuilding(int selection)
     {
-        GameObject old = selectedBuilding;
-        selectedBuilding = Instantiate(allStructuresPrefabs[selection], structureOutlineParentClass.transform);
-        selectedBuilding.GetComponent<SnapToGrid>().InitSnapToGrid(terrain, gameObject, null);
-        selectedBuilding.GetComponent<Placeable>().InitPlaceable();
-        if(old != null)
-        {
-            Destroy(old);
-        }
+        selectedBuilding = allStructuresPrefabs[selection];
+
+        outline = Instantiate(selectedBuilding, structureOutlineParentClass.transform);
+
+        outline.GetComponent<SnapToGrid>().InitSnapToGrid(terrain, gameObject);
+        outline.GetComponent<Placeable>().InitPlaceable();
+    
         camScript.ActivateBuildCam();
     }
 }

@@ -8,6 +8,8 @@ public class GridSystem : MonoBehaviour
     public static int gridHeight = 200;
     public static float tileSize = 4f;
 
+    private static Transform player;
+
     private static bool[,] grid;
     private static int[,] territoryGrid; //0 for not territory, 1 not -> territory, 2 for territory, 3 for territory -> not
     public GameObject target;
@@ -19,7 +21,7 @@ public class GridSystem : MonoBehaviour
     void Start()
     {
         //make all squares buidable
-    
+        player = GameObject.Find("player1").GetComponent<Transform>(); // used for testing for now, migrate to Player.players later
         grid = new bool[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
@@ -77,6 +79,10 @@ public class GridSystem : MonoBehaviour
     public static bool IsTileBuildable(Vector3 coordinates)
     {
         Vector3Int gridCoords = CoordinatesToGrid(coordinates);
+        if (gridCoords == CoordinatesToGrid(GridSystem.player.position))
+        {
+            return false;
+        }
 
         if (gridCoords.x >= 0 && gridCoords.x < gridWidth && 
             gridCoords.y >= 0 && gridCoords.y < gridHeight)

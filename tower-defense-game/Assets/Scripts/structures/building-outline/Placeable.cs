@@ -20,6 +20,9 @@ public class Placeable : MonoBehaviour
     {
         get { return requiredResources; }
     }
+
+    private GridSystem gridManager;
+
     void Update(){
         if(ResourcePool.EnoughResources(RequiredResources))
         {
@@ -33,6 +36,7 @@ public class Placeable : MonoBehaviour
 
     void Start(){
         InitPlaceable();
+        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
     }
 
     // Created an Init Placeable Function So That Creating 
@@ -40,7 +44,6 @@ public class Placeable : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         size = CalculateOccupyingSize();
         offset = CalculateOffset();
-        Debug.Log("offset = " + offset);
 
         //TODO: Remove and replace with code to actually add the correct resources based on building
         requiredResources.TryAdd("TestResource1", 150);
@@ -53,7 +56,7 @@ public class Placeable : MonoBehaviour
     }
 
     public bool IsBuildable(Vector3 placementPosition){
-        return GridSystem.IsTileAreaBuildable(placementPosition, size);
+        return gridManager.IsTileAreaBuildable(placementPosition, size);
     }
 
     int CalculateOffset(){
@@ -61,7 +64,6 @@ public class Placeable : MonoBehaviour
     }
 
     public void DebugStatement() {
-        Debug.Log("offset = " + offset);
         Debug.Log("name of prefab selected is " + prefab.name);
         Debug.Log("size is " + size.x + ", " + size.y);
         Debug.Log("grid is " + gridCoords.x + ", " + gridCoords.y);

@@ -31,7 +31,6 @@ public class SnapToGrid : MonoBehaviour
         placeable = gameObject.GetComponent<Placeable>();
         buildMode = commandingPlayer.GetComponent<BuildMode>();
         offset = placeable.offset;
-        Debug.Log("offset is " + offset);
     }
 
     void Update()
@@ -50,7 +49,6 @@ public class SnapToGrid : MonoBehaviour
 
 
         // rotation needs to be figured out
-        // buggy position tracking with Vector.zero
         // prevent from placing on player's position
 
         if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position)) {
@@ -94,13 +92,11 @@ public class SnapToGrid : MonoBehaviour
         }
         float minDistance = distances.OrderBy(n => n).First();
         if(minDistance == float.MaxValue){
-            Debug.Log("why are we here");
             return null;
         }
         int ind = Array.IndexOf(distances, minDistance);
         
         if(ind==-1){
-            Debug.Log("why are we here2");
             return null;
         }
         return transform.position + TILEOFFSET[ind];
@@ -117,7 +113,6 @@ public class SnapToGrid : MonoBehaviour
            return hit.point; 
             
         }
-        Debug.Log(hit.collider.gameObject);
         return null;
     }
 }

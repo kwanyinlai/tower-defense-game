@@ -22,6 +22,8 @@ public class BuildMode : MonoBehaviour
 
     private CharacterMovement camScript;
 
+    private GridSystem gridManager;
+
 
 
     void Start(){
@@ -32,6 +34,7 @@ public class BuildMode : MonoBehaviour
         structureParentClass=GameObject.Find("structures");
         structureOutlineParentClass=GameObject.Find("structure-outlines");
         camScript = GetComponent<CharacterMovement>();
+        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
     }
     
     void Update()
@@ -86,7 +89,7 @@ public class BuildMode : MonoBehaviour
                             outline.transform.position, 
                             outline.transform.rotation,
                             structureParentClass.transform);
-            GridSystem.OccupyArea(outline.transform.position, placeable.size, 
+            gridManager.OccupyArea(outline.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
             ResourcePool.DepleteResource(placeable.RequiredResources);
         }

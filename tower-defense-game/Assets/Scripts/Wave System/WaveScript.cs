@@ -7,6 +7,7 @@ public class WaveScript : MonoBehaviour
     private float gameTimer;
     private float waveTimer;
     public GameObject waveManager;
+    private GridSystem gridManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -14,6 +15,7 @@ public class WaveScript : MonoBehaviour
         waveNum = 0;
         gameTimer = 0;
         waveTimer = 0;
+        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
     }
 
     // Update is called once per frame
@@ -29,7 +31,7 @@ public class WaveScript : MonoBehaviour
             waveTimer = 0;
             EnemySpawnScript spawner = waveManager.GetComponent<EnemySpawnScript>();
             spawner.spawnEnemies(waveNum);
-            GridSystem.updateWaveTerritory();
+            gridManager.updateWaveTerritory();
         }
     }
 }

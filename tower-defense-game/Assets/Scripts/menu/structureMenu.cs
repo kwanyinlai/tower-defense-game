@@ -17,11 +17,14 @@ public class structureMenu : MonoBehaviour
 
     private GameObject test;
 
+    private GridSystem gridManager;
+
     private void Start()
     {
         test = transform.Find("structure-menu").Find("InfoText").gameObject;    
         infoTextText = transform.Find("structure-menu").Find("InfoText").gameObject.GetComponent<TextMeshProUGUI>();
         DisableUI();
+        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
     }
 
     private void Update()
@@ -90,7 +93,7 @@ public class structureMenu : MonoBehaviour
     {
         ResourcePool.AddResource(selectedStructure.GetComponent<Building>().getSellResources());
         Vector3Int structPost = GridSystem.CoordinatesToGrid(selectedStructure.transform.position);
-        GridSystem.StopOccupying(selectedStructure.transform.position, CalculateOccupyingSize());
+        gridManager.StopOccupying(selectedStructure.transform.position, CalculateOccupyingSize());
         selectedStructure.GetComponent<StructureBattleSystem>().TakeDamage(100000);
         selectedStructure = null;
         defaultMaterial = null;

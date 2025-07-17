@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GridSystem : MonoBehaviour
 {
@@ -8,23 +9,33 @@ public class GridSystem : MonoBehaviour
     public static int gridHeight = 200;
     public static float tileSize = 4f;
 
-    private static Transform player;
 
-    private static bool[,] grid;
-    private static int[,] territoryGrid; //0 for not territory, 1 not -> territory, 2 for territory, 3 for territory -> not
+
+    private bool[,] grid;
+    private int[,] territoryGrid; //0 for not territory, 1 not -> territory, 2 for territory, 3 for territory -> not
     public GameObject target;
     private bool starterTerritoryIsAssigned;
+    private List<Transform> playerPos;
+
 
     public void StarterTerritoryNotAssigned(){
         starterTerritoryIsAssigned = false;
     }
+
     void Start()
     {
+        playerPos = new List<Transform>();
         //make all squares buidable
-        player = GameObject.Find("player1").GetComponent<Transform>(); // used for testing for now, migrate to Player.players later
+        
+        foreach (GameObject player in Player.players) {
+            Debug.Log("test");
+            playerPos.Add(player.GetComponent<Transform>());
+        }
+
         grid = new bool[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
+
         for (int x = 0; x < gridWidth; x++)
         {
             for (int z = 0; z < gridHeight; z++)
@@ -76,13 +87,23 @@ public class GridSystem : MonoBehaviour
 
     }
 
-    public static bool IsTileBuildable(Vector3 coordinates)
+    public bool IsTileBuildable(Vector3 coordinates)
     {
         Vector3Int gridCoords = CoordinatesToGrid(coordinates);
-        if (gridCoords == CoordinatesToGrid(GridSystem.player.position))
+
+        List<Vector3Int> convertedPlayerPos = new List<Vector3Int>();
+
+        foreach (Transform coord in playerPos)
         {
-            return false;
+            Debug.Log(CoordinatesToGrid(coord.position));
+            Debug.Log(gridCoords + "e");
+            if (gridCoords == CoordinatesToGrid(coord.position))
+            {
+                return false;
+            }
         }
+
+
 
         if (gridCoords.x >= 0 && gridCoords.x < gridWidth && 
             gridCoords.y >= 0 && gridCoords.y < gridHeight)
@@ -92,7 +113,7 @@ public class GridSystem : MonoBehaviour
         return false;
     }
 
-    public static bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
+    public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
     {
         Vector3 gridCoords = CoordinatesToGrid(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
@@ -108,7 +129,7 @@ public class GridSystem : MonoBehaviour
         return true;
     }
 
-    public static void updateWaveTerritory()
+    public void updateWaveTerritory()
     {
         for(int i = 0; i < territoryGrid.GetLength(0); i++)
         {
@@ -125,7 +146,7 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    public static void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
+    public void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
     {
         Vector3Int gridPos = CoordinatesToGrid(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
@@ -151,7 +172,7 @@ public class GridSystem : MonoBehaviour
             }
         }
     }
-    public static void StopOccupying(Vector3 coordinates, Vector2Int size)
+    public void StopOccupying(Vector3 coordinates, Vector2Int size)
     {
         
         Vector3Int gridPos = CoordinatesToGrid(coordinates);

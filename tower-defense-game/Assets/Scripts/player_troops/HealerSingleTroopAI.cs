@@ -87,7 +87,7 @@ public class HealerSingleTroopAI : TroopAI
                 {
                     bestAlly = ally;
                     lowestHealth = currHealth;
-                    maxHealth = maxHealth;
+                    maxHealth = currMaxHealth;
                 }
             }
         }
@@ -97,7 +97,7 @@ public class HealerSingleTroopAI : TroopAI
     }
 
 
-    protected void Update()
+    protected override void Update()
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){

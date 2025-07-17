@@ -4,7 +4,7 @@ using UnityEngine;
 public class StructureBattleSystem : CombatSystem
 {
     public static List<GameObject> barracks = new List<GameObject>();
-    void Start()
+    protected override void Start()
     {
         barracks.Add(gameObject);
         currentHealth = maxHealth;

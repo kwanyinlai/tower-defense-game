@@ -9,7 +9,7 @@ public class TroopCombatSystem : CombatSystem
         this.barracks = barracks;
     }
 
-    void Start()
+    protected override void Start()
     {
         base.Start();
         currentHealth = maxHealth;

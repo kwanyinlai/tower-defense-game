@@ -58,7 +58,7 @@ public class HealerRadiusTroopAI : TroopAI
         return allies.Count == 0 ? null : allies;
     }
 
-    protected void Update()
+    protected override void Update()
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         

@@ -5,7 +5,7 @@ public class BerserkerTroopAI : TroopAI
     public float hasteEffectDecimal = 0.10f;
     public float troopStrengthDecimal = 0.50f;
 
-    protected void Start()
+    protected override void Start()
     {
         base.Start();
         combatSystem.ApplyEffect("haste", hasteEffectDecimal, -1);

@@ -21,7 +21,7 @@ public abstract class EnemyAI : MonoBehaviour
     private LineRenderer pathIndicator;
     protected CombatSystem combatSystem;
 
-    protected void Start()
+    protected virtual void Start()
     {
         enemies.Add(gameObject);
     
@@ -56,7 +56,7 @@ public abstract class EnemyAI : MonoBehaviour
     }
 
 
-    void Update()
+    protected virtual void Update()
     {
 
         if (baseTarget == null){

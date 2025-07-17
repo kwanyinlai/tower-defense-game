@@ -57,7 +57,7 @@ public abstract class TroopAI : MonoBehaviour
     }
 
 
-    protected void Start()
+    protected virtual void Start()
     {
         
         idleTransform = this.transform.position;
@@ -74,7 +74,7 @@ public abstract class TroopAI : MonoBehaviour
     }
 
 
-    protected void Update()
+    protected virtual void Update()
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         if(underSelection){

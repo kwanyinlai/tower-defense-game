@@ -19,12 +19,12 @@ public abstract class CombatSystem : MonoBehaviour
 
     protected HashSet<string> tagList;  // Uses a Set for Efficiency When Looking For Overlaps
 
-    protected void Start()
+    protected virtual void Start()
     {
         InitializeEffects();
     }
 
-    protected void Update()
+    protected virtual void Update()
     {
         List<(float strength, float startTime, float durationSec)> effect;
         float currentTime = Time.realtimeSinceStartup;

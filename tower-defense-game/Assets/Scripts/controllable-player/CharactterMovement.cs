@@ -17,16 +17,16 @@ public class CharacterMovement : MonoBehaviour
     private Quaternion rotWhole;
     private float camSpeed = 50f;
 
-    private CinemachineVirtualCamera overhead;
+    private CinemachineCamera overhead;
     [SerializeField] private GameObject overheadCam;
 
-    private CinemachineVirtualCamera above;
+    private CinemachineCamera above;
     [SerializeField] private GameObject aboveCam;
 
-    private CinemachineVirtualCamera wide;
+    private CinemachineCamera wide;
     [SerializeField] private GameObject wideCam;
 
-    private CinemachineVirtualCamera build;
+    private CinemachineCamera build;
     [SerializeField] private GameObject buildCam;
 
     public float selectionDistance = 2f;
@@ -40,9 +40,9 @@ public class CharacterMovement : MonoBehaviour
 
         characterController = GetComponent<CharacterController>();
         gravCalculation = Vector3.zero;
-        overhead = overheadCam.GetComponent<CinemachineVirtualCamera>();
-        wide = wideCam.GetComponent<CinemachineVirtualCamera>();
-        above = aboveCam.GetComponent<CinemachineVirtualCamera>();
+        overhead = overheadCam.GetComponent<CinemachineCamera>();
+        wide = wideCam.GetComponent<CinemachineCamera>();
+        above = aboveCam.GetComponent<CinemachineCamera>();
         overheadCam.SetActive(true);
         aboveCam.SetActive(false);
         wideCam.SetActive(false);
@@ -142,7 +142,7 @@ public class CharacterMovement : MonoBehaviour
         Vector3 dir = forward * vert + right * horiz;
         dir.Normalize();
         dir.y = 0;
-        Vector3 movement = dir * moveSpeed;
+        Vector3 movement = dir * camSpeed;
         aboveCam.transform.Translate(movement * Time.deltaTime, Space.World);
 
 

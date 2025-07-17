@@ -15,14 +15,5 @@ public class CollectResources : MonoBehaviour
         // if(Vector3.Distance())
     }
 
-    private GameObject FindReosurceNode()
-    {
-        int minDist = 0;
-        for(int i = 1 ; i < ResourceNode.resourceNodes.Count ; i++)
-        {
-            break;
-            
-        }
-        return null;
-    }
+
 }

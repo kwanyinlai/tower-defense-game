@@ -5,7 +5,7 @@ using UnityEngine;
 public class ResourcePool : MonoBehaviour
 {
     
-    private static int numResources = 3;
+    // private static int numResources = 3;  // commenting this out for now, uncomment if you need it
     private static Dictionary<string, int> resources = new Dictionary<string, int>();
 
     // make sure to initialize all types of resources to a default value in start

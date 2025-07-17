@@ -88,7 +88,7 @@ public class HealerSingleEnemyAI : EnemyAI
                 {
                     bestAlly = ally;
                     lowestHealth = currHealth;
-                    maxHealth = maxHealth;
+                    maxHealth = currMaxHealth;
                 }
             }
         }
@@ -97,7 +97,7 @@ public class HealerSingleEnemyAI : EnemyAI
         return bestAlly.transform;
     }
 
-    void Update()
+    protected override void Update()
     {
 
         if (baseTarget == null)

@@ -7,14 +7,15 @@ public class BaseBattleSystem : CombatSystem
 {
 
     private static float health;
-    void Start()
+
+    protected override void Start()
     {
         currentHealth = maxHealth;
         health = currentHealth;
         tagList = new HashSet<string>(viewableTagList);
     }
 
-    void Update()
+    protected override void Update()
     {
         health = currentHealth;
     }

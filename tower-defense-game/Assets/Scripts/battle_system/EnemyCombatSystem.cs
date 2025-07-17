@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class EnemyCombatSystem : CombatSystem
 {
-    void Start()
+    protected override void Start()
     {
         base.Start();
         currentHealth = maxHealth;

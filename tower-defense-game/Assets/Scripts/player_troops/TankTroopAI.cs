@@ -10,7 +10,7 @@ public class TankTroopAI : TroopAI
 {
     public float slowEffectDecimal = 0.10f;
 
-    protected void Start()
+    protected override void Start()
     {
         base.Start();
         combatSystem.ApplyEffect("slow", slowEffectDecimal, -1);

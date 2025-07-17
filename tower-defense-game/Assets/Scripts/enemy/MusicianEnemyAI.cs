@@ -22,7 +22,7 @@ public class MusicianEnemyAI : EnemyAI
 
     public void BuffAttack(List<GameObject> allyList)
     {
-        CombatSystem targetCombat;
+        // CombatSystem targetCombat; // commenting out for clarity, uncomment if needed
         foreach(var targetAlly in allyList)
         {
             targetAlly.GetComponent<CombatSystem>().ApplyEffect("attackBuff", attackBuffStrengthDecimal, attackCooldown);
@@ -51,7 +51,7 @@ public class MusicianEnemyAI : EnemyAI
         return allies.Count == 0 ? null : allies;
     }
 
-    void Update()
+    protected override void Update()
     {
 
         if (baseTarget == null)

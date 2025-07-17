@@ -58,7 +58,7 @@ public class HealerRadiusEnemyAI : EnemyAI
         return allies.Count == 0 ? null : allies;
     }
 
-    void Update()
+    protected override void Update()
     {
 
         if (baseTarget == null)

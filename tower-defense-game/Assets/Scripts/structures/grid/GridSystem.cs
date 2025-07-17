@@ -99,14 +99,15 @@ public class GridSystem : MonoBehaviour
             }
         }
 
-
-
-        if (coordinates.x >= 0 && coordinates.x < gridWidth && 
-            coordinates.y >= 0 && coordinates.y < gridHeight)
+        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight ||
+            !grid[coordinates.x, coordinates.z] || territoryGrid[coordinates.x, coordinates.z] != 2)
         {
-            return grid[coordinates.x, coordinates.y];
+            return false;
+
         }
-        return false;
+
+  
+        return true;
     }
 
     public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)

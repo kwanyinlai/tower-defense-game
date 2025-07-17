@@ -9,6 +9,10 @@ public class SnapToGrid : MonoBehaviour
     private BuildMode buildMode;
     [SerializeField] private GameObject commandingPlayer;
 
+
+    private LayerMask floorLayer = 1 << 8;
+
+
     private Vector3[] TILEOFFSET = {new Vector3(0f,0f,4f), new Vector3(0f,0f,-4f), 
                                   new Vector3(4f,0f,0f), new Vector3(-4f,0f,0f)};
 
@@ -21,6 +25,8 @@ public class SnapToGrid : MonoBehaviour
         //{
         //    InitSnapToGrid(terrain, commandingPlayer);
         //}
+
+
     }
 
     public void InitSnapToGrid(GameObject terrain, GameObject commandingPlayer)
@@ -108,7 +114,7 @@ public class SnapToGrid : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject == terrain)
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, floorLayer) && hit.collider.gameObject == terrain)
         {
            return hit.point; 
             

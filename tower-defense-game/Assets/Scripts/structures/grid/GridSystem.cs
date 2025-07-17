@@ -18,6 +18,10 @@ public class GridSystem : MonoBehaviour
     private List<Transform> playerPos;
 
 
+    [SerializeField] private GameObject buildableSquares;
+    [SerializeField] private Material tileMaterial;
+
+
     public void StarterTerritoryNotAssigned(){
         starterTerritoryIsAssigned = false;
     }
@@ -42,7 +46,7 @@ public class GridSystem : MonoBehaviour
             }
         }
         starterTerritoryIsAssigned = false;
-        
+
         
     }
     
@@ -64,6 +68,7 @@ public class GridSystem : MonoBehaviour
                 }
             }
         }
+        DrawGrid();
     }
 
     void Update(){
@@ -76,7 +81,6 @@ public class GridSystem : MonoBehaviour
                 starterTerritoryIsAssigned = true;
             }
         }
-       
     }
 
 
@@ -203,5 +207,32 @@ public class GridSystem : MonoBehaviour
         yRotation = Mathf.Round(yRotation / 90f) * 90f;
 
         return Quaternion.Euler(0f, yRotation, 0f);
+    }
+
+    public void DrawGrid()
+    {
+        // ClearGrid();
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int z = 0; z < gridHeight; z++)
+            {
+                if (territoryGrid[x, z]==2)
+                {
+                    DrawSquare(GridToCoordinates(new Vector3Int(x, 0, z)));
+                }
+            }
+        }
+    }
+
+    private void DrawSquare(Vector3 position)
+    {
+        GameObject buildableTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        buildableTile.transform.position = position + new Vector3(0, 0.1f, 0);
+        buildableTile.transform.localScale = new Vector3(tileSize, tileSize, tileSize);
+        buildableTile.GetComponent<Renderer>().material = tileMaterial;
+        buildableTile.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
+
+        buildableTile.transform.parent = buildableSquares.transform;
+        buildableTile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 }

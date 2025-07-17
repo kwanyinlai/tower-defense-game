@@ -27,10 +27,7 @@ public class GridSystem : MonoBehaviour
         playerPos = new List<Transform>();
         //make all squares buidable
         
-        foreach (GameObject player in Player.players) {
-            Debug.Log("test");
-            playerPos.Add(player.GetComponent<Transform>());
-        }
+        
 
         grid = new bool[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
@@ -87,17 +84,16 @@ public class GridSystem : MonoBehaviour
 
     }
 
-    public bool IsTileBuildable(Vector3 coordinates)
+    public bool IsTileBuildable(Vector3Int coordinates)
     {
-        Vector3Int gridCoords = CoordinatesToGrid(coordinates);
 
-        List<Vector3Int> convertedPlayerPos = new List<Vector3Int>();
-
-        foreach (Transform coord in playerPos)
+        
+        // check if tile is occupied by player
+        foreach (GameObject player in Player.players)
         {
-            Debug.Log(CoordinatesToGrid(coord.position));
-            Debug.Log(gridCoords + "e");
-            if (gridCoords == CoordinatesToGrid(coord.position))
+            Debug.Log(coordinates);
+            Debug.Log(CoordinatesToGrid(player.GetComponent<Transform>().position) + "e");
+            if (coordinates == CoordinatesToGrid(player.GetComponent<Transform>().position))
             {
                 return false;
             }
@@ -105,24 +101,24 @@ public class GridSystem : MonoBehaviour
 
 
 
-        if (gridCoords.x >= 0 && gridCoords.x < gridWidth && 
-            gridCoords.y >= 0 && gridCoords.y < gridHeight)
+        if (coordinates.x >= 0 && coordinates.x < gridWidth && 
+            coordinates.y >= 0 && coordinates.y < gridHeight)
         {
-            return grid[gridCoords.x, gridCoords.y];
+            return grid[coordinates.x, coordinates.y];
         }
         return false;
     }
 
     public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
     {
+ 
         Vector3 gridCoords = CoordinatesToGrid(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
         {
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-                if (x < 0 || x >= gridWidth || z < 0 || z >= gridHeight || !grid[x, z] || territoryGrid[x, z] != 2)
-                {
-                    return false; 
+                if (!IsTileBuildable(new Vector3Int(x, 0, z))){
+                    return false;
                 }
             }
         }

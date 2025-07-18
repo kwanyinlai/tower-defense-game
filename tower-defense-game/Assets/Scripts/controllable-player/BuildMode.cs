@@ -40,6 +40,7 @@ public class BuildMode : MonoBehaviour
 
         if(!gameObject.GetComponent<TroopManagment>().managingTroops){
             if(isBuilding){
+
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     isBuilding = false;
@@ -48,6 +49,8 @@ public class BuildMode : MonoBehaviour
                         Destroy(outline);
                     }
                     camScript.DeactivateBuildCam();
+
+                    gridManager.ClearGrid();
                 }
                 else if (Input.GetMouseButtonDown(0))
                 {
@@ -110,7 +113,8 @@ public class BuildMode : MonoBehaviour
         buildMenu.SetActive(false);
         buildMenuOpen = false;
         isBuilding = true;
-        
+        gridManager.DrawGrid();
+
     }
 
     public void SetActiveBuilding(int selection)

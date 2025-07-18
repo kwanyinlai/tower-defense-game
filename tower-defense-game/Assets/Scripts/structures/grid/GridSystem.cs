@@ -17,6 +17,8 @@ public class GridSystem : MonoBehaviour
     private bool starterTerritoryIsAssigned;
     private List<Transform> playerPos;
 
+    private List<GameObject> destructibleTiles;
+
 
     [SerializeField] private GameObject buildableSquares;
     [SerializeField] private Material tileMaterial;
@@ -29,9 +31,10 @@ public class GridSystem : MonoBehaviour
     void Start()
     {
         playerPos = new List<Transform>();
+
         //make all squares buidable
-        
-        
+
+        destructibleTiles = new List<GameObject>();
 
         grid = new bool[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
@@ -67,7 +70,6 @@ public class GridSystem : MonoBehaviour
                 }
             }
         }
-        DrawGrid();
     }
 
     void Update(){
@@ -103,7 +105,8 @@ public class GridSystem : MonoBehaviour
         }
 
 
-        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight)
+        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight ||
+            territoryGrid[coordinates.x, coordinates.z]!=2)
         {
             return false;
             
@@ -227,11 +230,20 @@ public class GridSystem : MonoBehaviour
     private void DrawSquare(Vector3 position)
     {
         GameObject buildableTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        destructibleTiles.Add(buildableTile);
         buildableTile.transform.position = position + new Vector3(0, 0.1f, 0);
         buildableTile.transform.localScale = new Vector3(tileSize, tileSize, tileSize);
         buildableTile.GetComponent<Renderer>().material = tileMaterial;
         buildableTile.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
         buildableTile.transform.parent = buildableSquares.transform;
         buildableTile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
+    }
+
+    public void ClearGrid()
+    {
+        foreach (GameObject tile in destructibleTiles)
+        {
+            Destroy(tile);
+        }
     }
 }

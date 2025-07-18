@@ -35,13 +35,54 @@ public class ButtonScripts : MonoBehaviour
         SceneManager.LoadScene("StartMenu");
     }
 
-    
+
+
     //Buttons for the build menu
+    //Foldable region of a lot of similar functions
+    #region
     public void basicBarrackButton()
+    {
+        buildMode.SetActiveBuilding(0);
+        buildMode.CloseBuildMenu();
+    }
+
+    public void berserkerBarrackButton()
+    {
+        buildMode.SetActiveBuilding(1);
+        buildMode.CloseBuildMenu();
+    }
+
+    public void healerRBarrackButton()
+    {
+        buildMode.SetActiveBuilding(2);
+        buildMode.CloseBuildMenu();
+    }
+
+    public void healerSBarrackButton()
+    {
+        buildMode.SetActiveBuilding(3);
+        buildMode.CloseBuildMenu();
+    }
+
+    public void meleeBarrackButton()
+    {
+        buildMode.SetActiveBuilding(4);
+        buildMode.CloseBuildMenu();
+    }
+
+    public void musicianBarrackButton()
+    {
+        buildMode.SetActiveBuilding(5);
+        buildMode.CloseBuildMenu();
+    }
+
+    public void tankBarrackButton()
     {
         buildMode.SetActiveBuilding(6);
         buildMode.CloseBuildMenu();
     }
+    #endregion
+
 
     public void sortAllBuilds()
     {

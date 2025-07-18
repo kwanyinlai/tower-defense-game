@@ -61,13 +61,10 @@ public class SnapToGrid : MonoBehaviour
             transform.localScale=new Vector3(2f,2f,2f);
         }
         else{
-            if(!placeable.IsBuildable(gameObject.transform.position)){
-                
-                if ( NearestGrid() != null){
-                    transform.position = (Vector3) NearestGrid();
-                    return;
-                }
-
+            Vector3? closestGrid = NearestGrid();
+            if (closestGrid != null){
+                transform.position = (Vector3) closestGrid;
+                return;
             }
 
             transform.localScale=new Vector3(0f,0f,0f);

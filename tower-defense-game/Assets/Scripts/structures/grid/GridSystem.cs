@@ -35,7 +35,6 @@ public class GridSystem : MonoBehaviour
 
         grid = new bool[gridWidth, gridHeight];
         territoryGrid = new int[gridWidth, gridHeight];
-        territoryGrid = new int[gridWidth, gridHeight];
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -95,23 +94,23 @@ public class GridSystem : MonoBehaviour
         // check if tile is occupied by player
         foreach (GameObject player in Player.players)
         {
-            Debug.Log(coordinates);
-            Debug.Log(CoordinatesToGrid(player.GetComponent<Transform>().position) + "e");
+            
             if (coordinates == CoordinatesToGrid(player.GetComponent<Transform>().position))
             {
+                // TODO: this is slgihtly off rn but I'll fix it later
                 return false;
             }
         }
 
-        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight ||
-            !grid[coordinates.x, coordinates.z] || territoryGrid[coordinates.x, coordinates.z] != 2)
+
+        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight)
         {
             return false;
-
+            
         }
 
-  
-        return true;
+
+        return grid[coordinates.x, coordinates.z];
     }
 
     public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
@@ -139,7 +138,8 @@ public class GridSystem : MonoBehaviour
                 if (territoryGrid[i, j] == 1)
                 {
                     territoryGrid[i, j] = 2;
-                } else if (territoryGrid[i, j] == 3)
+                }
+                else if (territoryGrid[i, j] == 3)
                 {
                     territoryGrid[i, j] = 4;
                 }
@@ -231,7 +231,6 @@ public class GridSystem : MonoBehaviour
         buildableTile.transform.localScale = new Vector3(tileSize, tileSize, tileSize);
         buildableTile.GetComponent<Renderer>().material = tileMaterial;
         buildableTile.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
-
         buildableTile.transform.parent = buildableSquares.transform;
         buildableTile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }

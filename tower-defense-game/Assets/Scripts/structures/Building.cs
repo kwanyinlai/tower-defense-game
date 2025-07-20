@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class Building : MonoBehaviour
 {
-    public readonly int range = 10; //for territory purposes, can also be used as actual range
+    public int range = 10; //for territory purposes, can also be used as actual range
     public string building_name;
     public GameObject building_model; // used in order to highlighting the building structure
 

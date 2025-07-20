@@ -34,6 +34,14 @@ public class ResourcePool : MonoBehaviour
         }
     }
 
+    public static void AddResource(Dictionary<string, int> required, float amplifier)
+    {
+        foreach (var elem in required)
+        {
+            resources[elem.Key] += (int)(elem.Value * amplifier);
+        }
+    }
+
     public static bool DepleteResource(Dictionary<string, int> required)
     {
         if(EnoughResources(required) == false)

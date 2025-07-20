@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7219003914671107716}
   - component: {fileID: 3981047555632939294}
   - component: {fileID: 1813731442395706262}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: health-bar-slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 4169029352087084844}
   - component: {fileID: 5532871635515728719}
   - component: {fileID: 6668559448844276406}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: health-bar-canvas (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   - component: {fileID: 7112269484183577501}
   - component: {fileID: 5360677967309494999}
   - component: {fileID: 8881465790543298115}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 2368392202141827580}
   - component: {fileID: 5811977858867178953}
   - component: {fileID: 6340527822655953294}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -434,7 +434,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 481315401928556134}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +477,7 @@ GameObject:
   - component: {fileID: 8702303853260513744}
   - component: {fileID: 2052587566374734930}
   - component: {fileID: 6540427454544848809}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: enemy Tank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -603,7 +603,6 @@ MonoBehaviour:
   maxSpeed: 3.5
   dmg: 10
   atkTimer: 0
-  range: 2
   slowEffectDecimal: 0.1
 --- !u!33 &2052587566374734930
 MeshFilter:
@@ -731,7 +730,7 @@ GameObject:
   - component: {fileID: 8499625059361597753}
   - component: {fileID: 238415068888548}
   - component: {fileID: 5404469380196464998}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}

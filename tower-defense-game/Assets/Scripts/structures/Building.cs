@@ -16,7 +16,7 @@ public abstract class Building : MonoBehaviour
         IntializeSellResources();
     }
 
-    public Dictionary<string, int> getSellResources()
+    public Dictionary<string, int> GetSellResources()
     {
         return sellResources;
     }

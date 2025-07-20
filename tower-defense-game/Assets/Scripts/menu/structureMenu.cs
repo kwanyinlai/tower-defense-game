@@ -9,11 +9,27 @@ public class structureMenu : MonoBehaviour
     public Material highlightMaterial;
 
     private TextMeshProUGUI infoTextText; //Text of infoText
-    private GameObject selectedStructure = null;
+    private GameObject selectedObject = null;
     private Material defaultMaterial = null;
+    
+    // For Buildings
     private StructureBattleSystem selectedSBSScript = null;
     private Building selectedBuildingScript = null;
+
+    // For Troops
+    private CombatSystem selectedCombatSystem = null;
+    private TroopAI selectedTroopAI = null;
+
     private bool isMenuOpen = false;
+
+    public enum Selectables
+    {
+        None,
+        Building,
+        Troop
+    }
+
+    private Selectables selectedType = Selectables.None;
 
     private GameObject test;
 
@@ -39,10 +55,15 @@ public class structureMenu : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, 1 << 6))
+            if (Physics.Raycast(ray, out RaycastHit building, Mathf.Infinity, 1 << 6))
             { // 1<<6 Gets The 6th Layer Which Are For Buildables
                 // Use the hit variable to determine what was clicked on.
-                EnableUI(hit.collider.gameObject);
+                EnableUI(building.collider.gameObject, Selectables.Building);
+            }
+            else if(Physics.Raycast(ray, out RaycastHit troop, Mathf.Infinity, 1 << 7))
+            {
+                EnableUI(troop.collider.gameObject, Selectables.Troop);
+                Debug.Log(troop.collider.gameObject.name + " has been hit!");
             }
         }
     }
@@ -52,58 +73,131 @@ public class structureMenu : MonoBehaviour
     //Contains structure health
     private void updateText()
     {
-        infoTextText.text = "Health: " + selectedSBSScript.currentHealth + "/" + selectedSBSScript.maxHealth
-                            + "\nSell for:\n" + StaticScripts.resourcesToText(selectedBuildingScript.sellResources);
+        if(selectedType ==  Selectables.Building)
+        {
+            infoTextText.text = "Health: " + selectedSBSScript.currentHealth + "/" + selectedSBSScript.maxHealth
+                            + "\nSell for:\n" + StaticScripts.resourcesToText(selectedBuildingScript.GetSellResources());
+        }
+        else if(selectedType == Selectables.Troop)
+        {
+            infoTextText.text = "Health: " + selectedCombatSystem.currentHealth + "/" + selectedCombatSystem.maxHealth
+                            + "\nSell for:\n" + StaticScripts.resourcesToText(selectedTroopAI.GetSellResources());
+        }
     }
 
-    public void EnableUI(GameObject highlightedStructure)
+    public void EnableUI(GameObject highlightedObject, Selectables type)
     {
-        selectedSBSScript = highlightedStructure.GetComponent<StructureBattleSystem>();
-        selectedBuildingScript = highlightedStructure.GetComponent<Building>(); 
         structureMenuUI.SetActive(true);
-        if (selectedStructure != null)
+
+        if (selectedObject != null) // Unhighlights previously selected structure
         {
-            selectedStructure.GetComponent<Building>().building_model.GetComponent<Renderer>().material = defaultMaterial;
+            UnhighlightObject();
         }
 
-        selectedStructure = highlightedStructure;
+        selectedType = type;
+        if(type == Selectables.Building)
+        {
+            SetupBuildingUI(highlightedObject);
+        } 
+        else if(type == Selectables.Troop)
+        {
+            SetupTroopUI(highlightedObject);
+        }
 
-        GameObject building_model = highlightedStructure.GetComponent<Building>().building_model;
+        isMenuOpen = true;
+    }
+
+    private void SetupBuildingUI(GameObject highlightedObject)
+    {
+        selectedSBSScript = highlightedObject.GetComponent<StructureBattleSystem>();
+        selectedBuildingScript = highlightedObject.GetComponent<Building>(); 
+        
+        selectedObject = highlightedObject;
+
+        GameObject building_model = selectedBuildingScript.building_model;
         defaultMaterial = building_model.GetComponent<Renderer>().material;
         building_model.GetComponent<Renderer>().material = highlightMaterial;
 
-        structure_name_ui.text = highlightedStructure.GetComponent<Building>().building_name;
-        isMenuOpen = true;
+        structure_name_ui.text = selectedBuildingScript.building_name;
+    }
+
+    private void SetupTroopUI(GameObject highlightedObject)
+    {
+        selectedCombatSystem = highlightedObject.GetComponent<CombatSystem>();
+        selectedTroopAI = highlightedObject.GetComponent<TroopAI>();
+
+        selectedObject = highlightedObject;
+
+        GameObject troopModel = selectedTroopAI.troopModel;
+        defaultMaterial = troopModel.GetComponent<Renderer>().material;
+        troopModel.GetComponent<Renderer>().material = highlightMaterial;
+
+        structure_name_ui.text = selectedTroopAI.troopName;
     }
 
     public void DisableUI()
     {
-        if (selectedStructure != null)
+        if (selectedObject != null)
         {
-            GameObject building_model = selectedStructure.GetComponent<Building>().building_model;
-            building_model.GetComponent<Renderer>().material = defaultMaterial;
-            selectedStructure = null;
+            UnhighlightObject();
+            selectedObject = null;
             defaultMaterial = null;
         }
         structureMenuUI.SetActive(false);
         isMenuOpen = false;
+        selectedType = Selectables.None;
     }
 
     public void SellButton()
     {
-        ResourcePool.AddResource(selectedStructure.GetComponent<Building>().getSellResources());
-        Vector3Int structPost = GridSystem.CoordinatesToGrid(selectedStructure.transform.position);
-        gridManager.StopOccupying(selectedStructure.transform.position, CalculateOccupyingSize());
-        selectedStructure.GetComponent<StructureBattleSystem>().TakeDamage(100000);
-        selectedStructure = null;
+        if(selectedType == Selectables.Building)
+        {
+            SellBuilding();
+        }
+        else if(selectedType == Selectables.Troop)
+        {
+            SellTroop();
+        }
+    }
+
+    private void SellBuilding()
+    {
+        ResourcePool.AddResource(selectedBuildingScript.GetSellResources());
+        Vector3Int structPost = GridSystem.CoordinatesToGrid(selectedObject.transform.position);
+        gridManager.StopOccupying(selectedObject.transform.position, CalculateOccupyingSize());
+        selectedSBSScript.TakeDamage(100000);
+        selectedObject = null;
+        defaultMaterial = null;
+        DisableUI();
+    }
+
+    private void SellTroop()
+    {
+        ResourcePool.AddResource(selectedTroopAI.GetSellResources());
+        selectedCombatSystem.TakeDamage(100000);
+
+        selectedObject = null;
         defaultMaterial = null;
         DisableUI();
     }
 
 
-    Vector2Int CalculateOccupyingSize(){
-        MeshRenderer meshRenderer = selectedStructure.GetComponent<Building>().building_model.GetComponent<MeshRenderer>();
+    Vector2Int CalculateOccupyingSize()
+    {
+        MeshRenderer meshRenderer = selectedBuildingScript.building_model.GetComponent<MeshRenderer>();
         return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
                 Mathf.CeilToInt(meshRenderer.bounds.size.z / GridSystem.tileSize) );
+    }
+
+    private void UnhighlightObject()
+    {
+        if(selectedType == Selectables.Building)
+        {
+            selectedBuildingScript.building_model.GetComponent<Renderer>().material = defaultMaterial;
+        }
+        else if(selectedType == Selectables.Troop)
+        {
+            selectedTroopAI.troopModel.GetComponent<Renderer>().material = defaultMaterial;
+        }
     }
 }

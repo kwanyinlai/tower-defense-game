@@ -5,8 +5,10 @@ using System.Collections.Generic;
 public abstract class TroopAI : MonoBehaviour
 {
     public float aggroRange = 10.0f; // range which troop engages enemy
+    public string troopName;
     public Transform enemyTarget;
     protected CombatSystem targetStats;
+    public GameObject troopModel;
 
     protected NavMeshAgent agent;
 
@@ -26,6 +28,7 @@ public abstract class TroopAI : MonoBehaviour
     protected float atkTimer = 0f;
     public float maxSpeed = 3.5f;
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
+    protected Dictionary<string, int> sellResources = new Dictionary<string, int>();
 
     private LineRenderer pathIndicator;
 
@@ -41,6 +44,8 @@ public abstract class TroopAI : MonoBehaviour
     public GameObject commandingPlayer;
     public GameObject waypoint; // maybe these shouldn't be public?
     public abstract void Attack(Transform target);
+  
+    protected abstract void IntializeSellResources();
 
     [SerializeField] private GameObject selectedCircle;
     
@@ -70,6 +75,8 @@ public abstract class TroopAI : MonoBehaviour
 
         combatSystem = gameObject.GetComponent<CombatSystem>();
         agent.speed = maxSpeed;
+
+        IntializeSellResources();
 
     }
 
@@ -273,6 +280,16 @@ public abstract class TroopAI : MonoBehaviour
     public void Selected()
     {
         Debug.Log("hello");
+    }
+
+    public void SetSellResources(Dictionary<string, int> resources)
+    {
+        sellResources = resources;
+    }
+
+    public Dictionary<string, int> GetSellResources()
+    {
+        return sellResources;
     }
 
     

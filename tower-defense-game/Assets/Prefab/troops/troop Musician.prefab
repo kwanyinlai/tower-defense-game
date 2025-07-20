@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4819948793336852589}
   - component: {fileID: 7449741663901051032}
   - component: {fileID: 7749022126286121766}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: 232009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,6 +157,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -251,7 +255,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aggroRange: 10
+  troopName: Musician Troop
   enemyTarget: {fileID: 0}
+  troopModel: {fileID: 8643192185184541480}
   idleRange: 10
   attackRange: 5
   dmg: 10
@@ -412,6 +418,11 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!1 &8643192185184541480 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+  m_PrefabInstance: {fileID: 485943793069399712}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1002069218572416999
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -428,9 +439,21 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1654103039952126077, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3655607998315927334, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3969995382856144502, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5058609326813034357, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5202642866907457317, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
       propertyPath: m_Pivot.x
@@ -512,9 +535,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7921444860459390066, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 8461883299926002394, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
       propertyPath: m_Name
       value: health-bar-canvas (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8461883299926002394, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 9166099498394906623, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
       propertyPath: target
@@ -558,6 +589,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 86925410923215179}
     m_Modifications:
+    - target: {fileID: 2546999208053913930, guid: a6f1495e469374eb5b89bb19da8c712d, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6169607151486638889, guid: a6f1495e469374eb5b89bb19da8c712d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.92
@@ -601,6 +636,10 @@ PrefabInstance:
     - target: {fileID: 6833378629827838355, guid: a6f1495e469374eb5b89bb19da8c712d, type: 3}
       propertyPath: m_Name
       value: selector-circle 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6833378629827838355, guid: a6f1495e469374eb5b89bb19da8c712d, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -81,6 +81,12 @@ public class ButtonScripts : MonoBehaviour
         buildMode.SetActiveBuilding(6);
         buildMode.CloseBuildMenu();
     }
+
+    public void woodResourceButton()
+    {
+        buildMode.SetActiveBuilding(7);
+        buildMode.CloseBuildMenu();
+    }
     #endregion
 
 
@@ -104,6 +110,9 @@ public class ButtonScripts : MonoBehaviour
                 break;
             case "wall":
                 filter = "WallTypeButton";
+                break;
+            case "resource building":
+                filter = "ResourceBuildingButton";
                 break;
             default:
                 filter = "Error?";

@@ -478,7 +478,7 @@ GameObject:
   - component: {fileID: 2052587566374734930}
   - component: {fileID: 6540427454544848809}
   m_Layer: 9
-  m_Name: enemy Variant
+  m_Name: enemy Ranged
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -595,11 +595,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700e422f34b66478bbd055dd10634ccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aggroRange: 10
+  aggroRange: 15
   baseTarget: {fileID: 4297677168834720841, guid: 87d723e00b62349bba774cf272424160, type: 3}
   troopTarget: {fileID: 0}
   barracksTarget: {fileID: 0}
-  range: 5
+  range: 10
   maxSpeed: 3.5
   dmg: 10
   atkTimer: 0

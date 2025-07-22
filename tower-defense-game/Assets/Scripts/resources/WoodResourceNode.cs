@@ -21,7 +21,7 @@ public class ResourceNode : MonoBehaviour
     private void setResourcesPerCollect()
     {
         resourcesPerCollect = new Dictionary<string, int>();
-        resourcesPerCollect.Add("TestResource1", 10);
+        resourcesPerCollect.Add("Wood", 10);
     }
 
     void Update()

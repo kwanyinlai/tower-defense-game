@@ -46,7 +46,7 @@ public class Placeable : MonoBehaviour
         offset = CalculateOffset();
 
         //TODO: Remove and replace with code to actually add the correct resources based on building
-        requiredResources.TryAdd("TestResource1", 150);
+        requiredResources.TryAdd("Wood", 150);
         requiredResources.TryAdd("TestResource2", 150);
     }
 

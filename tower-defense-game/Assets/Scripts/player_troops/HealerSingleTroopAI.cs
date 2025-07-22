@@ -164,7 +164,7 @@ public class HealerSingleTroopAI : TroopAI
     protected override void IntializeSellResources()
     {
         //TODO: Remove and replace with code to actually add the correct resources based on building
-        sellResources.Add("TestResource1", 100);
+        sellResources.Add("Wood", 100);
         sellResources.Add("TestResource2", 100);
     }
 }

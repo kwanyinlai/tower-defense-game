@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class MusicianTroopAI : TroopAI
+public class MusicianTroopAI : SupportTroop
 {
 
     public float attackBuffStrengthDecimal = 1.25f;
@@ -30,25 +30,6 @@ public class MusicianTroopAI : TroopAI
 
         Collider collider = this.GetComponent<Collider>();
         atkTimer = atkCooldown;
-    }
-    
-    public List<GameObject> GetAlliesInRange()
-    {        
-        List<GameObject> allies = new List<GameObject>();
-
-        // adds allies within range
-        foreach (var ally in TroopAI.troops)
-        {
-            CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(transform.position, ally.transform.position);
-
-            if (distance <= aggroRange)
-            {
-                allies.Add(ally);
-            }
-        }
-        
-        return allies.Count == 0 ? null : allies;
     }
     
     

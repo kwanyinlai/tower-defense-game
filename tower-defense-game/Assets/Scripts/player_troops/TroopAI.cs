@@ -84,58 +84,77 @@ public abstract class TroopAI : MonoBehaviour
     protected virtual void Update()
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
+
+        ControlTroop();
+        
+
+        // Decide Whether to Engage In Combat
+        DecideState();
+
+       // Combat Mechanics
+        HandleCombat();
+    }
+
+    protected void HandleCombat() {
+        if (inCombat)
+        {
+            FightEnemy();    
+        } 
+        else 
+        {
+            Disengaged();
+        }
+    }
+
+    protected void ControlTroop() {
         if(underSelection){
             ;
         }
         else{
             HideCircle();
         }
+    }
+
+    protected void DecideState() {
         Transform copy = GetClosestEnemyInRange();
         if (copy != null)
         {
+            // Start Combat & Find Target
             inCombat = true;
             enemyTarget = copy;
         }
         else
         {   
+            // Stop Combat + Movement
             inCombat = false;  
             agent.isStopped=false; 
         }
-       
-        if (inCombat)
-        {
-            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
-            
-            FightEnemyInRange();
-        } 
-        else {        
-            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
-            if(underSelection){
-
-                ;
-            }
-            else{
-                if(waypoint!=null){
-                    GoToWaypoint();
-                    HideCircle();
-                    
-                }
-                else{
-                    ;
-                }
-
-            }
-            
-            
-            
-        }
-
-
-
-        
-        
     }
 
+    protected void FightEnemy() {
+        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        FightEnemyInRange();
+    }
+
+    protected void Disengaged() {
+        // Disengaged Mechanics
+        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        if(underSelection){
+
+            ;
+        }
+        else{
+            if(waypoint!=null){
+                GoToWaypoint();
+                HideCircle();
+                
+            }
+            else{
+                ;
+            }
+
+        }
+    }
 
 
 

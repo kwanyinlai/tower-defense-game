@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class HealerRadiusTroopAI : TroopAI
+public class HealerRadiusTroopAI : SupportTroop
 {
 
     public float healStrength = 10;
@@ -38,37 +38,24 @@ public class HealerRadiusTroopAI : TroopAI
         Collider collider = this.GetComponent<Collider>();
         atkTimer = atkCooldown;
     }
-    
-    public List<GameObject> GetAlliesInRange()
-    {        
-        List<GameObject> allies = new List<GameObject>();
-
-        // adds allies within range
-        foreach (var ally in TroopAI.troops)
-        {
-            CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(transform.position, ally.transform.position);
-
-            if (distance <= aggroRange && targetCombat.currentHealth != targetCombat.maxHealth)
-            {
-                allies.Add(ally);
-            }
-        }
-        
-        return allies.Count == 0 ? null : allies;
-    }
 
     protected override void Update()
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         
-        if(underSelection){
-            ;
-        }
-        else{
-            HideCircle();
-        }
+        ControlTroop();
         
+        DecideState();
+       
+        HandleCombat();    
+    }
+
+    protected void HealAlly() {
+        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        ApplyEffectToAlly();
+    }
+
+    protected void DecideState() {
         allyList = GetAlliesInRange();
         
         if (allyList != null && allyList.Count != 0)
@@ -81,28 +68,16 @@ public class HealerRadiusTroopAI : TroopAI
             inCombat = false;  
             agent.isStopped=false; 
         }
-       
+    }
+
+    protected void HandleCombat() {
         if (inCombat)
         {
-            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
-
-            ApplyEffectToAlly();
+            HealAlly();
         } 
         else {        
-            agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
-            if(underSelection){
-                ;
-            }
-            else{
-                if(waypoint!=null){
-                    GoToWaypoint();
-                    HideCircle();   
-                }
-                else{
-                    ;
-                }
-            }   
-        }    
+            Disengaged(); 
+        }
     }
 
     protected void ApplyEffectToAlly(){

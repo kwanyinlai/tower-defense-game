@@ -6,6 +6,7 @@ public class StructureBattleSystem : CombatSystem
     public static List<GameObject> barracks = new List<GameObject>();
     protected override void Start()
     {
+        base.Start();
         barracks.Add(gameObject);
         currentHealth = maxHealth;
         tagList = new HashSet<string>(viewableTagList);

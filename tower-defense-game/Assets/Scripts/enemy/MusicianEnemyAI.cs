@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class MusicianEnemyAI : EnemyAI
+public class MusicianEnemyAI : SupportEnemyAI
 {
 
     public float attackBuffStrengthDecimal = 1.25f;
@@ -31,39 +31,24 @@ public class MusicianEnemyAI : EnemyAI
         Collider collider = this.GetComponent<Collider>();
         atkTimer = atkCooldown;
     }
-    
-    public List<GameObject> GetAlliesInRange()
-    {        
-        List<GameObject> allies = new List<GameObject>();
-
-        // adds allies within range
-        foreach (var ally in EnemyAI.enemies)
-        {
-            CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(transform.position, ally.transform.position);
-
-            if (distance <= aggroRange)
-            {
-                allies.Add(ally);
-            }
-        }
-        
-        return allies.Count == 0 ? null : allies;
-    }
 
     protected override void Update()
     {
+        if (atkTimer > 0f) {
+            atkTimer -= Time.deltaTime;
+        } else
+        {
+            atkTimer = atkCooldown;
+        }
 
-        if (baseTarget == null)
-        {
-            Debug.Log("No base found!");
-            baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
-        }
-        else
-        {
-            targetStats = baseTarget.GetComponent<CombatSystem>();
-        }
+        FindDefaultTargets();
         
+        FindTargets();
+
+        HandleCombat();
+    } 
+
+    protected void FindTargets() {
         allyList = GetAlliesInRange();
 
         // sets troop target just in case something else depends on it
@@ -77,7 +62,9 @@ public class MusicianEnemyAI : EnemyAI
         }
 
         barracksTarget = GetClosestBarracksInRange();
+    }
 
+    protected void HandleCombat() {
         if (troopTarget != null)
         {
             targetStats = troopTarget.GetComponent<CombatSystem>();
@@ -126,6 +113,5 @@ public class MusicianEnemyAI : EnemyAI
         {
             atkTimer = atkCooldown;
         }
-    } 
-
+    }
 }

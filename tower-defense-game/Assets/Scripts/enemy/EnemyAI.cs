@@ -58,7 +58,39 @@ public abstract class EnemyAI : MonoBehaviour
 
     protected virtual void Update()
     {
+        // // Atk Timer
+        if (atkTimer > 0f) {
+            atkTimer -= Time.deltaTime;
+        } else
+        {
+            atkTimer = atkCooldown;
+        }
+        
+        FindDefaultTargets();
+        FindTargets();
+        
+        HandleCombat();
+    } 
 
+    protected void FindDefaultTargets() {
+        // Find Targets
+        if (baseTarget == null){
+            Debug.Log("No base found!");
+            baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+        }
+        else{
+            targetStats = baseTarget.GetComponent<CombatSystem>(); 
+        }
+    }
+
+    protected void FindTargets() {
+        // Get Targets
+        troopTarget = GetClosestEnemyInRange();
+        barracksTarget = GetClosestBarracksInRange();
+    }
+
+
+    protected void HandleCombat() {
         if (baseTarget == null){
             Debug.Log("No base found!");
             baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
@@ -129,13 +161,7 @@ public abstract class EnemyAI : MonoBehaviour
         {
             StopMoving();
         }
-        if (atkTimer > 0f) {
-            atkTimer -= Time.deltaTime;
-        } else
-        {
-            atkTimer = atkCooldown;
-        }
-    } 
+    }
 
     public Transform GetClosestEnemyInRange()
     {

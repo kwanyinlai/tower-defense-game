@@ -10,6 +10,7 @@ public class BaseBattleSystem : CombatSystem
 
     protected override void Start()
     {
+        base.Start();
         currentHealth = maxHealth;
         health = currentHealth;
         tagList = new HashSet<string>(viewableTagList);
@@ -17,6 +18,7 @@ public class BaseBattleSystem : CombatSystem
 
     protected override void Update()
     {
+        base.Update();
         health = currentHealth;
     }
 

@@ -313,6 +313,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 100
+  shield: 0
   viewableTagList:
   - Troop
 --- !u!1 &5058609326813034357

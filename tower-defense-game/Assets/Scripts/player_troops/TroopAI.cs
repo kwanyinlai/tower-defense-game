@@ -8,79 +8,68 @@ using System.Collections.Generic;
 
 public abstract class TroopAI : MonoBehaviour
 {
-    public float aggroRange = 10.0f; // range which troop engages enemy
-    public string troopName;
-    public Transform enemyTarget;
-    protected CombatSystem targetStats;
-    public GameObject troopModel;
-
-    protected NavMeshAgent agent;
-
-    protected Vector3 idleTransform;
-    protected Vector3 idleStartPos;
-    public float idleRange = 10.0f;
-
-
-    protected bool inCombat = false;
-    public bool InCombat{
-        get{ return inCombat; }
-    }
-    
-    public float attackRange = 5.0f;
-    public int dmg = 10;
-    protected float atkCooldown = 1.5f;
-    protected float atkTimer = 0f;
-    public float maxSpeed = 3.5f;
-    protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
-    protected Dictionary<string, int> sellResources = new Dictionary<string, int>();
-
-    private LineRenderer pathIndicator;
-
 
     public static List<GameObject> troops = new List<GameObject>();
 
+    [Header("Troop Attributes")]
+    public string troopName;
+    public GameObject troopModel;
+    public float maxSpeed = 3.5f;
 
+    [Header("Combat Attributes")]
+    public float attackRange = 5.0f;
+    public int dmg = 10;
+    public float aggroRange = 10.0f; // range which troop engages enemy
+    public Transform enemyTarget;
+
+    [Header("Control Attributes")]
     public bool underSelection=false;
-
-    protected CombatSystem combatSystem;
-
-
     public GameObject commandingPlayer;
     public GameObject waypoint; // maybe these shouldn't be public?
-    public abstract void Attack(Transform target);
-  
-    protected abstract void IntializeSellResources();
-
     [SerializeField] private GameObject selectedCircle;
     
 
+    // PRIVATE AND PROTECTED ATTRIBUTES 
 
-    public Vector3 GetRandomPosition(Vector3 center, float idleRange)
-    {
-        Vector3 randomTransform;
-        randomTransform.y = 0;
-        randomTransform.x = Random.value;
-        randomTransform.z = Random.value;
-        randomTransform = randomTransform.normalized * Random.value * idleRange;
-        return randomTransform;
+    // Combat Stats
+    protected float atkCooldown = 1.5f;
+    protected float atkTimer = 0f;
+
+    // Combat Attributes
+    protected CombatSystem targetStats;
+    protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
+    protected CombatSystem combatSystem;
+
+    // Movement Attributes
+    private LineRenderer pathIndicator;
+    protected NavMeshAgent agent;
+    private Vector3 anchor;
+    
+    // Resource Attributes
+    protected Dictionary<string, int> sellResources = new Dictionary<string, int>();
+
+    // Abstract Methods 
+    protected abstract void IntializeSellResources();
+    public abstract void Attack(Transform target);
+    
+    // Getters and Setters
+    public bool InCombat{
+        get{ return inCombat; }
     }
+
 
 
     protected virtual void Start()
     {
-        
-        idleTransform = this.transform.position;
-        idleStartPos = this.transform.position;
         agent = GetComponent<NavMeshAgent>();
         troops.Add(gameObject);
-        HideCircle();
         pathIndicator = GetComponent<LineRenderer>();
         pathIndicator.enabled = false;
-
         combatSystem = gameObject.GetComponent<CombatSystem>();
         agent.speed = maxSpeed;
 
         IntializeSellResources();
+        HideCircle();
 
     }
 
@@ -89,8 +78,9 @@ public abstract class TroopAI : MonoBehaviour
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
 
+
+        // Events when player is controlling troop
         ControlTroop();
-        
 
         // Decide Whether to Engage In Combat
         DecideState();
@@ -162,19 +152,7 @@ public abstract class TroopAI : MonoBehaviour
 
 
 
-    protected void Idle(){
-        float dist = Mathf.Sqrt(Mathf.Pow(idleStartPos.x - transform.position.x, 2) + Mathf.Pow(idleStartPos.z - transform.position.z, 2));
-        float dist2 = Mathf.Sqrt(Mathf.Pow(idleTransform.x - transform.position.x, 2) + Mathf.Pow(idleTransform.z - transform.position.z, 2));
-        if (dist >= idleRange)
-        {
-            idleStartPos = transform.position;
-        }
-        if (dist >= idleRange || dist2 <= 3f)
-        {
-            idleTransform = idleStartPos + GetRandomPosition(idleStartPos, idleRange);
-            agent.SetDestination(idleTransform);
-        }
-    }
+
 
 
   
@@ -268,6 +246,21 @@ public abstract class TroopAI : MonoBehaviour
         selectedCircle.SetActive(false);
     }
 
+    public void Selected()
+    {
+        Debug.Log("hello");
+    }
+
+    public void SetSellResources(Dictionary<string, int> resources)
+    {
+        sellResources = resources;
+    }
+
+    public Dictionary<string, int> GetSellResources()
+    {
+        return sellResources;
+    }
+
     
 
     /*
@@ -299,21 +292,31 @@ public abstract class TroopAI : MonoBehaviour
     }
     */
 
-
-    public void Selected()
+    /*
+    public Vector3 GetRandomPosition(Vector3 center, float idleRange)
     {
-        Debug.Log("hello");
+        Vector3 randomTransform;
+        randomTransform.y = 0;
+        randomTransform.x = Random.value;
+        randomTransform.z = Random.value;
+        randomTransform = randomTransform.normalized * Random.value * idleRange;
+        return randomTransform;
     }
-
-    public void SetSellResources(Dictionary<string, int> resources)
-    {
-        sellResources = resources;
+    */
+    /* protected void Idle(){
+        float dist = Mathf.Sqrt(Mathf.Pow(idleStartPos.x - transform.position.x, 2) + Mathf.Pow(idleStartPos.z - transform.position.z, 2));
+        float dist2 = Mathf.Sqrt(Mathf.Pow(idleTransform.x - transform.position.x, 2) + Mathf.Pow(idleTransform.z - transform.position.z, 2));
+        if (dist >= idleRange)
+        {
+            idleStartPos = transform.position;
+        }
+        if (dist >= idleRange || dist2 <= 3f)
+        {
+            idleTransform = idleStartPos + GetRandomPosition(idleStartPos, idleRange);
+            agent.SetDestination(idleTransform);
+        }
     }
-
-    public Dictionary<string, int> GetSellResources()
-    {
-        return sellResources;
-    }
+    */
 
     
 }

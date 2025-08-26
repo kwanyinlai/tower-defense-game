@@ -39,10 +39,12 @@ public abstract class TroopAI : MonoBehaviour
     protected CombatSystem targetStats;
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
     protected CombatSystem combatSystem;
+    protected bool inCombat = false;
 
     // Movement Attributes
     private LineRenderer pathIndicator;
     protected NavMeshAgent agent;
+
     private Vector3 anchor;
     
     // Resource Attributes
@@ -140,8 +142,7 @@ public abstract class TroopAI : MonoBehaviour
         else{
             if(waypoint!=null){
                 GoToWaypoint();
-                HideCircle();
-                
+                HideCircle();        
             }
             else{
                 ;
@@ -149,10 +150,6 @@ public abstract class TroopAI : MonoBehaviour
 
         }
     }
-
-
-
-
 
 
   
@@ -175,7 +172,6 @@ public abstract class TroopAI : MonoBehaviour
 
     public Transform GetClosestEnemyInRange()
     {
-
         if (agent!=null && agent.isOnNavMesh && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
             return enemyTarget;
         }
@@ -206,7 +202,6 @@ public abstract class TroopAI : MonoBehaviour
     protected void GoToWaypoint(){
         if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 3f){
             DeleteFromWaypoint();
-            Debug.Log("waypoint test");
             pathIndicator.enabled = false;
         }
         else{

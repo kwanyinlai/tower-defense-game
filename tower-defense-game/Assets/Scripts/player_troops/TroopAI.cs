@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
+
+// some sort of anchor point which they attempt to get close to always but if there are enemies in the way, they choose against it
+
+
 public abstract class TroopAI : MonoBehaviour
 {
     public float aggroRange = 10.0f; // range which troop engages enemy

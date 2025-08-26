@@ -165,7 +165,14 @@ public class TroopManagment : MonoBehaviour
 
 
     void SetWaypoint(){
-        GameObject deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,3f), transform.rotation);
+        GameObject deployedPoint = null;
+        if (Waypoint.FindNearestWaypoint(transform.position + transform.rotation * new Vector3(0f,0f,3f)) == null){
+            deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,3f), transform.rotation);
+        }
+        else{
+            deployedPoint = Waypoint.FindNearestWaypoint(transform.position + transform.rotation * new Vector3(0f,0f,3f));
+        }
+        
         foreach (GameObject troop in selectedTroops)
         {
            

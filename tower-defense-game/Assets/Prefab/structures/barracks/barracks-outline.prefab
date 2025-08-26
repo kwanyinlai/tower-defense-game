@@ -123,9 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terrain: {fileID: 0}
-  buildMode: {fileID: 0}
   commandingPlayer: {fileID: 0}
-  mainCamera: {fileID: 0}
 --- !u!114 &484398474819610536
 MonoBehaviour:
   m_ObjectHideFlags: 0

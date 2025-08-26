@@ -40,7 +40,7 @@ public class BuildMode : MonoBehaviour
 
         if(!gameObject.GetComponent<TroopManagment>().managingTroops){
             if(isBuilding){
-
+                
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
                     isBuilding = false;
@@ -55,6 +55,10 @@ public class BuildMode : MonoBehaviour
                 else if (Input.GetMouseButtonDown(0))
                 {
                     PlaceBuilding();
+                }
+                else if(Input.GetKeyDown(KeyCode.R)){
+                    outline.transform.Rotate(0, 90, 0);
+                    Debug.Log("rotated"); 
                 }
             }
             else if (buildMenuOpen)

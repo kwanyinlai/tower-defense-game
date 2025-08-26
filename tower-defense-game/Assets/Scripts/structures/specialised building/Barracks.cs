@@ -40,8 +40,13 @@ public class Barracks : Building
 
     protected void SpawnTroop()
     {
+        float spawnRadius = 3f;
         int direction = (int) Mathf.Round(transform.eulerAngles.y / 90); //0 for north (up), 1 for east (right) 2 for south (down), 3 for west (left).
-        Vector3 spawnPos = transform.position;
+        float xOffset = Random.Range(-4, 4);
+        float zOffset = Random.Range(0, 8);
+        Vector3 spawnPos = transform.position + transform.right * xOffset + transform.forward * zOffset;
+
+
         switch (direction)
         {
             case 0:
@@ -63,7 +68,7 @@ public class Barracks : Building
         if (ResourcePool.EnoughResources(troopResources))
         {
             ResourcePool.DepleteResource(troopResources);
-            GameObject troop = Instantiate(troopPrefab, spawnPos, Quaternion.identity, troopEmptyObject);
+            GameObject troop = Instantiate(troopPrefab, spawnPos, Random.rotation, troopEmptyObject);
             troop.GetComponent<TroopCombatSystem>().setBarracks(this);
             currentTroops++;
         }

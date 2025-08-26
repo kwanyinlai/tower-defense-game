@@ -44,8 +44,32 @@ public abstract class CombatSystem : MonoBehaviour
         return currentHealth / maxHealth;
     }
 
+    protected virtual void DamageVFX()
+    {
+        int blockCount = 5;
+        float blockSize = 0.2f;
+        float destroyTime = 4f;
+
+        for (int i = 0; i < blockCount; i++)
+        {
+            GameObject blood = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            blood.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
+            blood.transform.position = transform.position + new Vector3(0, 1.5f,0) + Random.insideUnitSphere;
+            blood.transform.rotation = Random.rotation;
+
+            blood.GetComponent<Renderer>().material.color = Color.red;
+            Rigidbody rb = blood.AddComponent<Rigidbody>();
+            rb.AddForce(Random.onUnitSphere, ForceMode.Impulse);
+            Destroy(blood, destroyTime);
+        }
+    }
+   
+
     public virtual void TakeDamage(int damage)
     {
+        DamageVFX();
+
+
         shield -= damage;
 
         if (shield <= 0)

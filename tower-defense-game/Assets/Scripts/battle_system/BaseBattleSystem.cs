@@ -29,8 +29,8 @@ public class BaseBattleSystem : CombatSystem
 
     protected override void Die()
     {
-        GameObject.Find("grid-manager").GetComponent<GridSystem>().StarterTerritoryNotAssigned();
-        if (this.gameObject.tag == "Target")
+        GameObject.Find("grid-manager").GetComponent<GridSystem>().UnassignTerritory();
+        if (gameObject.tag == "Target")
         {
             SceneManager.LoadScene("GameOver");
         }

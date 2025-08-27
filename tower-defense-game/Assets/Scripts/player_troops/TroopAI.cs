@@ -80,7 +80,6 @@ public abstract class TroopAI : MonoBehaviour
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
 
-
         // Events when player is controlling troop
         ControlTroop();
 
@@ -135,8 +134,8 @@ public abstract class TroopAI : MonoBehaviour
     protected void Disengaged() {
         // Disengaged Mechanics
         agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        AntiClustering();
         if(underSelection){
-
             ;
         }
         else{
@@ -149,6 +148,21 @@ public abstract class TroopAI : MonoBehaviour
             }
 
         }
+    }
+
+    protected void AntiClustering() // simple algorithm to avoid clustering while idling
+    {
+        Vector3 awayDir = Vector3.zero;
+        Collider[] collisions = Physics.OverlapSphere(transform.position, 1.5f);
+        foreach (Collider collider in collisions)
+        {
+            if (collider.gameObject != gameObject && collider.CompareTag("Troop"))
+            {
+                awayDir = transform.position - collider.transform.position;
+            }
+            
+        }
+        transform.position += awayDir.normalized * agent.speed * Time.deltaTime;
     }
 
 

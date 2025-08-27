@@ -4,59 +4,72 @@ using System.Collections.Generic;
 public class GridSystem : MonoBehaviour
 {
 
-    // TODO: build menu for selecting buildings
     public static int gridWidth = 200;
     public static int gridHeight = 200;
     public static float tileSize = 4f;
 
-
-
-    private bool[,] grid;
-    private int[,] territoryGrid; //0 for not territory, 1 not -> territory, 2 for territory, 3 for territory -> not
-    public GameObject target;
-    private bool starterTerritoryIsAssigned;
+    private bool[,] grid; // true means buildable, false means occupied
     private List<Transform> playerPos;
 
-    private List<GameObject> destructibleTiles;
+    
+    private int[,] territoryGrid; // corresponds to enum TerritoryStatus
+    public GameObject target;
+    private bool starterTerritoryIsAssigned;
 
+    
+    public enum TerritoryStatus
+    {
+        NotAssigned = 0,
+        AssigneOnWaveUpdate = 1,
+        Assigned = 2,
+        RemoveOnWaveUpdate = 3
+    }
 
-    [SerializeField] private GameObject buildableSquares;
-    [SerializeField] private Material tileMaterial;
+    [Header("Buildable Tiles")]
+    [SerializeField] private GameObject buildableTilePrefab;
+    [SerializeField] private Material buildableTileMaterial;
 
+    private List<GameObject> buildableTiles;
 
-    public void StarterTerritoryNotAssigned(){
-        starterTerritoryIsAssigned = false;
+    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
+    {
+        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; // this might be broken i think
+        int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
+        return new Vector3Int(x,0,z);
+    }
+
+    public static Vector3 GridToCoordinates(Vector3 gridCoords)
+    {
+        return new Vector3((gridCoords.x - gridWidth/2) * tileSize, 0f, (gridCoords.z - gridHeight/2) * tileSize);
     }
 
     void Start()
     {
+        territoryGrid = new int[gridWidth, gridHeight];
+
         playerPos = new List<Transform>();
-
-        //make all squares buidable
-
-        destructibleTiles = new List<GameObject>();
+        buildableTiles = new List<GameObject>();
 
         grid = new bool[gridWidth, gridHeight];
-        territoryGrid = new int[gridWidth, gridHeight];
+        
+        
 
         for (int x = 0; x < gridWidth; x++)
         {
             for (int z = 0; z < gridHeight; z++)
             {
                 grid[x, z] = true;
-                territoryGrid[x, z] = 0;
+                territoryGrid[x, z] = (int)TerritoryStatus.NotAssigned;
             }
         }
-        starterTerritoryIsAssigned = false;
+        // starterTerritoryIsAssigned = false;
 
-        
     }
     
 
 
     void SetStarterTerritory()
     {
-       
         Vector3 pos = target.transform.position;
         Vector3Int gridPos = CoordinatesToGrid(pos);
         for(int i = gridPos.x - 5; i <= gridPos.x + 5; i++)
@@ -64,49 +77,32 @@ public class GridSystem : MonoBehaviour
             for(int j =  gridPos.z - 5; j <= gridPos.z + 5; j++)
             {
                 float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
-                if(distSquared < 25) //Territory radius of 3 around the target
+                if(distSquared < 25)
                 {
-                    territoryGrid[i, j] = 2;
+                    territoryGrid[i, j] = (int)TerritoryStatus.Assigned;
                 }
             }
         }
     }
 
-    void Update(){
-        if(target==null){
-            target = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
-        }
-        else{
-            if(!starterTerritoryIsAssigned){
-                SetStarterTerritory();
-                starterTerritoryIsAssigned = true;
-            }
-        }
-    }
 
 
-    void GetFloorSize(){
 
-    }
 
     public bool IsTileBuildable(Vector3Int coordinates)
     {
-
-        
         // check if tile is occupied by player
         foreach (GameObject player in Player.players)
         {
-            
             if (coordinates == CoordinatesToGrid(player.GetComponent<Transform>().position))
             {
-                // TODO: this is slgihtly off rn but I'll fix it later
+                // TODO: this is slgihtly off rn but I'll fix it later // later note, what is off about this??
                 return false;
             }
         }
 
-
         if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight ||
-            territoryGrid[coordinates.x, coordinates.z]!=2)
+            territoryGrid[coordinates.x, coordinates.z] == (int)TerritoryStatus.NotAssigned) 
         {
             return false;
             
@@ -118,7 +114,6 @@ public class GridSystem : MonoBehaviour
 
     public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
     {
- 
         Vector3 gridCoords = CoordinatesToGrid(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
         {
@@ -132,23 +127,7 @@ public class GridSystem : MonoBehaviour
         return true;
     }
 
-    public void updateWaveTerritory()
-    {
-        for(int i = 0; i < territoryGrid.GetLength(0); i++)
-        {
-            for(int j = 0; j < territoryGrid.GetLength(1); j++)
-            {
-                if (territoryGrid[i, j] == 1)
-                {
-                    territoryGrid[i, j] = 2;
-                }
-                else if (territoryGrid[i, j] == 3)
-                {
-                    territoryGrid[i, j] = 4;
-                }
-            }
-        }
-    }
+    
 
     public void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
     {
@@ -169,9 +148,10 @@ public class GridSystem : MonoBehaviour
             for (int j = gridPos.z - range; j <= gridPos.z + size.y + range; j++)
             {   
                 float distSquared = Mathf.Pow(i - gridPos.x - size.x/2, 2) + Mathf.Pow(j - gridPos.z - size.y/2, 2);
-                if (distSquared < Mathf.Pow(range, 2) && territoryGrid[i, j] != 2) //Territory radius of 3 around the target
+
+                if (distSquared < Mathf.Pow(range, 2) && territoryGrid[i, j] != (int)TerritoryStatus.Assigned) 
                 {
-                    territoryGrid[i, j] = 1;
+                    territoryGrid[i, j] = (int)TerritoryStatus.AssigneOnWaveUpdate;
                 }
             }
         }
@@ -192,17 +172,6 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
-    {
-        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; // this could be broken i think
-        int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
-        return new Vector3Int(x,0,z);
-    }
-
-    public static Vector3 GridToCoordinates(Vector3 gridCoords)
-    {
-        return new Vector3((gridCoords.x - gridWidth/2) * tileSize, 0f, (gridCoords.z - gridHeight/2) * tileSize);
-    }
 
     public static Quaternion SnapRotation(Quaternion currentRotation)
     {
@@ -212,38 +181,79 @@ public class GridSystem : MonoBehaviour
         return Quaternion.Euler(0f, yRotation, 0f);
     }
 
-    public void DrawGrid()
+    public void DrawBuildGrid()
     {
         // ClearGrid();
         for (int x = 0; x < gridWidth; x++)
         {
             for (int z = 0; z < gridHeight; z++)
             {
-                if (territoryGrid[x, z]==2)
+                if (grid[x, z] && territoryGrid[x,z] == (int)TerritoryStatus.Assigned)
                 {
-                    DrawSquare(GridToCoordinates(new Vector3Int(x, 0, z)));
+                    DrawBuildableSquare(GridToCoordinates(new Vector3Int(x, 0, z)));
                 }
             }
         }
     }
 
-    private void DrawSquare(Vector3 position)
+    private void DrawBuildableSquare(Vector3 position)
     {
         GameObject buildableTile = GameObject.CreatePrimitive(PrimitiveType.Quad);
-        destructibleTiles.Add(buildableTile);
-        buildableTile.transform.position = position + new Vector3(0, 0.1f, 0);
+        buildableTiles.Add(buildableTile);
+
+        buildableTile.transform.position = position + new Vector3(0, 0.1f, 0); // raise slightly above ground to be seen
         buildableTile.transform.localScale = new Vector3(tileSize, tileSize, tileSize);
-        buildableTile.GetComponent<Renderer>().material = tileMaterial;
+
+        buildableTile.GetComponent<Renderer>().material = buildableTileMaterial;
         buildableTile.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
-        buildableTile.transform.parent = buildableSquares.transform;
+
+        buildableTile.transform.parent = buildableTilePrefab.transform;
+
         buildableTile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
-    public void ClearGrid()
+    public void ClearBuildGrid()
     {
-        foreach (GameObject tile in destructibleTiles)
+        foreach (GameObject tile in buildableTiles)
         {
             Destroy(tile);
         }
     }
+
+    void Update(){
+        if(target==null){
+            target = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+        }
+        else{
+            if(!starterTerritoryIsAssigned){
+                SetStarterTerritory();
+                starterTerritoryIsAssigned = true;
+            }
+        }
+    }
+
+    
+    public void TerritoryUpdate()
+    {
+        for(int i = 0; i < territoryGrid.GetLength(0); i++)
+        {
+            for(int j = 0; j < territoryGrid.GetLength(1); j++)
+            {
+                if (territoryGrid[i, j] == (int)TerritoryStatus.AssigneOnWaveUpdate)
+                {
+                    territoryGrid[i, j] = (int)TerritoryStatus.Assigned;
+                }
+                else if (territoryGrid[i, j] == (int)TerritoryStatus.RemoveOnWaveUpdate)
+                {
+                    territoryGrid[i, j] = (int)TerritoryStatus.NotAssigned;
+                }
+            }
+        }
+    }
+
+
+    public void UnassignTerritory(){
+        starterTerritoryIsAssigned = false;
+    }
+    
 }

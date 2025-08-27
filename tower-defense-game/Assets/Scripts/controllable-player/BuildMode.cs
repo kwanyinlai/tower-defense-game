@@ -50,7 +50,7 @@ public class BuildMode : MonoBehaviour
                     }
                     camScript.DeactivateBuildCam();
 
-                    gridManager.ClearGrid();
+                    gridManager.ClearBuildGrid();
                 }
                 else if (Input.GetMouseButtonDown(0))
                 {
@@ -117,7 +117,7 @@ public class BuildMode : MonoBehaviour
         buildMenu.SetActive(false);
         buildMenuOpen = false;
         isBuilding = true;
-        gridManager.DrawGrid();
+        gridManager.DrawBuildGrid();
 
     }
 

@@ -8,6 +8,7 @@ TagManager:
   - BarrackTypeButton
   - WallTypeButton
   - ResourceBuildingButton
+  - Troop
   layers:
   - Default
   - TransparentFX

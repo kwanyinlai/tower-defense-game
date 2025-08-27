@@ -157,6 +157,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      propertyPath: m_TagString
+      value: Troop
+      objectReference: {fileID: 0}
     - target: {fileID: 8164078558771037576, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -254,14 +258,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2b0188e677f37243b6e3cdd091f0605, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aggroRange: 10
   troopName: Musician Troop
-  enemyTarget: {fileID: 0}
   troopModel: {fileID: 8643192185184541480}
-  idleRange: 10
+  maxSpeed: 3.5
   attackRange: 5
   dmg: 10
-  maxSpeed: 3.5
+  aggroRange: 10
+  enemyTarget: {fileID: 0}
   underSelection: 0
   commandingPlayer: {fileID: 0}
   waypoint: {fileID: 0}

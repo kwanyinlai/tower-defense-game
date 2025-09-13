@@ -254,13 +254,11 @@ public abstract class TroopAI : MonoBehaviour
 
     public void ShowCircle()
     {
-        Debug.Log("Showing circle");
         selectedCircle.SetActive(true);
     }
 
     public void HideCircle()
     {
-        Debug.Log("HIDING CIRCLe");
         selectedCircle.SetActive(false);
     }
 

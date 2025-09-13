@@ -9,8 +9,7 @@ public class CharacterCameraController : MonoBehaviour
     private float camSpeed = 50f;
 
     private CinemachineCamera overhead;
-    [SerializeField] private GameObject overheadCam;
-    public GameObject OverheadCam {get; private set;}
+    [SerializeField] public GameObject overheadCam;
 
     private CinemachineCamera above;
     [SerializeField] private GameObject aboveCam;

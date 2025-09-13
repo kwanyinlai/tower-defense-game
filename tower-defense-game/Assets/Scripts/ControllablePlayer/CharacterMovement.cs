@@ -54,8 +54,8 @@ public class CharacterMovement : MonoBehaviour
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
-        Vector3 forward = cameraController.OverheadCam.transform.forward;
-        Vector3 right = cameraController.OverheadCam.transform.right;
+        Vector3 forward = GetComponent<CharacterCameraController>().overheadCam.transform.forward;
+        Vector3 right = GetComponent<CharacterCameraController>().overheadCam.transform.right;
 
         forward.y = 0f;
         right.y = 0f;

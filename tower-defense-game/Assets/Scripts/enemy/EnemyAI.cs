@@ -6,20 +6,33 @@ using System.Runtime.Serialization.Json;
 public abstract class EnemyAI : MonoBehaviour
 {
     public static List<GameObject> enemies = new List<GameObject>(); 
+
+
+    [Header("Movement")]
     public float aggroRange = 10.0f;
-    public GameObject baseTarget;
-    public Transform troopTarget;
-    public Transform barracksTarget;
-    protected UnityEngine.AI.NavMeshAgent agent;
-    protected CombatSystem targetStats;
     public float range = 5.0f;
     public float maxSpeed = 3.5f;
+
+    private LineRenderer pathIndicator;
+     
+    [Header("Combat Attributes")]
     public int dmg = 10;
     protected float atkCooldown = 1.5f;
     public float atkTimer = 0f;
-    public abstract void Attack(Transform target);
-    private LineRenderer pathIndicator;
+
+    [Header("Combat Target")]
+    public GameObject baseTarget;
+    public Transform troopTarget;
+    public Transform barracksTarget;
+
+    // Reference Objects
+    protected UnityEngine.AI.NavMeshAgent agent;
+    protected CombatSystem targetStats;
     protected CombatSystem combatSystem;
+   
+    // ================ //
+    public abstract void Attack(Transform target);
+    // ================ //
 
     protected virtual void Start()
     {
@@ -43,6 +56,7 @@ public abstract class EnemyAI : MonoBehaviour
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
         pathIndicator.enabled = true;
         pathIndicator.positionCount = path.corners.Length;
+
         for (int i = 0; i < path.corners.Length; i++)
         {
             pathIndicator.SetPosition(i, path.corners[i]);
@@ -58,7 +72,7 @@ public abstract class EnemyAI : MonoBehaviour
 
     protected virtual void Update()
     {
-        // // Atk Timer
+        // attaack timer
         if (atkTimer > 0f) {
             atkTimer -= Time.deltaTime;
         } else
@@ -68,7 +82,6 @@ public abstract class EnemyAI : MonoBehaviour
         
         FindDefaultTargets();
         FindTargets();
-        
         HandleCombat();
     } 
 
@@ -76,7 +89,7 @@ public abstract class EnemyAI : MonoBehaviour
         // Find Targets
         if (baseTarget == null){
             Debug.Log("No base found!");
-            baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+            baseTarget = BaseManager.Instance.GetBase();
         }
         else{
             targetStats = baseTarget.GetComponent<CombatSystem>(); 
@@ -93,7 +106,7 @@ public abstract class EnemyAI : MonoBehaviour
     protected void HandleCombat() {
         if (baseTarget == null){
             Debug.Log("No base found!");
-            baseTarget = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+            baseTarget = BaseManager.Instance.GetBase();
         }
         else{
             targetStats = baseTarget.GetComponent<CombatSystem>(); 
@@ -188,6 +201,8 @@ public abstract class EnemyAI : MonoBehaviour
         if (closestEnemy == null) { return null; }
         return closestEnemy.transform;
     }
+
+    
     public Transform GetClosestBarracksInRange()
     {
         if (barracksTarget != null)

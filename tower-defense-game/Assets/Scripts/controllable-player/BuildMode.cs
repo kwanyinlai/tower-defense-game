@@ -3,36 +3,40 @@ using UnityEngine;
 
 public class BuildMode : MonoBehaviour
 {
-    private GameObject structureParentClass;
-    private GameObject structureOutlineParentClass;
-    public List<GameObject> allStructuresPrefabs = new List<GameObject>();
+    // Building Parents (for organization)
+    [SerializeField] private GameObject structureParentClass;
+    [SerializeField] private GameObject structureOutlineParentClass;
 
+    [Header("Build Mode Flags")]
     public bool isBuilding = false;
-    [SerializeField] private GameObject selectedBuilding;
-    private GameObject buildMenu;
     public bool buildMenuOpen;
-    [SerializeField] private GameObject terrain;
 
-    [Header("Building Prefabs")]
-    public GameObject barracksPrefab;
-
+    // Asdf
+    private GameObject buildMenu;
     private GameObject outline;
 
-    private CharacterMovement camScript;
+    //
+    [SerializeField] private GameObject terrain;
+    [SerializeField] private GameObject selectedBuilding;
 
-    private GridSystem gridManager;
+    [Header("Building Prefabs")]
+    public List<GameObject> allStructuresPrefabs = new List<GameObject>();
+    public GameObject barracksPrefab;
+
+
+    // Reference Scripts
+    private CharacterMovement camScript;
+    private GridManager gridManager;
 
 
 
     void Start(){
-        buildMenu = GameObject.Find("BuildMenu");
+        buildMenu = BuildMenu.Instance.gameObject;
         buildMenu.SetActive(false);
         buildMenuOpen = false;
         isBuilding=false;
-        structureParentClass=GameObject.Find("structures");
-        structureOutlineParentClass=GameObject.Find("structure-outlines");
         camScript = GetComponent<CharacterMovement>();
-        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
+        gridManager = GridManager.Instance;
     }
     
     void Update()
@@ -56,7 +60,8 @@ public class BuildMode : MonoBehaviour
                 {
                     PlaceBuilding();
                 }
-                else if(Input.GetKeyDown(KeyCode.R)){
+                else if(Input.GetKeyDown(KeyCode.R))
+                {
                     outline.transform.Rotate(0, 90, 0);
                     Debug.Log("rotated"); 
                 }

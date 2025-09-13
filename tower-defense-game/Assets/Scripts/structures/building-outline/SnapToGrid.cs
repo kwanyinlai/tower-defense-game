@@ -48,7 +48,7 @@ public class SnapToGrid : MonoBehaviour
             return;
         }
         Vector3 mousePos = (Vector3)mouseNullCheck;
-        transform.position = GridSystem.GridToCoordinates(GridSystem.CoordinatesToGrid(
+        transform.position = GridManager.GridToCoordinates(GridManager.CoordinatesToGrid(
             mousePos));
         // for this model, the centre of the model is off for some reason so it looks wrong. i'm pretty sure
         // it works correctly though, if we replace it with another model for exmaple

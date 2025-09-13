@@ -21,7 +21,7 @@ public class Placeable : MonoBehaviour
         get { return requiredResources; }
     }
 
-    private GridSystem gridManager;
+    private GridManager gridManager;
 
     void Update(){
         if(ResourcePool.EnoughResources(RequiredResources))
@@ -36,7 +36,7 @@ public class Placeable : MonoBehaviour
 
     void Start(){
         InitPlaceable();
-        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
+        gridManager = GridManager.Instance;
     }
 
     // Created an Init Placeable Function So That Creating 
@@ -51,8 +51,8 @@ public class Placeable : MonoBehaviour
     }
 
     Vector2Int CalculateOccupyingSize(){
-        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
-                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridSystem.tileSize) );
+        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
+                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
     }
 
     public bool IsBuildable(Vector3 placementPosition){

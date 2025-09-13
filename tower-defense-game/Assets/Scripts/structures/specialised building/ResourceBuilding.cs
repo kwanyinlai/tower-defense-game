@@ -34,7 +34,7 @@ public class ResourceBuilding : Building
         if (timer >= collectionInterval && resourceNode != null)
         {
             timer = 0f;
-            resourceNode.GetComponent<ResourceNode>().collectResources();
+            resourceNode.GetComponent<ResourceNode>().CollectResources();
         }
     }
 

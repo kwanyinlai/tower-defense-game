@@ -33,14 +33,14 @@ public class structureMenu : MonoBehaviour
 
     private GameObject test;
 
-    private GridSystem gridManager;
+    private GridManager gridManager;
 
     private void Start()
     {
-        test = transform.Find("structure-menu").Find("InfoText").gameObject;    
-        infoTextText = transform.Find("structure-menu").Find("InfoText").gameObject.GetComponent<TextMeshProUGUI>();
+        test = transform.Find("StructureMenu").Find("InfoText").gameObject;  // TODO: what is test  
+        infoTextText = transform.Find("StructureMenu").Find("InfoText").gameObject.GetComponent<TextMeshProUGUI>();
         DisableUI();
-        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
+        gridManager = GridManager.Instance;
     }
 
     private void Update()
@@ -163,7 +163,7 @@ public class structureMenu : MonoBehaviour
     private void SellBuilding()
     {
         ResourcePool.AddResource(selectedBuildingScript.GetSellResources());
-        Vector3Int structPost = GridSystem.CoordinatesToGrid(selectedObject.transform.position);
+        Vector3Int structPost = GridManager.CoordinatesToGrid(selectedObject.transform.position);
         gridManager.StopOccupying(selectedObject.transform.position, CalculateOccupyingSize());
         selectedSBSScript.TakeDamage(100000);
         selectedObject = null;
@@ -185,8 +185,8 @@ public class structureMenu : MonoBehaviour
     Vector2Int CalculateOccupyingSize()
     {
         MeshRenderer meshRenderer = selectedBuildingScript.building_model.GetComponent<MeshRenderer>();
-        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridSystem.tileSize), 
-                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridSystem.tileSize) );
+        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
+                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
     }
 
     private void UnhighlightObject()

@@ -3,14 +3,26 @@ using UnityEngine.EventSystems;
 
 
 [RequireComponent(typeof(RectTransform))]
-public class buildMenuScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class BuildMenu : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     private RectTransform rectTransform;
     private Canvas canvas;
     private Vector2 offset;
 
-    void Awake()
+    public static BuildMenu Instance { get; private set; }
+
+    private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+    
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
     }

@@ -11,26 +11,26 @@ public class ButtonScripts : MonoBehaviour
     {
         //Keep Build Mode enabled at the start of the game so this will not raise a null reference exception
         //The Build Menu will auto disable upon game start
-        buildMode = GameObject.Find("player1").GetComponent<BuildMode>();
+        buildMode = GameObject.Find("Player1").GetComponent<BuildMode>(); // TODO: Use Player.players
     }
 
     //Buttons for the start menu
-    public void startButton()
+    public void StartButton()
     {
         SceneManager.LoadScene("GameScene");
     }
 
-    public void optionButton()
+    public void OptionButton()
     {
 
     }
 
-    public void quitButton()
+    public void QuitButton()
     {
         Application.Quit();
     }
 
-    public void tryAgainButton()
+    public void TryAgainButton()
     {
         SceneManager.LoadScene("StartMenu");
     }

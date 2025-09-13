@@ -6,19 +6,19 @@ public class ResourceNode : MonoBehaviour
     private int maxTimesCollected;
     private int timesCollected;
     private Dictionary<string, int> resourcesPerCollect;
-    private GameObject waveSystem;
+    private WaveManager waveManager;
     private int currWave = 0;
 
 
     void Start()
     {
-        waveSystem = GameObject.Find("Wave System");
+        waveManager = WaveManager.Instance;
         timesCollected = 0;
         maxTimesCollected = 10;
-        setResourcesPerCollect();
+        SetResourcesPerCollect();
     }
 
-    private void setResourcesPerCollect()
+    private void SetResourcesPerCollect()
     {
         resourcesPerCollect = new Dictionary<string, int>();
         resourcesPerCollect.Add("Wood", 10);
@@ -26,14 +26,14 @@ public class ResourceNode : MonoBehaviour
 
     void Update()
     {
-        if (currWave != waveSystem.GetComponent<WaveScript>().waveNum)
+        if (currWave != waveManager.waveNum)
         {
-            currWave = waveSystem.GetComponent<WaveScript>().waveNum;
+            currWave = waveManager.waveNum;
             timesCollected = 0;
         }
     }
 
-    public void collectResources()
+    public void CollectResources()
     {
         if(timesCollected < maxTimesCollected)
         {

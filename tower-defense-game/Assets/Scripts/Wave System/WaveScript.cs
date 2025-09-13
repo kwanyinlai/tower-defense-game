@@ -1,20 +1,34 @@
 using UnityEngine;
 using UnityEngine.InputSystem.Controls;
 
-public class WaveScript : MonoBehaviour
+public class WaveManager : MonoBehaviour
 {
     public int waveNum;
     private float gameTimer;
     private float waveTimer;
     public GameObject waveManager;
-    private GridSystem gridManager;
+    private GridManager gridManager;
 
     void Start()
     {
         waveNum = 0;
         gameTimer = 0;
         waveTimer = 0;
-        gridManager = GameObject.Find("grid-manager").GetComponent<GridSystem>();
+        gridManager = GridManager.Instance;
+    }
+    
+    public static WaveManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Update()

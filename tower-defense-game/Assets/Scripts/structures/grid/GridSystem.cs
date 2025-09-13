@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class GridSystem : MonoBehaviour
+public class GridManager : MonoBehaviour
 {
 
     public static int gridWidth = 200;
@@ -16,6 +16,18 @@ public class GridSystem : MonoBehaviour
     public GameObject target;
     private bool starterTerritoryIsAssigned;
 
+    public static GridManager Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
     
     public enum TerritoryStatus
     {
@@ -222,7 +234,7 @@ public class GridSystem : MonoBehaviour
 
     void Update(){
         if(target==null){
-            target = GameObject.Find("base-manager").GetComponent<BaseManager>().GetBase();
+            target = BaseManager.Instance.GetBase();
         }
         else{
             if(!starterTerritoryIsAssigned){

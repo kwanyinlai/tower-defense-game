@@ -5,12 +5,12 @@ public class TextUIScript : MonoBehaviour
 {
     public TextMeshProUGUI infoText;
     public GameObject waveSystem;
-    private WaveScript waveScript;
+    private WaveManager waveScript;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        waveScript = waveSystem.GetComponent<WaveScript>();
+        waveScript = WaveManager.Instance;
         updateText();
     }
 

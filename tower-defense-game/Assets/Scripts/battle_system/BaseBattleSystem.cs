@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
+
+// THIS SCRIPT NEEDS TO BE REWORKED
+
 public class BaseBattleSystem : CombatSystem
 {
 
@@ -29,7 +32,7 @@ public class BaseBattleSystem : CombatSystem
 
     protected override void Die()
     {
-        GameObject.Find("grid-manager").GetComponent<GridSystem>().UnassignTerritory();
+        GridManager.Instance.UnassignTerritory();
         if (gameObject.tag == "Target")
         {
             SceneManager.LoadScene("GameOver");

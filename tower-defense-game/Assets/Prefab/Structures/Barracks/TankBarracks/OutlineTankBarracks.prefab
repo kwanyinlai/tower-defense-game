@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8727382702700250641}
   - component: {fileID: 484398474819610536}
   m_Layer: 0
-  m_Name: barracks-outline-melee
+  m_Name: OutlineTankBarracks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 0, y: 0}
-  prefab: {fileID: 117855511310969354, guid: 86e20cc63918a674a822cc3657e1034b, type: 3}
+  prefab: {fileID: 117855511310969354, guid: b286935d57021fe47ad1ccacf1993c39, type: 3}
   offset: 0
   bankruptMat: {fileID: 2100000, guid: 8ec7a937664bf46b7b417847b570f634, type: 2}
   normalMat: {fileID: 2100000, guid: a5692cbc034fe4c8698198a73f6f147b, type: 2}

@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Name
-      value: Ranged
+      value: AllyRanged
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Layer
@@ -163,7 +163,7 @@ MonoBehaviour:
   enemyTarget: {fileID: 0}
   commandingPlayer: {fileID: 0}
   waypoint: {fileID: 0}
-  selectedCircle: {fileID: 0}
+  selectedCircle: {fileID: 5537264383970593057}
   bulletPrefab: {fileID: 5588779450264495694, guid: 8c6bd88a6114147c4ba4c63384c021dd, type: 3}
 --- !u!64 &4164009545557612017
 MeshCollider:
@@ -498,5 +498,10 @@ PrefabInstance:
 --- !u!4 &270312854060724666 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8006708470641099342, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
+  m_PrefabInstance: {fileID: 7844658075795354612}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5537264383970593057 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2307393782616898261, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
   m_PrefabInstance: {fileID: 7844658075795354612}
   m_PrefabAsset: {fileID: 0}

@@ -111,7 +111,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else if (movementType == "observer")
         {
-            Debug.Log("observer");
+            Debug.Log("Movement Type: observer");
             Observer();
         }
         else if (movementType == "disabled")
@@ -207,7 +207,6 @@ public class CharacterMovement : MonoBehaviour
     public void DeactivateBuildCam()
     {
         cameraState = currentActiveCam;
-        Debug.Log(currentActiveCam);
 
     }
 

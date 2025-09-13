@@ -23,8 +23,14 @@ public abstract class TroopAI : MonoBehaviour
     public Transform enemyTarget;
 
     [Header("Control Attributes")]
-    protected bool isUnderSelection=false;
-    public bool IsUnderSelection {get; set;}
+    protected bool isUnderSelection = false;
+
+    public bool IsUnderSelection
+    {
+        get => isUnderSelection;
+        set => isUnderSelection = value;
+    }
+
     public GameObject commandingPlayer;
     public GameObject waypoint; // maybe these shouldn't be public?
     [SerializeField] private GameObject selectedCircle;
@@ -103,8 +109,8 @@ public abstract class TroopAI : MonoBehaviour
     }
 
     protected void ControlTroop() {
-        if(isUnderSelection){
-            ;
+        if(IsUnderSelection){
+            ShowCircle();
         }
         else{
             HideCircle();
@@ -136,7 +142,7 @@ public abstract class TroopAI : MonoBehaviour
         // Disengaged Mechanics
         agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
         AntiClustering();
-        if(isUnderSelection){
+        if(IsUnderSelection){
             ;
         }
         else{
@@ -248,18 +254,18 @@ public abstract class TroopAI : MonoBehaviour
 
     public void ShowCircle()
     {
+        Debug.Log("Showing circle");
         selectedCircle.SetActive(true);
-        Debug.Log("Showing selected circle");
     }
 
     public void HideCircle()
     {
+        Debug.Log("HIDING CIRCLe");
         selectedCircle.SetActive(false);
     }
 
     public void Selected()
     {
-        Debug.Log("hello");
     }
 
     public void SetSellResources(Dictionary<string, int> resources)

@@ -137,13 +137,14 @@ public class TroopManagment : MonoBehaviour
             Vector3 troopPosition = troop.transform.position;
             playerPosition.y = 0f;
             troopPosition.y = 0f;
-
+            
             TroopAI troopAI = troop.GetComponent<TroopAI>();
-            if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && !selectedTroops.Contains(troop) 
-                && troopAI.IsUnderSelection==false)
+            Debug.Log("Troop AI isUnderSelection: " + troopAI.IsUnderSelection);
+            if (!selectedTroops.Contains(troop) && troopAI.IsUnderSelection == false)
             {
                 
                 troopAI.IsUnderSelection = true;
+                Debug.Log("Troop AI isUnderSelection: " + troopAI.IsUnderSelection);
                 troopAI.commandingPlayer = gameObject;
                 troopAI.DeleteFromWaypoint();
                 selectedTroops.Add(troop);

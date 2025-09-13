@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 998503910232365536, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
       propertyPath: m_Name
-      value: flag-outline Variant
+      value: FlagOutline
       objectReference: {fileID: 0}
     - target: {fileID: 1662417495463653340, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'

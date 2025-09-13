@@ -21,7 +21,7 @@ public class BaseManager : MonoBehaviour
 
     void Start()
     {
-        currBase=Instantiate(basePrefab, instantiatePos, Quaternion.identity);
+        currBase = Instantiate(basePrefab, instantiatePos, Quaternion.identity);
     }
 
     public GameObject GetBase(){

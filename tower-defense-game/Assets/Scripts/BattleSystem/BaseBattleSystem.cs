@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 
-// THIS SCRIPT NEEDS TO BE REWORKED
+// TODO: This entire script needs to be reworked
 
 public class BaseBattleSystem : CombatSystem
 {

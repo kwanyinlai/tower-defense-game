@@ -25,7 +25,7 @@ public class BuildMode : MonoBehaviour
 
 
     // Reference Scripts
-    private CharacterMovement camScript;
+    private CharacterCameraController cameraController;
     private GridManager gridManager;
 
 
@@ -35,7 +35,7 @@ public class BuildMode : MonoBehaviour
         buildMenu.SetActive(false);
         buildMenuOpen = false;
         isBuilding=false;
-        camScript = GetComponent<CharacterMovement>();
+        cameraController = GetComponent<CharacterCameraController>();
         gridManager = GridManager.Instance;
     }
     
@@ -52,7 +52,7 @@ public class BuildMode : MonoBehaviour
                     {
                         Destroy(outline);
                     }
-                    camScript.DeactivateBuildCam();
+                    cameraController.DeactivateBuildCam();
 
                     gridManager.ClearBuildGrid();
                 }
@@ -72,7 +72,7 @@ public class BuildMode : MonoBehaviour
                 {
                     buildMenuOpen = false;
                     CloseBuildMenu();
-                    camScript.DeactivateBuildCam();
+                    cameraController.DeactivateBuildCam();
                     isBuilding = false;
                 }
             }
@@ -135,6 +135,6 @@ public class BuildMode : MonoBehaviour
         outline.GetComponent<SnapToGrid>().InitSnapToGrid(terrain, gameObject);
         outline.GetComponent<Placeable>().InitPlaceable();
     
-        camScript.ActivateBuildCam();
+        cameraController.ActivateBuildCam();
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public abstract class CombatSystem : MonoBehaviour
+
 {
     /*
     Contains all types of effects

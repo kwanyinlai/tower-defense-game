@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// Make the object face towards the camera
+
 public class FaceCamera : MonoBehaviour
 {
     public Transform cam;

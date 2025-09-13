@@ -16,7 +16,7 @@ public class Barracks : Building
     new protected void Start(){
         base.Start();
         InitializeTroopResources();
-        troopEmptyObject = GameObject.Find("troops").transform;
+        troopEmptyObject = Troops.Transform;
     }
 
     protected virtual void InitializeTroopResources()

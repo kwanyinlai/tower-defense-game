@@ -13,10 +13,10 @@ public class StaticScripts : MonoBehaviour
             result += pair.Key + ": " + pair.Value + "\n";
         }
         return result;
-    }
+    } // Put this into a relevant class rather than in a dedicated "StaticScripts" class
 
     public static float horizontalDistance(float x1, float y1, float x2, float y2)
     {
         return Mathf.Sqrt(Mathf.Pow(x2 - x1, 2) + Mathf.Pow(y2 - y1, 2));
-    }
+    } // TODO: There is an in-built function for this already
 }

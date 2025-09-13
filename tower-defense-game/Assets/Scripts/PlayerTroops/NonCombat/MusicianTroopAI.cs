@@ -38,7 +38,7 @@ public class MusicianTroopAI : SupportTroop
     {
         if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
         
-        if(underSelection){
+        if(isUnderSelection){
             ;
         }
         else{
@@ -65,7 +65,7 @@ public class MusicianTroopAI : SupportTroop
         } 
         else {        
             agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
-            if(underSelection){
+            if(isUnderSelection){
                 ;
             }
             else{

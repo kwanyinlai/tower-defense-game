@@ -9,19 +9,19 @@ public class TroopManagment : MonoBehaviour
     [SerializeField] private GameObject selectorCircle;
     public List<GameObject> selectedTroops = new List<GameObject>();
     public float selectionRadius = 100f;
-    private bool placingWaypoint = false;
+    private bool isPlacingWaypoint = false;
     [SerializeField] private GameObject waypoint;
-    [SerializeField] private GameObject outlineWaypoint;
-    public bool managingTroops = false;
+    [SerializeField] private GameObject waypointOutline;
+    private bool isManagingTroops = false;
     // private float menuTime; // for timing how long menu is up for before it closes
     [SerializeField] private LayerMask selectableLayer;
     
-
+    public bool IsManagingTroops {get; private set;}
 
     
     void Start()
     {
-        managingTroops = false;
+        isManagingTroops = false;
         HideWaypointOutline();
     }
 
@@ -42,14 +42,14 @@ public class TroopManagment : MonoBehaviour
                     StopAndClearSelecting();
                 }
 
-                managingTroops = true;
+                isManagingTroops = true;
             }
                
                 
                 
             
 
-            if(placingWaypoint){
+            if(isPlacingWaypoint){
                 // timeMenu += time.deltaTime;
                 // if (timer >= timeLimit){
 
@@ -78,11 +78,11 @@ public class TroopManagment : MonoBehaviour
                     case bool _ when Input.GetKeyDown(KeyCode.Return):
                         SetWaypoint();
                         ValidInput();
-                        placingWaypoint = false;
+                        isPlacingWaypoint = false;
                         break;
                     case bool _ when Input.GetKeyDown(KeyCode.Escape):
                         ValidInput(); // do nothing just close menu
-                        placingWaypoint = false;
+                        isPlacingWaypoint = false;
                         break;
                 }
                 
@@ -92,11 +92,11 @@ public class TroopManagment : MonoBehaviour
                 HideWaypointOutline();
             }
 
-            if (managingTroops)
+            if (isManagingTroops)
             {
                 // SelectTroops();
                 RaySelect();
-                managingTroops = false;
+                isManagingTroops = false;
                 
             }
         }
@@ -107,25 +107,25 @@ public class TroopManagment : MonoBehaviour
 
     void ShowWaypointOutline(){
       
-        outlineWaypoint.transform.localScale = new Vector3(1f, 1f, 1f);
-        placingWaypoint = true;
+        waypointOutline.transform.localScale = new Vector3(1f, 1f, 1f);
+        isPlacingWaypoint = true;
         
 
     }
 
     void HideWaypointOutline(){
-        outlineWaypoint.transform.localScale= new Vector3(0f,0f,0f);
+        waypointOutline.transform.localScale= new Vector3(0f,0f,0f);
 
     }
 
     void StopAndClearSelecting(){
         foreach(GameObject troop in selectedTroops){
-            TroopAI troopScript = troop.GetComponent<TroopAI>();
-            troopScript.underSelection=false;
-            troopScript.commandingPlayer=null;
+            TroopAI troopAI = troop.GetComponent<TroopAI>();
+            troopAI.IsUnderSelection=false;
+            troopAI.commandingPlayer=null;
 
         }
-        managingTroops = false;
+        isManagingTroops = false;
         selectedTroops.Clear();
     }
 
@@ -138,15 +138,14 @@ public class TroopManagment : MonoBehaviour
             playerPosition.y = 0f;
             troopPosition.y = 0f;
 
-            TroopAI troopScript = troop.GetComponent<TroopAI>();
-            if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && 
-                    !selectedTroops.Contains(troop) && 
-                   troopScript.underSelection==false)
+            TroopAI troopAI = troop.GetComponent<TroopAI>();
+            if (Vector3.Distance(playerPosition, troopPosition) <= selectionRadius && !selectedTroops.Contains(troop) 
+                && troopAI.IsUnderSelection==false)
             {
                 
-                troopScript.underSelection=true;
-                troopScript.commandingPlayer = gameObject;
-                troopScript.DeleteFromWaypoint();
+                troopAI.IsUnderSelection = true;
+                troopAI.commandingPlayer = gameObject;
+                troopAI.DeleteFromWaypoint();
                 selectedTroops.Add(troop);
             }
         }
@@ -158,7 +157,7 @@ public class TroopManagment : MonoBehaviour
 
 
     void ValidInput(){
-        placingWaypoint = false;
+        isPlacingWaypoint = false;
         StopAndClearSelecting();
         
     }
@@ -176,10 +175,10 @@ public class TroopManagment : MonoBehaviour
         foreach (GameObject troop in selectedTroops)
         {
            
-            TroopAI troopScript = troop.GetComponent<TroopAI>();
-            troopScript.commandingPlayer = null;
-            troopScript.DeleteFromWaypoint();
-            troopScript.waypoint = deployedPoint;
+            TroopAI troopAI = troop.GetComponent<TroopAI>();
+            troopAI.commandingPlayer = null;
+            troopAI.DeleteFromWaypoint();
+            troopAI.waypoint = deployedPoint;
             deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);
         }
 
@@ -196,7 +195,7 @@ public class TroopManagment : MonoBehaviour
             TroopAI troop = hit.collider.GetComponent<TroopAI>();
             if (troop != null && !selectedTroops.Contains(troop.gameObject))
             {
-                troop.underSelection = true;
+                troop.IsUnderSelection = true;
                 troop.commandingPlayer = gameObject;
                 selectedTroops.Add(troop.gameObject);
                 troop.ShowCircle();

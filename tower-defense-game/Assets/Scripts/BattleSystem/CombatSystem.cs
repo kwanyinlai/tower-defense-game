@@ -8,6 +8,7 @@ public abstract class CombatSystem : MonoBehaviour
     If strength == 0, it means that there is no real effect being applied 
     If durationSec == -1, it means effect lasts forever
     */
+
     private Dictionary<string, List<(float strength, float startTime, float durationSec)>> appliedEffects = new Dictionary<string, List<(float strength, float startTime, float durationSec)>>();
 
     public float maxHealth = 100f;
@@ -108,7 +109,7 @@ public abstract class CombatSystem : MonoBehaviour
 
     public void InitializeEffects()
     {
-        // please initialize all effects hear, this is just to prevent situations where duplicate effects are added like "health" and "Health" by accident
+        // please initialize all effects here, this is just to prevent situations where duplicate effects are added like "health" and "Health" by accident
         appliedEffects.Add("heal", new List<(float strength, float startTime, float durationSec)>());
         appliedEffects.Add("slow", new List<(float strength, float startTime, float durationSec)>());
         appliedEffects.Add("haste", new List<(float strength, float startTime, float durationSec)>());

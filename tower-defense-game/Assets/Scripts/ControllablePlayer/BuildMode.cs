@@ -42,7 +42,7 @@ public class BuildMode : MonoBehaviour
     void Update()
     {
 
-        if(!gameObject.GetComponent<TroopManagment>().managingTroops){
+        if(!gameObject.GetComponent<TroopManagment>().IsManagingTroops){
             if(isBuilding){
                 
                 if (Input.GetKeyDown(KeyCode.Escape))

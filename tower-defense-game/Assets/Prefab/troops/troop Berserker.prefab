@@ -265,7 +265,6 @@ MonoBehaviour:
   dmg: 10
   aggroRange: 10
   enemyTarget: {fileID: 0}
-  underSelection: 0
   commandingPlayer: {fileID: 0}
   waypoint: {fileID: 0}
   selectedCircle: {fileID: 2343332585344418765}

@@ -198,7 +198,7 @@ GameObject:
   - component: {fileID: 5845857472085319031}
   - component: {fileID: 9166099498394906623}
   m_Layer: 5
-  m_Name: health-bar-slider
+  m_Name: HealthBarSlider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c67d2e7f40074deb992dd3cbc4a8d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  targetUnit: {fileID: 0}
   gradient:
     serializedVersion: 2
     key0: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 1}
@@ -336,7 +336,7 @@ GameObject:
   - component: {fileID: 3087104007152008998}
   - component: {fileID: 4031579210168498746}
   m_Layer: 5
-  m_Name: health-bar-canvas (2)
+  m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1224,7 +1224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.015595615}
+  m_AnchoredPosition: {x: 0, y: -0.010226378}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &312722151
@@ -2965,7 +2965,10 @@ PrefabInstance:
     - {fileID: -3487032523997646066, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 998503910232365536, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1854583102}
   m_SourcePrefab: {fileID: 100100000, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
 --- !u!1 &640726955
 GameObject:
@@ -5461,8 +5464,7 @@ MonoBehaviour:
   selectedTroops: []
   selectionRadius: 8
   waypoint: {fileID: 998503910232365536, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
-  outlineWaypoint: {fileID: 1854583100}
-  managingTroops: 0
+  waypointOutline: {fileID: 7801006528677537390, guid: 2edbe5fa0d7bb40509cfffe1a0a2ed00, type: 3}
   selectableLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -7220,6 +7222,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 473078795802067802, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
   m_PrefabInstance: {fileID: 638059551}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1854583102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854583100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e64b3138997574b4cb9b9e931d1e5237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  troopsBound: []
 --- !u!1 &1861386290
 GameObject:
   m_ObjectHideFlags: 0

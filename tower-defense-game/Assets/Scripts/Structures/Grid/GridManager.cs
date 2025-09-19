@@ -1,6 +1,23 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+public struct GridNode
+{
+    public GridNode(int x, int y){
+        walkable = false;
+        territoryStatus = (int)TerritoryStatus.NotAssigned;
+        buildable = false;
+        this.x = x;
+        this.y = y;
+    }
+
+    public bool walkable;
+    public int territoryStatus; // refer to TerritoryStatus enum
+    public bool buildable;
+    public int x;
+    public int y;
+}
+
 public class GridManager : MonoBehaviour
 {
 
@@ -96,9 +113,6 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-
-
-
 
 
     public bool IsTileBuildable(Vector3Int coordinates)

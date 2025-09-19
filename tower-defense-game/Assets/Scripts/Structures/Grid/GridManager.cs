@@ -4,9 +4,9 @@ using System.Collections.Generic;
 public struct GridNode
 {
     public GridNode(int x, int y){
-        walkable = false;
+        walkable = true;
         territoryStatus = (int)TerritoryStatus.NotAssigned;
-        buildable = false;
+        buildable = true;
         this.x = x;
         this.y = y;
     }
@@ -21,15 +21,17 @@ public struct GridNode
 public class GridManager : MonoBehaviour
 {
 
-    public static int gridWidth = 200;
+    public static int gridWidth = 200; // number of tiles
     public static int gridHeight = 200;
     public static float tileSize = 4f;
 
-    private bool[,] grid; // true means buildable, false means occupied
+    // private bool[,] grid; // true means buildable, false means occupied
     private List<Transform> playerPos;
 
+    private GriNode[,] grid;
+
     
-    private int[,] territoryGrid; // corresponds to enum TerritoryStatus
+    // private int[,] territoryGrid; // corresponds to enum TerritoryStatus
     public GameObject target;
     private bool starterTerritoryIsAssigned;
 
@@ -74,12 +76,13 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        territoryGrid = new int[gridWidth, gridHeight];
+        grid = new int[gridWidth, gridHeight];
 
         playerPos = new List<Transform>();
+        
         buildableTiles = new List<GameObject>();
 
-        grid = new bool[gridWidth, gridHeight];
+        // grid = new bool[gridWidth, gridHeight];
         
         
 
@@ -87,8 +90,7 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < gridHeight; z++)
             {
-                grid[x, z] = true;
-                territoryGrid[x, z] = (int)TerritoryStatus.NotAssigned;
+                grid[x, z] = GridNode(x, z);
             }
         }
         // starterTerritoryIsAssigned = false;
@@ -108,7 +110,7 @@ public class GridManager : MonoBehaviour
                 float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
                 if(distSquared < 25)
                 {
-                    territoryGrid[i, j] = (int)TerritoryStatus.Assigned;
+                    grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
                 }
             }
         }
@@ -128,14 +130,13 @@ public class GridManager : MonoBehaviour
         }
 
         if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight ||
-            territoryGrid[coordinates.x, coordinates.z] == (int)TerritoryStatus.NotAssigned) 
+            grid[coordinates.x, coordinates.z].territoryStatus == (int)TerritoryStatus.NotAssigned) 
         {
             return false;
             
         }
 
-
-        return grid[coordinates.x, coordinates.z];
+        return grid[coordinates.x, coordinates.z].buildable;
     }
 
     public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
@@ -145,7 +146,10 @@ public class GridManager : MonoBehaviour
         {
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-                if (!IsTileBuildable(new Vector3Int(x, 0, z))){
+                // if (!IsTileBuildable(new Vector3Int(x, 0, z))){
+                //     return false;
+                // } // This is very inefficient
+                if (!grid[x,z].buildable){
                     return false;
                 }
             }
@@ -164,7 +168,7 @@ public class GridManager : MonoBehaviour
             {
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
-                    grid[x, z] = false;
+                    grid[x, z].buildable = false;
                 }
             }
         }
@@ -175,9 +179,9 @@ public class GridManager : MonoBehaviour
             {   
                 float distSquared = Mathf.Pow(i - gridPos.x - size.x/2, 2) + Mathf.Pow(j - gridPos.z - size.y/2, 2);
 
-                if (distSquared < Mathf.Pow(range, 2) && territoryGrid[i, j] != (int)TerritoryStatus.Assigned) 
+                if (distSquared < Mathf.Pow(range, 2) && grid[i, j] != (int)TerritoryStatus.Assigned) 
                 {
-                    territoryGrid[i, j] = (int)TerritoryStatus.AssigneOnWaveUpdate;
+                    grid[i, j].territoryStatus = (int)TerritoryStatus.AssigneOnWaveUpdate;
                 }
             }
         }
@@ -192,7 +196,7 @@ public class GridManager : MonoBehaviour
             {
                 if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
                 {
-                    grid[x, z] = true;
+                    grid[x, z].buildable = true;
                 }
             }
         }
@@ -214,7 +218,7 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < gridHeight; z++)
             {
-                if (grid[x, z] && territoryGrid[x,z] == (int)TerritoryStatus.Assigned)
+                if (grid[x, z] && grid[x,z] == (int)TerritoryStatus.Assigned)
                 {
                     DrawBuildableSquare(GridToCoordinates(new Vector3Int(x, 0, z)));
                 }
@@ -261,17 +265,17 @@ public class GridManager : MonoBehaviour
     
     public void TerritoryUpdate()
     {
-        for(int i = 0; i < territoryGrid.GetLength(0); i++)
+        for(int i = 0; i < grid.GetLength(0); i++)
         {
-            for(int j = 0; j < territoryGrid.GetLength(1); j++)
+            for(int j = 0; j < grid.GetLength(1); j++)
             {
-                if (territoryGrid[i, j] == (int)TerritoryStatus.AssigneOnWaveUpdate)
+                if (grid[i, j].territoryStatus == (int)TerritoryStatus.AssigneOnWaveUpdate)
                 {
-                    territoryGrid[i, j] = (int)TerritoryStatus.Assigned;
+                    grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
                 }
-                else if (territoryGrid[i, j] == (int)TerritoryStatus.RemoveOnWaveUpdate)
+                else if (grid[i, j] == (int)TerritoryStatus.RemoveOnWaveUpdate)
                 {
-                    territoryGrid[i, j] = (int)TerritoryStatus.NotAssigned;
+                    grid[i, j].territoryStatus = (int)TerritoryStatus.NotAssigned;
                 }
             }
         }

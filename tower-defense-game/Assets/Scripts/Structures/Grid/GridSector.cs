@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Collections;
-using GridManager.GridNode;
+using System.Collections.Generic;
 
 public class GridSector // for HPA*
 {

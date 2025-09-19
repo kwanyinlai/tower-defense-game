@@ -28,6 +28,11 @@ public class GridManager : MonoBehaviour
     private List<Transform> playerPos;
 
     private GridNode[,] grid;
+    
+    public GridNode[,] GetGrid(){
+        return grid;
+    }
+
 
     
     // private int[,] territoryGrid; // corresponds to enum TerritoryStatus

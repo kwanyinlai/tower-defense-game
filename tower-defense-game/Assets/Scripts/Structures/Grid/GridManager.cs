@@ -1,25 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public struct GridNode
-{
-    public GridNode(int x, int y){
-        walkable = true;
-        territoryStatus = (int)TerritoryStatus.NotAssigned;
-        buildable = true;
-        this.x = x;
-        this.y = y;
-    }
-
-    public bool walkable;
-    public int territoryStatus; // refer to TerritoryStatus enum
-    public bool buildable;
-    public int x;
-    public int y;
-}
-
 public class GridManager : MonoBehaviour
 {
+    public struct GridNode
+    {
+        public GridNode(int x, int y){
+            walkable = true;
+            territoryStatus = (int)TerritoryStatus.NotAssigned;
+            buildable = true;
+            this.x = x;
+            this.y = y;
+        }
+
+        public bool walkable;
+        public int territoryStatus; // refer to TerritoryStatus enum
+        public bool buildable;
+        public int x;
+        public int y;
+    }
 
     public static int gridWidth = 200; // number of tiles
     public static int gridHeight = 200;
@@ -28,7 +27,7 @@ public class GridManager : MonoBehaviour
     // private bool[,] grid; // true means buildable, false means occupied
     private List<Transform> playerPos;
 
-    private GriNode[,] grid;
+    private GridNode[,] grid;
 
     
     // private int[,] territoryGrid; // corresponds to enum TerritoryStatus
@@ -76,7 +75,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        grid = new int[gridWidth, gridHeight];
+        grid = new GridNode[gridWidth, gridHeight];
 
         playerPos = new List<Transform>();
         
@@ -90,7 +89,7 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < gridHeight; z++)
             {
-                grid[x, z] = GridNode(x, z);
+                grid[x, z] = new GridNode(x, z);
             }
         }
         // starterTerritoryIsAssigned = false;
@@ -179,7 +178,7 @@ public class GridManager : MonoBehaviour
             {   
                 float distSquared = Mathf.Pow(i - gridPos.x - size.x/2, 2) + Mathf.Pow(j - gridPos.z - size.y/2, 2);
 
-                if (distSquared < Mathf.Pow(range, 2) && grid[i, j] != (int)TerritoryStatus.Assigned) 
+                if (distSquared < Mathf.Pow(range, 2) && grid[i, j].territoryStatus != (int)TerritoryStatus.Assigned) 
                 {
                     grid[i, j].territoryStatus = (int)TerritoryStatus.AssigneOnWaveUpdate;
                 }
@@ -218,7 +217,7 @@ public class GridManager : MonoBehaviour
         {
             for (int z = 0; z < gridHeight; z++)
             {
-                if (grid[x, z] && grid[x,z] == (int)TerritoryStatus.Assigned)
+                if (grid[x, z].buildable && grid[x,z].territoryStatus == (int)TerritoryStatus.Assigned)
                 {
                     DrawBuildableSquare(GridToCoordinates(new Vector3Int(x, 0, z)));
                 }
@@ -273,7 +272,7 @@ public class GridManager : MonoBehaviour
                 {
                     grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
                 }
-                else if (grid[i, j] == (int)TerritoryStatus.RemoveOnWaveUpdate)
+                else if (grid[i, j].territoryStatus == (int)TerritoryStatus.RemoveOnWaveUpdate)
                 {
                     grid[i, j].territoryStatus = (int)TerritoryStatus.NotAssigned;
                 }
@@ -287,3 +286,4 @@ public class GridManager : MonoBehaviour
     }
     
 }
+

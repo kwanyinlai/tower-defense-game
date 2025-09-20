@@ -5,8 +5,8 @@ public class SectorManager : MonoBehaviour
 {
     public static SectorManager Instance { get; private set; }
     private GridNode[,] grid;
-    private Dictionary<GridNode, Sector> nodeSectorMap = new Dictionary<GridNode, Sector>();
-    private List<Sector> sectors = new List<Sector>();
+    private Dictionary<GridNode, GridSector> nodeSectorMap = new Dictionary<GridNode, GridSector>();
+    private List<GridSector> sectors = new List<GridSector>();
 
 
     private void Awake()

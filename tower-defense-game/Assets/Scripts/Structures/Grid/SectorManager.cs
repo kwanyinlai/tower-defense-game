@@ -24,8 +24,16 @@ public class SectorManager : MonoBehaviour
         grid = GridManager.Instance.GetGrid();
     }
 
-    void InitializeSector(){
+    void InitializeSector()
+    {
         sectors.Clear();
         nodeSectorMap.Clear();
+        for (int x = 0; x < grid.size; x++)
+        {
+            for (int y = 0; y < grid.size; y++)
+            {
+                pass;
+            }
+        }
     }
 }

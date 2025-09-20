@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class SectorManager : MonoBehaviour
 {
     public static SectorManager Instance { get; private set; }
-    private GridNode[,] grid;
-    private Dictionary<GridNode, GridSector> nodeSectorMap = new Dictionary<GridNode, GridSector>();
+    private GridManager.GridNode[,] grid;
+    private Dictionary<GridManager.GridNode, GridSector> nodeSectorMap = new Dictionary<GridManager.GridNode, GridSector>();
     private List<GridSector> sectors = new List<GridSector>();
 
 
@@ -28,11 +28,11 @@ public class SectorManager : MonoBehaviour
     {
         sectors.Clear();
         nodeSectorMap.Clear();
-        for (int x = 0; x < grid.size; x++)
+        for (int x = 0; x < grid.Length; x++)
         {
-            for (int y = 0; y < grid.size; y++)
+            for (int y = 0; y < grid.Length; y++)
             {
-                pass;
+                return;
             }
         }
     }

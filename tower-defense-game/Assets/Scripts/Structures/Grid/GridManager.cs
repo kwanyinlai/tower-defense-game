@@ -9,15 +9,13 @@ public class GridManager : MonoBehaviour
             walkable = true;
             territoryStatus = (int)TerritoryStatus.NotAssigned;
             buildable = true;
-            this.x = x;
-            this.y = y;
+            coord = new Vector2(x, y);
         }
 
         public bool walkable;
         public int territoryStatus; // refer to TerritoryStatus enum
         public bool buildable;
-        public int x;
-        public int y;
+        public Vector2 coord;
     }
 
     public static int gridWidth = 200; // number of tiles

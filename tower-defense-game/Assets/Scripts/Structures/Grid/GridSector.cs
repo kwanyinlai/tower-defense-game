@@ -3,17 +3,14 @@ using System.Collections.Generic;
 
 public class GridSector // for HPA*
 {
-    public List<GridNode> tiles = new List<GridNode>();
+    public List<GridManager.GridNode> tiles = new List<GridManager.GridNode>();
     public Vector2 centre;
 
-    private Vector2 CalculateCenter()
+    private void CalculateCenter()
     {
-        if (tiles.Count == 0){
-            return;
-        }
         Vector2 sum = Vector2.zero;
-        foreach (var pos in tiles)
-            sum += pos;
+        foreach (GridManager.GridNode tile in tiles)
+            sum += tile.coord;
         this.centre = sum / tiles.Count;
     }
 }

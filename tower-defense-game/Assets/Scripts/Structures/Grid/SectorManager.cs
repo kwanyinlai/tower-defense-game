@@ -7,6 +7,7 @@ public class SectorManager : MonoBehaviour
     private GridManager.GridNode[,] grid;
     private Dictionary<GridManager.GridNode, GridSector> nodeSectorMap = new Dictionary<GridManager.GridNode, GridSector>();
     private List<GridSector> sectors = new List<GridSector>();
+    
 
 
     private void Awake()
@@ -20,7 +21,8 @@ public class SectorManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start(){
+    void Start()
+    {
         grid = GridManager.Instance.GetGrid();
     }
 
@@ -35,5 +37,15 @@ public class SectorManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    void MergeSector()
+    {
+
+    }
+
+    void SplitSector()
+    {
+        
     }
 }

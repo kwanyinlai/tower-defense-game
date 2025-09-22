@@ -3,8 +3,17 @@ using System.Collections.Generic;
 
 public class GridSector // for HPA*
 {
-    public List<GridManager.GridNode> tiles = new List<GridManager.GridNode>();
+    public GridManager.GridNode[,] localGrid;
+    public float[,] costField;
+    public Vector2[,] vectorField;
+
+    public Dictionary<int, List<GridNode>> entryPoints;
     public Vector2 centre;
+    private int sectorID;
+
+    private Dictionary<GridNode, float> costField;
+
+    private Dictionary<GridNode, Vector2> flowVectors;
 
     private void CalculateCenter()
     {

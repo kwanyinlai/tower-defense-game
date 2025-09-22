@@ -5,7 +5,8 @@ public class GridManager : MonoBehaviour
 {
     public struct GridNode
     {
-        public GridNode(int x, int y){
+        public GridNode(int x, int y)
+        {
             walkable = true;
             territoryStatus = (int)TerritoryStatus.NotAssigned;
             buildable = true;
@@ -13,9 +14,11 @@ public class GridManager : MonoBehaviour
         }
 
         public bool walkable;
+        public int sectorID;
         public int territoryStatus; // refer to TerritoryStatus enum
         public bool buildable;
         public Vector2 coord;
+        
     }
 
     public static int gridWidth = 200; // number of tiles

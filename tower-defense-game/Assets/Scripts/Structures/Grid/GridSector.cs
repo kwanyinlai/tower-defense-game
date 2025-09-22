@@ -22,4 +22,14 @@ public class GridSector // for HPA*
             sum += tile.coord;
         this.centre = sum / tiles.Count;
     }
+
+    private float aggregateCosts()
+    {
+        float sum = 0;
+        foreach (var item in myDictionary.Keys)
+        {
+            sum += item;
+        }
+        return sum;
+    }
 }

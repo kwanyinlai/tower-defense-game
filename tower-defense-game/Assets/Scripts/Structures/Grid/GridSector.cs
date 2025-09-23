@@ -10,6 +10,7 @@ public class GridSector // for HPA*
     public Dictionary<int, List<GridNode>> entryPoints;
     public Vector2 centre;
     private int sectorID;
+    private float cost;
 
     private Dictionary<GridNode, float> costField;
 
@@ -23,13 +24,14 @@ public class GridSector // for HPA*
         this.centre = sum / tiles.Count;
     }
 
-    private float aggregateCosts()
+    private float AggregateCosts()
     {
         float sum = 0;
         foreach (var item in myDictionary.Keys)
         {
             sum += item;
         }
+        cost = sum;
         return sum;
     }
 }

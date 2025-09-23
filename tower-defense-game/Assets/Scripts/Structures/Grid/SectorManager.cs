@@ -8,6 +8,7 @@ public class SectorManager : MonoBehaviour
     private Dictionary<GridManager.GridNode, GridSector> nodeSectorMap = new Dictionary<GridManager.GridNode, GridSector>();
     private List<GridSector> sectors = new List<GridSector>();
     
+    // store sectors as quadtree?
 
 
     private void Awake()

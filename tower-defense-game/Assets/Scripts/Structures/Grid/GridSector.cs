@@ -26,12 +26,7 @@ public class GridSector // for HPA*
 
     private float AggregateCosts()
     {
-        float sum = 0;
-        foreach (var item in myDictionary.Keys)
-        {
-            sum += item;
-        }
-        cost = sum;
-        return sum;
+        cost = myDictionary.Keys.Sum();
+        return cost;
     }
 }

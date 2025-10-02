@@ -21,23 +21,26 @@ public class GridManager : MonoBehaviour
         
     }
 
-    public static int gridWidth = 200; // number of tiles
-    public static int gridHeight = 200;
-    public static float tileSize = 4f;
+    public static readonly int gridWidth = 200; // number of tiles
+    public static readonly int gridHeight = 200;
+    public static readonly float tileSize = 4f;
 
     // private bool[,] grid; // true means buildable, false means occupied
     private List<Transform> playerPos;
 
     private GridNode[,] grid;
-    
     public GridNode[,] GetGrid(){
         return grid;
     }
 
-
-    
     // private int[,] territoryGrid; // corresponds to enum TerritoryStatus
-    public GameObject target;
+
+    private GameObject target;
+    public GameObject Target
+    {
+        get { return target; }
+        set { target = value; }
+    }
     private bool starterTerritoryIsAssigned;
 
     public static GridManager Instance { get; private set; }

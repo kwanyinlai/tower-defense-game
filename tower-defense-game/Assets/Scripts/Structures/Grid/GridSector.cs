@@ -40,4 +40,5 @@ public class GridSector // for HPA*
         // TODO: This doesn't work. Can't sum on KeyCollection like Java
         return cost;
     }
+    // TODO:
 }

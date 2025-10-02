@@ -12,15 +12,15 @@ public abstract class TroopAI : MonoBehaviour
     public static List<GameObject> troops = new List<GameObject>();
 
     [Header("Troop Attributes")]
-    public string troopName;
-    public GameObject troopModel;
-    public float maxSpeed = 3.5f;
+    [SerializeField] protected string troopName;
+    [SerializeField] protected GameObject troopModel;
+    [SerializeField] protected float maxSpeed = 3.5f;
 
     [Header("Combat Attributes")]
-    public float attackRange = 5.0f;
-    public int dmg = 10;
-    public float aggroRange = 10.0f; // range which troop engages enemy
-    public Transform enemyTarget;
+    [SerializeField] protected float attackRange = 5.0f ;
+    [SerializeField] protected int dmg = 10;
+    [SerializeField] protected float aggroRange = 10.0f; // range which troop engages enemy
+    [SerializeField] protected Transform enemyTarget;
 
     [Header("Control Attributes")]
     protected bool isUnderSelection = false;
@@ -31,9 +31,9 @@ public abstract class TroopAI : MonoBehaviour
         set => isUnderSelection = value;
     }
 
-    public GameObject commandingPlayer;
-    public GameObject waypoint; // maybe these shouldn't be public?
-    [SerializeField] private GameObject selectedCircle;
+    [SerializeField] protected GameObject commandingPlayer;
+    [SerializeField] protected GameObject waypoint; // maybe these shouldn't be public?
+    [SerializeField] protected GameObject selectedCircle;
     
 
     // PRIVATE AND PROTECTED ATTRIBUTES 
@@ -47,6 +47,9 @@ public abstract class TroopAI : MonoBehaviour
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
     protected CombatSystem combatSystem;
     protected bool inCombat = false;
+    public bool InCombat{
+        get{ return inCombat; }
+    }
 
     // Movement Attributes
     private LineRenderer pathIndicator;
@@ -60,12 +63,6 @@ public abstract class TroopAI : MonoBehaviour
     // Abstract Methods 
     protected abstract void IntializeSellResources();
     public abstract void Attack(Transform target);
-    
-    // Getters and Setters
-    public bool InCombat{
-        get{ return inCombat; }
-    }
-
 
 
     protected virtual void Start()

@@ -15,17 +15,16 @@ public class GridSector // for HPA*
 {
 
     public GridManager.GridNode[,] localGrid;
-    public float[,] costField;
     public Vector2[,] vectorField;
 
-    public Dictionary<int, List<GridNode>> entryPoints;
+    public Dictionary<int, List<GridManager.GridNode>> entryPoints;
     public Vector2 centre;
     private int sectorID;
     private float cost;
 
-    private Dictionary<GridNode, float> costField;
+    private Dictionary<GridManager.GridNode, float> costField;
 
-    private Dictionary<GridNode, Vector2> flowVectors;
+    private Dictionary<GridManager.GridNode, Vector2> flowVectors;
 
     private void CalculateCenter()
     {

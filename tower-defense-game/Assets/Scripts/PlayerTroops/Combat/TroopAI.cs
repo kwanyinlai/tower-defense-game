@@ -9,43 +9,53 @@ using System.Collections.Generic;
 public abstract class TroopAI : MonoBehaviour
 {
 
-    public static List<GameObject> troops = new List<GameObject>();
+    public static List<GameObject> troops = new List<GameObject>(); // TODO: make this getter and setter
 
     [Header("Troop Attributes")]
     [SerializeField] protected string troopName;
+    public string TroopName{ get; }
     [SerializeField] protected GameObject troopModel;
+    public GameObject TroopModel{ get; set; }
     [SerializeField] protected float maxSpeed = 3.5f;
+    public float MaxSpeed { get; }
 
     [Header("Combat Attributes")]
     [SerializeField] protected float attackRange = 5.0f ;
+    public float AttackRange{ get; set; }
     [SerializeField] protected int dmg = 10;
-    [SerializeField] protected float aggroRange = 10.0f; // range which troop engages enemy
+    public int Damage
+    {
+        get { return dmg; }
+        set { this.dmg = value; }
+    }
+    [SerializeField] protected float aggroRange = 10.0f;
+    public float AggroRange { get; set; } // range which troop engages enemy
     [SerializeField] protected Transform enemyTarget;
+    public Transform EnemyTarget { get; set; }
 
     [Header("Control Attributes")]
-    protected bool isUnderSelection = false;
 
-    public bool IsUnderSelection
-    {
-        get => isUnderSelection;
-        set => isUnderSelection = value;
-    }
+    protected bool isUnderSelection = false;
+    public bool IsUnderSelection { get; set; }
 
     [SerializeField] protected GameObject commandingPlayer;
-    [SerializeField] protected GameObject waypoint; // maybe these shouldn't be public?
+    public GameObject CommandingPlayer { get; set; }
+    [SerializeField] protected GameObject waypoint;
+    public GameObject Waypoint { get; set; } // maybe these shouldn't be public?
     [SerializeField] protected GameObject selectedCircle;
+    public GameObject SelectedCircle { get; set; }
     
 
     // PRIVATE AND PROTECTED ATTRIBUTES 
 
     // Combat Stats
-    protected float atkCooldown = 1.5f;
-    protected float atkTimer = 0f;
+    protected float atkCooldown { get; set; } = 1.5f;
+    protected float atkTimer { get; set; } = 0f;
 
     // Combat Attributes
-    protected CombatSystem targetStats;
+    protected CombatSystem targetStats { get; set; }
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
-    protected CombatSystem combatSystem;
+    protected CombatSystem combatSystem { get;  set; }
     protected bool inCombat = false;
     public bool InCombat{
         get{ return inCombat; }

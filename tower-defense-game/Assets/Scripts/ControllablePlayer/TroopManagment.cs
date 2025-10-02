@@ -122,7 +122,7 @@ public class TroopManagment : MonoBehaviour
         foreach(GameObject troop in selectedTroops){
             TroopAI troopAI = troop.GetComponent<TroopAI>();
             troopAI.IsUnderSelection=false;
-            troopAI.commandingPlayer=null;
+            troopAI.CommandingPlayer=null;
 
         }
         isManagingTroops = false;
@@ -145,7 +145,7 @@ public class TroopManagment : MonoBehaviour
                 
                 troopAI.IsUnderSelection = true;
                 Debug.Log("Troop AI isUnderSelection: " + troopAI.IsUnderSelection);
-                troopAI.commandingPlayer = gameObject;
+                troopAI.CommandingPlayer = gameObject;
                 troopAI.DeleteFromWaypoint();
                 selectedTroops.Add(troop);
             }
@@ -177,9 +177,9 @@ public class TroopManagment : MonoBehaviour
         {
            
             TroopAI troopAI = troop.GetComponent<TroopAI>();
-            troopAI.commandingPlayer = null;
+            troopAI.CommandingPlayer = null;
             troopAI.DeleteFromWaypoint();
-            troopAI.waypoint = deployedPoint;
+            troopAI.Waypoint = deployedPoint;
             deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);
         }
 
@@ -197,7 +197,7 @@ public class TroopManagment : MonoBehaviour
             if (troop != null && !selectedTroops.Contains(troop.gameObject))
             {
                 troop.IsUnderSelection = true;
-                troop.commandingPlayer = gameObject;
+                troop.CommandingPlayer = gameObject;
                 selectedTroops.Add(troop.gameObject);
                 troop.ShowCircle();
                 destroyedRay = true;

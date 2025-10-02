@@ -24,7 +24,7 @@ public class TroopCombatSystem : CombatSystem
             if (troop == gameObject)
             {
                 TroopAI.troops.Remove(troop);
-                GameObject temp = gameObject.GetComponent<TroopAI>().waypoint;
+                GameObject temp = gameObject.GetComponent<TroopAI>().Waypoint;
                 if (temp!=null){
                     temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
                 }

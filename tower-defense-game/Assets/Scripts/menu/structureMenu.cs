@@ -128,11 +128,11 @@ public class structureMenu : MonoBehaviour
 
         selectedObject = highlightedObject;
 
-        GameObject troopModel = selectedTroopAI.troopModel;
+        GameObject troopModel = selectedTroopAI.TroopModel;
         defaultMaterial = troopModel.GetComponent<Renderer>().material;
         troopModel.GetComponent<Renderer>().material = highlightMaterial;
 
-        structure_name_ui.text = selectedTroopAI.troopName;
+        structure_name_ui.text = selectedTroopAI.TroopName;
     }
 
     public void DisableUI()
@@ -197,7 +197,7 @@ public class structureMenu : MonoBehaviour
         }
         else if(selectedType == Selectables.Troop)
         {
-            selectedTroopAI.troopModel.GetComponent<Renderer>().material = defaultMaterial;
+            selectedTroopAI.TroopModel.GetComponent<Renderer>().material = defaultMaterial;
         }
     }
 }

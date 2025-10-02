@@ -14,7 +14,8 @@ public class GridManager : MonoBehaviour
         }
 
         public bool walkable;
-        public int sectorID;
+        // public int sectorID; // TODO: Figure out how to not have to initialise this on creation
+        // but later in the code
         public int territoryStatus; // refer to TerritoryStatus enum
         public bool buildable;
         public Vector2 coord;

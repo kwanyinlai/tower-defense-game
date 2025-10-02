@@ -29,14 +29,15 @@ public class GridSector // for HPA*
     private void CalculateCenter()
     {
         Vector2 sum = Vector2.zero;
-        foreach (GridManager.GridNode tile in tiles)
+        foreach (GridManager.GridNode tile in costField.Keys)
             sum += tile.coord;
-        this.centre = sum / tiles.Count;
+        this.centre = sum / costField.Count;
     }
 
     private float AggregateCosts()
     {
-        cost = myDictionary.Keys.Sum();
+        // cost = entryPoints.Keys.Sum(); 
+        // TODO: This doesn't work. Can't sum on KeyCollection like Java
         return cost;
     }
 }

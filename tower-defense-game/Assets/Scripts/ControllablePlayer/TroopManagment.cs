@@ -113,7 +113,7 @@ public class TroopManagment : MonoBehaviour
         
 
     }
-
+    // TODO: make default reference in troopmmanagment directly call prefab, why is flag outline disappearing?
     void HideWaypointOutline(){
         waypointOutline.transform.localScale= new Vector3(0f,0f,0f);
 

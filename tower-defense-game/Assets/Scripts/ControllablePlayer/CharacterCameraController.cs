@@ -66,7 +66,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 1)
         {
-            movementController.MovementType = "observer";
+            movementController.MovementType = CharacterMovement.MovementTypes.Observer;
             overheadCam.SetActive(false);
             aboveCam.SetActive(true);
             wideCam.SetActive(false);
@@ -76,7 +76,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 2)
         {
-            movementController.MovementType = "observer";
+            movementController.MovementType = CharacterMovement.MovementTypes.Character; // TODO: ENUM MOVEMENT TYPE
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(true);
@@ -85,7 +85,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 3)
         {
-            movementController.MovementType = "disabled";
+            movementController.MovementType = CharacterMovement.MovementTypes.Observer;
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);

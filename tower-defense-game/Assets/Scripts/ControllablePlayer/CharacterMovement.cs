@@ -9,8 +9,14 @@ public class CharacterMovement : MonoBehaviour
 
     private CharacterController characterController;
 
-    [SerializeField] private string movementType = "character"; // movementType is either "observer", "character" or "disabled"
-    public string MovementType {private get; set;}
+    public enum MovementTypes
+    {
+        Character = 0,
+        Observer = 1,
+        Disabled=2
+    }
+    [SerializeField] private MovementTypes movementType = MovementTypes.Character; 
+    public MovementTypes MovementType {private get; set;}
     private float selectionDistance = 2f;
     private CharacterCameraController cameraController;
     
@@ -25,20 +31,20 @@ public class CharacterMovement : MonoBehaviour
 
     public bool IsControllable()
     {
-        return movementType == "character";
+        return movementType == MovementTypes.Character;
     }
 
     void Update()
     {
-        if (movementType == "character")
+        if (movementType == MovementTypes.Character)
         {
             Character();
         }
-        else if (movementType == "observer")
+        else if (movementType == MovementTypes.Observer)
         {
             cameraController.Observer();
         }
-        else if (movementType == "disabled")
+        else if (movementType == MovementTypes.Disabled)
         {
             ;
         }

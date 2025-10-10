@@ -31,7 +31,7 @@ public class TroopCombatSystem : CombatSystem
                     
 
                 foreach(GameObject player in Player.players){
-                    List<GameObject> selected = player.GetComponent<TroopManagment>().selectedTroops;
+                    List<GameObject> selected = player.GetComponent<TroopManagment>().SelectedTroops;
                     if(selected.Contains(troop)){
                         selected.Remove(troop);
                     }

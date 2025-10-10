@@ -14,7 +14,7 @@ public class EnemyCombatSystem : CombatSystem
         
         EnemyAI.enemies.Remove(gameObject);
         foreach(GameObject player in Player.players){
-            List<GameObject> list = player.GetComponent<TroopManagment>().selectedTroops;
+            List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
             if (list.Contains(gameObject)){
                 list.Remove(gameObject);
                 break;

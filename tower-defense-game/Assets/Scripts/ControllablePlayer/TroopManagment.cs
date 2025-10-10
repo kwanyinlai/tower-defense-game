@@ -7,8 +7,9 @@ using System.Collections.Generic;
 public class TroopManagment : MonoBehaviour
 {
     [SerializeField] private GameObject selectorCircle;
-    public List<GameObject> selectedTroops = new List<GameObject>();
-    public float selectionRadius = 100f;
+    private List<GameObject> selectedTroops = new List<GameObject>();
+    public List<GameObject> SelectedTroops{ get; }
+    private float selectionRadius = 100f;
     private bool isPlacingWaypoint = false;
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject waypointOutline;

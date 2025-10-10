@@ -56,7 +56,7 @@ public class CharacterCameraController : MonoBehaviour
 
         if (cameraState == 0)
         {
-            movementController.MovementType = "character";
+            movementController.MovementType = CharacterMovement.MovementTypes.Character;
             overheadCam.SetActive(true);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);

@@ -1224,7 +1224,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.010805063}
+  m_AnchoredPosition: {x: 0, y: 0.0040745125}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &312722151
@@ -5044,7 +5044,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54812db3e7084c8aa3f206c944b5f00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
   buildableTilePrefab: {fileID: 125049617}
   buildableTileMaterial: {fileID: 2100000, guid: 3f8112578bd2c4ae0b0e182c72b850d5, type: 2}
 --- !u!4 &1022243305
@@ -8216,8 +8215,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5413488068154538727, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5288083840281084649, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2680552372830084585, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}

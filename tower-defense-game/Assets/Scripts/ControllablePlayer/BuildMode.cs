@@ -8,7 +8,8 @@ public class BuildMode : MonoBehaviour
     [SerializeField] private GameObject structureOutlineParentClass;
 
     [Header("Build Mode Flags")]
-    public bool isBuilding = false;
+    private bool isPlacingBuilding = false;
+    public bool IsPlacingBuilding{ get; set; }
     public bool buildMenuOpen;
 
     // Asdf
@@ -34,7 +35,7 @@ public class BuildMode : MonoBehaviour
         buildMenu = BuildMenu.Instance.gameObject;
         buildMenu.SetActive(false);
         buildMenuOpen = false;
-        isBuilding=false;
+        isPlacingBuilding=false;
         cameraController = GetComponent<CharacterCameraController>();
         gridManager = GridManager.Instance;
     }
@@ -43,11 +44,11 @@ public class BuildMode : MonoBehaviour
     {
 
         if(!gameObject.GetComponent<TroopManagment>().IsManagingTroops){
-            if(isBuilding){
+            if(isPlacingBuilding){
                 
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    isBuilding = false;
+                    isPlacingBuilding = false;
                     if (outline != null)
                     {
                         Destroy(outline);
@@ -73,7 +74,7 @@ public class BuildMode : MonoBehaviour
                     buildMenuOpen = false;
                     CloseBuildMenu();
                     cameraController.DeactivateBuildCam();
-                    isBuilding = false;
+                    isPlacingBuilding = false;
                 }
             }
             else
@@ -121,7 +122,7 @@ public class BuildMode : MonoBehaviour
     {
         buildMenu.SetActive(false);
         buildMenuOpen = false;
-        isBuilding = true;
+        isPlacingBuilding = true;
         gridManager.DrawBuildGrid();
 
     }

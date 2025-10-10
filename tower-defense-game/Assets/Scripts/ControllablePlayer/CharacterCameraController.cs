@@ -9,7 +9,15 @@ public class CharacterCameraController : MonoBehaviour
     private float camSpeed = 50f;
 
     private CinemachineCamera overhead;
-    [SerializeField] public GameObject overheadCam;
+    [SerializeField] private GameObject overheadCam;
+    public Vector3 OverheadCamForward
+    {
+        get{ return overheadCam.transform.forward; }
+    }
+    public Vector3 OverheadCamRight
+    {
+        get{ return overheadCam.transform.right; }
+    }
 
     private CinemachineCamera above;
     [SerializeField] private GameObject aboveCam;

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float angularSpeed = 60f;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float angularSpeed = 60f;
     private const float GRAVITY = -9.81f;
     private Vector3 gravCalculation;
 
@@ -11,7 +11,7 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private string movementType = "character"; // movementType is either "observer", "character" or "disabled"
     public string MovementType {private get; set;}
-    public float selectionDistance = 2f;
+    private float selectionDistance = 2f;
     private CharacterCameraController cameraController;
     
 
@@ -54,8 +54,8 @@ public class CharacterMovement : MonoBehaviour
         float horiz = Input.GetAxis("Horizontal");
         float vert = Input.GetAxis("Vertical");
 
-        Vector3 forward = GetComponent<CharacterCameraController>().overheadCam.transform.forward;
-        Vector3 right = GetComponent<CharacterCameraController>().overheadCam.transform.right;
+        Vector3 forward = GetComponent<CharacterCameraController>().OverheadCamForward;
+        Vector3 right = GetComponent<CharacterCameraController>().OverheadCamRight;
 
         forward.y = 0f;
         right.y = 0f;

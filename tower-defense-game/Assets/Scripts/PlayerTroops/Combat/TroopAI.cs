@@ -41,7 +41,7 @@ public abstract class TroopAI : MonoBehaviour
     [SerializeField] protected GameObject commandingPlayer;
     public GameObject CommandingPlayer { get{ return commandingPlayer; } set{ commandingPlayer = value; } }
     [SerializeField] protected GameObject waypoint;
-    public GameObject Waypoint { get{ return waypoint; } set{ waypoint = value; } } // TOOD: maybe protected can't use the getter setter shortcuts
+    public GameObject Waypoint { get{ return waypoint; } set{ waypoint = value; } } 
     [SerializeField] protected GameObject selectedCircle; // TODO: change build menu isBuilding to more descriptive
     public GameObject SelectedCircle { get{ return selectedCircle; } set{ selectedCircle = value; } }
     

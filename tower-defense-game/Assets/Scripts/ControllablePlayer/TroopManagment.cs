@@ -32,7 +32,7 @@ public class TroopManagment : MonoBehaviour
         {
             StopAndClearSelecting();
         }
-        if (!gameObject.GetComponent<BuildMode>().isBuilding &&
+        if (!gameObject.GetComponent<BuildMode>().IsPlacingBuilding &&
             GetComponent<CharacterMovement>().IsControllable()){
 
             if (Input.GetKeyDown(KeyCode.Space))

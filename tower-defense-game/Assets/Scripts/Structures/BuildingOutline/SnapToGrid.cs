@@ -42,7 +42,7 @@ public class SnapToGrid : MonoBehaviour
     void Update()
     {
         Vector3? mouseNullCheck = GetMousePosOnPlane();
-        if (mouseNullCheck==null)
+        if (mouseNullCheck == null)
         {
             // show red outline
             return;
@@ -57,18 +57,22 @@ public class SnapToGrid : MonoBehaviour
         // rotation needs to be figured out
         // prevent from placing on player's position
 
-        if(buildMode.isBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position)) {
-            transform.localScale=new Vector3(2f,2f,2f);
+        if (buildMode.IsPlacingBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
+        {
+            transform.localScale = new Vector3(2f, 2f, 2f);
         }
-        else{
+        else
+        {
             Vector3? closestGrid = NearestGrid();
-            if (closestGrid != null){
-                transform.position = (Vector3) closestGrid;
+            if (closestGrid != null)
+            {
+                transform.position = (Vector3)closestGrid;
                 return;
             }
 
-            transform.localScale=new Vector3(0f,0f,0f);
+            transform.localScale = new Vector3(0f, 0f, 0f);
         }
+        // TODO: waypoint outline missing
 
 
     }

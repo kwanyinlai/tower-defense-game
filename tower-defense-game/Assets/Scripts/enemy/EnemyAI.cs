@@ -13,7 +13,7 @@ public abstract class EnemyAI : MonoBehaviour
     public float range = 5.0f;
     public float maxSpeed = 3.5f;
 
-    private LineRenderer pathIndicator;
+    // private LineRenderer pathIndicator;
      
     [Header("Combat Attributes")]
     public int dmg = 10;
@@ -39,10 +39,10 @@ public abstract class EnemyAI : MonoBehaviour
         enemies.Add(gameObject);
     
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        pathIndicator= GetComponent<LineRenderer>();
+        // pathIndicator= GetComponent<LineRenderer>();
         combatSystem = gameObject.GetComponent<CombatSystem>();
         
-        pathIndicator.enabled = false;
+        // pathIndicator.enabled = false;
         agent.speed = maxSpeed;
     }
 
@@ -54,19 +54,19 @@ public abstract class EnemyAI : MonoBehaviour
         agent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-        pathIndicator.enabled = true;
-        pathIndicator.positionCount = path.corners.Length;
+        // pathIndicator.enabled = true;
+        // pathIndicator.positionCount = path.corners.Length;
 
-        for (int i = 0; i < path.corners.Length; i++)
-        {
-            pathIndicator.SetPosition(i, path.corners[i]);
-        }
+        // for (int i = 0; i < path.corners.Length; i++)
+        // {
+        //     pathIndicator.SetPosition(i, path.corners[i]);
+        // }
     }
 
     protected void StopMoving()
     {
         agent.isStopped = true;
-        pathIndicator.enabled = false;
+        // pathIndicator.enabled = false;
     }
 
 

@@ -62,7 +62,7 @@ public abstract class TroopAI : MonoBehaviour
     }
 
     // Movement Attributes
-    private LineRenderer pathIndicator;
+    // private LineRenderer pathIndicator;
     protected NavMeshAgent agent;
 
     private Vector3 anchor;
@@ -79,8 +79,8 @@ public abstract class TroopAI : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         troops.Add(gameObject);
-        pathIndicator = GetComponent<LineRenderer>();
-        pathIndicator.enabled = false;
+        // pathIndicator = GetComponent<LineRenderer>();
+        // pathIndicator.enabled = false;
         combatSystem = gameObject.GetComponent<CombatSystem>();
         agent.speed = maxSpeed;
 
@@ -230,18 +230,18 @@ public abstract class TroopAI : MonoBehaviour
     protected void GoToWaypoint(){
         if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= 3f){
             DeleteFromWaypoint();
-            pathIndicator.enabled = false;
+            // pathIndicator.enabled = false;
         }
         else{
             agent.SetDestination(waypoint.transform.position);
             NavMeshPath path = new NavMeshPath();
             NavMesh.CalculatePath(transform.position, waypoint.transform.position, NavMesh.AllAreas, path);
-            pathIndicator.enabled = true;
-            pathIndicator.positionCount = path.corners.Length;
-            for (int i = 0; i < path.corners.Length; i++)
-            {
-                pathIndicator.SetPosition(i, path.corners[i]);
-            }
+            // pathIndicator.enabled = true;
+            // pathIndicator.positionCount = path.corners.Length;
+            // for (int i = 0; i < path.corners.Length; i++)
+            // {
+            //     pathIndicator.SetPosition(i, path.corners[i]);
+            // }
 
         }
 

@@ -3,47 +3,15 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
-public abstract class EnemyAI : MonoBehaviour
+public abstract class EnemyAI : TroopAI
 {
-    public static List<GameObject> enemies = new List<GameObject>(); 
+    public static List<GameObject> enemies = new List<GameObject>();
 
-
-    [Header("Movement")]
-    public float aggroRange = 10.0f;
-    public float range = 5.0f;
-    public float maxSpeed = 3.5f;
-
-    // private LineRenderer pathIndicator;
-     
-    [Header("Combat Attributes")]
-    public int dmg = 10;
-    protected float atkCooldown = 1.5f;
-    public float atkTimer = 0f;
-
-    [Header("Combat Target")]
-    public GameObject baseTarget;
-    public Transform troopTarget;
-    public Transform barracksTarget;
-
-    // Reference Objects
-    protected UnityEngine.AI.NavMeshAgent agent;
-    protected CombatSystem targetStats;
-    protected CombatSystem combatSystem;
-   
-    // ================ //
-    public abstract void Attack(Transform target);
-    // ================ //
-
+    
     protected virtual void Start()
     {
+        super.Start();
         enemies.Add(gameObject);
-    
-        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        // pathIndicator= GetComponent<LineRenderer>();
-        combatSystem = gameObject.GetComponent<CombatSystem>();
-        
-        // pathIndicator.enabled = false;
-        agent.speed = maxSpeed;
     }
 
 
@@ -63,7 +31,7 @@ public abstract class EnemyAI : MonoBehaviour
         // }
     }
 
-    protected void StopMoving()
+    protected void StopMoving() // what is this for
     {
         agent.isStopped = true;
         // pathIndicator.enabled = false;
@@ -72,30 +40,31 @@ public abstract class EnemyAI : MonoBehaviour
 
     protected virtual void Update()
     {
-        // attaack timer
-        if (atkTimer > 0f) {
-            atkTimer -= Time.deltaTime;
-        } else
-        {
-            atkTimer = atkCooldown;
-        }
+        super.Update();
         
         FindDefaultTargets();
         FindTargets();
-        HandleCombat();
-    } 
+    }
 
-    protected void FindDefaultTargets() {
+    protected void FindDefaultTargets()
+    {
         // Find Targets
-        if (baseTarget == null){
+        if (baseTarget == null)
+        {
             Debug.Log("No base found!");
             baseTarget = BaseManager.Instance.GetBase();
         }
-        else{
-            targetStats = baseTarget.GetComponent<CombatSystem>(); 
+        else
+        {
+            targetStats = baseTarget.GetComponent<CombatSystem>();
         }
     }
 
+    protected void Disengaged()
+    {
+        ;
+    }
+    
     protected void FindTargets() {
         // Get Targets
         troopTarget = GetClosestEnemyInRange();
@@ -119,7 +88,7 @@ public abstract class EnemyAI : MonoBehaviour
         {
             targetStats = troopTarget.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(transform.position, troopTarget.position);
-            if (distance <= range)
+            if (distance <= attackRange)
             {
                 StopMoving();
                 if (atkTimer <= 0f)
@@ -136,7 +105,7 @@ public abstract class EnemyAI : MonoBehaviour
         {
 
             float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
-            if (distance <= range)
+            if (distance <= attackRange)
             {
                 StopMoving();
                 if (agent.velocity.magnitude <= 0.1f)
@@ -156,7 +125,7 @@ public abstract class EnemyAI : MonoBehaviour
         else if (barracksTarget != null)
         {
             float distance = Vector3.Distance(agent.transform.position, barracksTarget.position);
-            if (distance <= range)
+            if (distance <= attackRange)
             {
                 StopMoving();
                 if (atkTimer <= 0f)

@@ -96,7 +96,7 @@ public class TroopManagment : MonoBehaviour
             if (isManagingTroops)
             {
                 // SelectTroops();
-                RaySelect();
+                RaySelectAlliedTroops();
                 isManagingTroops = false;
                 
             }
@@ -187,7 +187,7 @@ public class TroopManagment : MonoBehaviour
         StopAndClearSelecting();
     }
 
-    void RaySelect()
+    void RaySelectAlliedTroops()
     {
         RaycastHit hit;
         bool destroyedRay = false;

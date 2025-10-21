@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MeleeTroopAI : TroopAI
+public class MeleeTroopAI : PlayerTroopAI
 {
     public override void Attack(Transform target)
     {

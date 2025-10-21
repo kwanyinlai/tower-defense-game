@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Json;
 
 
 
-public class TankTroopAI : TroopAI
+public class TankTroopAI : PlayerTroopAI
 {
     public float slowEffectDecimal = 0.10f;
 

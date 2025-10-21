@@ -6,6 +6,16 @@ using System.Collections.Generic;
 public abstract class TroopAI : MonoBehaviour
 {
 
+    [SerializeField] protected string troopState; // disengaged, targetinrange, fighting enemy, stopped
+    enum TroopState
+    {
+        Disengaged,
+        TargetDetected,
+        InCombat,
+        Stopped,
+        Retreating
+
+    }
     [Header("Troop Attributes")]
     [SerializeField] protected string troopName;
     public string TroopName{ get { return troopName; } }
@@ -39,7 +49,8 @@ public abstract class TroopAI : MonoBehaviour
     protected float atkTimer { get; set; } = 0f;
 
     // Combat Attributes
-    protected CombatSystem targetStats { get; set; }
+    protected CombatSystem enemyTargetCombatSystem
+     { get; set; }
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
     protected CombatSystem combatSystem { get;  set; }
     protected bool inCombat = false;
@@ -69,20 +80,23 @@ public abstract class TroopAI : MonoBehaviour
         DecideState();
 
        // Combat Mechanics
-        HandleCombat();
+        HandleState();
     }
 
-    protected void HandleCombat() {
+    protected void HandleCombat()
+    {
+        // TODO: consider this
         if (inCombat)
         {
-            FightEnemy();    
-        } 
-        else 
+            FightEnemy();
+        }
+        else
         {
             Disengaged();
-        }
+        } 
     }
 
+    protected abstract void FindAndSetAllTargets();
     protected void ControlTroop() {
         if(IsUnderSelection){
             ShowCircle();
@@ -92,20 +106,21 @@ public abstract class TroopAI : MonoBehaviour
         }
     }
 
-    protected void DecideState() {
+    protected void DecideState()
+    {
         // TODO: Implement default state machine for all troops
-        Transform copy = GetClosestEnemyInRange();
-        if (copy != null)
+
+        FindAndSetAllTargets();
+
+        DecideState();
+
+        if (CheckInCombat())
         {
-            // Start Combat & Find Target
             inCombat = true;
-            enemyTarget = copy;
         }
         else
-        {   
-            // Stop Combat + Movement
-            inCombat = false;  
-            agent.isStopped=false; 
+        {
+            inCombat = false;
         }
     }
 
@@ -118,7 +133,8 @@ public abstract class TroopAI : MonoBehaviour
   
     protected void FightEnemyInRange(){
         
-        targetStats = enemyTarget.GetComponent<CombatSystem>(); 
+        enemyTargetCombatSystem
+         = enemyTarget.GetComponent<CombatSystem>(); 
         float distance = Vector3.Distance(transform.position, enemyTarget.position);
         if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/) {
             agent.isStopped = true;
@@ -133,35 +149,6 @@ public abstract class TroopAI : MonoBehaviour
     }
 
 
-    public Transform GetClosestEnemyInRange()
-    {
-        if (agent!=null && agent.isOnNavMesh && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
-            return enemyTarget;
-        }
-        GameObject closestEnemy = null;
-        float closestDistance = aggroRange;
-
-        // TODO:
-        if (EnemyAI.getListOfEnemies().Count == 0 ){
-            return null;
-        }
-
-        foreach (var enemy in EnemyAI.enemies)
-        {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            
-            if (distance <= aggroRange && distance < closestDistance)
-            {
-                closestEnemy = enemy;
-                closestDistance = distance;
-            }
-        }
-        
-        if (closestEnemy == null) {
-            return enemyTarget; 
-        }
-
-        return closestEnemy.transform;
-    }
+   
     
 }

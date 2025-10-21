@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
 
-public class RangedTroopAI : TroopAI
+public class RangedTroopAI : PlayerTroopAI
 {
     public GameObject bulletPrefab; 
     public override void Attack(Transform target)

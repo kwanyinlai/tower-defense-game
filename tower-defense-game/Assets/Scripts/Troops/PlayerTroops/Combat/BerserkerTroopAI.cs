@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BerserkerTroopAI : TroopAI
+public class BerserkerTroopAI : PlayerTroopAI
 {
     public float hasteEffectDecimal = 0.10f;
     public float troopStrengthDecimal = 0.50f;

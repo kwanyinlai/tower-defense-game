@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public abstract class SupportTroop : TroopAI
+public abstract class SupportTroop : PlayerTroopAI
 {
     
     public List<GameObject> GetAlliesInRange()

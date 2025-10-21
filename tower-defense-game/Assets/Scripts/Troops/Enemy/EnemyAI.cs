@@ -6,6 +6,9 @@ using System.Runtime.Serialization.Json;
 public abstract class EnemyAI : TroopAI
 {
     public static List<GameObject> enemies = new List<GameObject>();
+    protected Transform baseTarget;
+    protected Transform troopTarget;
+    protected Transform barracksTarget;
 
     
     protected virtual void Start()
@@ -46,51 +49,39 @@ public abstract class EnemyAI : TroopAI
         FindTargets();
     }
 
-    protected void FindDefaultTargets()
+    protected void FindDefaultTargets() // duplicate
     {
-        // Find Targets
-        if (baseTarget == null)
-        {
-            Debug.Log("No base found!");
-            baseTarget = BaseManager.Instance.GetBase();
-        }
-        else
-        {
-            targetStats = baseTarget.GetComponent<CombatSystem>();
-        }
+        baseTarget = GetPlayerBaseTarget();
     }
 
     protected void Disengaged()
     {
         ;
     }
-    
-    protected void FindTargets() {
-        // Get Targets
+
+    protected Transform GetPlayerBaseTarget()
+    {
+        if (baseTarget == null){
+            return BaseManager.Instance.GetBase().transform;
+        }
+        
+    }
+    protected void FindAndSetAllTargets()
+    {
+        baseTarget = GetPlayerBaseTarget();
         troopTarget = GetClosestEnemyInRange();
         barracksTarget = GetClosestBarracksInRange();
     }
 
 
     protected void HandleCombat() {
-        if (baseTarget == null){
-            Debug.Log("No base found!");
-            baseTarget = BaseManager.Instance.GetBase();
-        }
-        else{
-            targetStats = baseTarget.GetComponent<CombatSystem>(); 
-        }
-        
-        troopTarget = GetClosestEnemyInRange();
-        barracksTarget = GetClosestBarracksInRange();
         
         if (troopTarget != null)
         {
-            targetStats = troopTarget.GetComponent<CombatSystem>();
+            enemyTargetCombatSystem = troopTarget.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(transform.position, troopTarget.position);
             if (distance <= attackRange)
             {
-                StopMoving();
                 if (atkTimer <= 0f)
                 {
                     Attack(troopTarget);
@@ -98,28 +89,7 @@ public abstract class EnemyAI : TroopAI
             }
             else
             {
-            MoveTowardsTarget(troopTarget);
-            }
-        }
-        else if (baseTarget != null)
-        {
-
-            float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
-            if (distance <= attackRange)
-            {
-                StopMoving();
-                if (agent.velocity.magnitude <= 0.1f)
-                {
-                    if (atkTimer <= 0f)
-                    {
-                        Attack(baseTarget.transform);
-                    }
-                }
-
-            }
-            else
-            {
-                MoveTowardsTarget(baseTarget.transform);
+                MoveTowardsTarget(troopTarget);
             }
         }
         else if (barracksTarget != null)
@@ -127,7 +97,6 @@ public abstract class EnemyAI : TroopAI
             float distance = Vector3.Distance(agent.transform.position, barracksTarget.position);
             if (distance <= attackRange)
             {
-                StopMoving();
                 if (atkTimer <= 0f)
                 {
                     Attack(barracksTarget);
@@ -139,9 +108,31 @@ public abstract class EnemyAI : TroopAI
                 MoveTowardsTarget(barracksTarget);
             }
         }
+        else if (baseTarget != null)
+        {
+
+            float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
+            if (distance <= attackRange)
+            {
+                if (agent.velocity.magnitude <= 0.1f) // TODO: I want to change this so that it starts
+                // attacking the moment the input stops and not require velocity to be 0.
+                {
+                    if (atkTimer <= 0f)
+                    {
+                        Attack(baseTarget.transform);
+                    }
+                }
+            }
+            else
+            {
+                inCombat = false;
+                MoveTowardsTarget(baseTarget.transform);
+            }
+        }
         else
         {
-            StopMoving();
+            // we shouldn't be here so maybe error msg
+            ;
         }
     }
 

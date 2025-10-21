@@ -88,7 +88,7 @@ public abstract class PlayerTroopAI : TroopAI
     }
     
     protected void Disengaged() {
-        // Disengaged Mechanics
+        // Disengaged Mechanics; move to waypoint
         agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
         AntiClustering();
         if(IsUnderSelection){
@@ -143,7 +143,7 @@ public abstract class PlayerTroopAI : TroopAI
         return sellResources;
     }
 
-    
+
 
     /*
     public static void inSelection(MeshCollider collider, Transform cam){
@@ -210,9 +210,46 @@ public abstract class PlayerTroopAI : TroopAI
             {
                 awayDir = transform.position - collider.transform.position;
             }
-            
+
         }
         transform.position += awayDir.normalized * agent.speed * Time.deltaTime;
+    }
+
+
+    protected void SelectAllTargets()
+    {
+        enemyTarget = GetClosestEnemyInRange();
+    }
+    
+    public Transform GetClosestEnemyInRange()
+    {
+        if (agent!=null && agent.isOnNavMesh && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
+            return enemyTarget;
+        }
+        GameObject closestEnemy = null;
+        float closestDistance = aggroRange;
+
+        // TODO:
+        if (EnemyAI.getListOfEnemies().Count == 0 ){
+            return null;
+        }
+
+        foreach (var enemy in EnemyAI.enemies)
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            
+            if (distance <= aggroRange && distance < closestDistance)
+            {
+                closestEnemy = enemy;
+                closestDistance = distance;
+            }
+        }
+        
+        if (closestEnemy == null) {
+            return enemyTarget; 
+        }
+
+        return closestEnemy.transform;
     }
 
 

@@ -53,6 +53,7 @@ public abstract class PlayerTroopAI : TroopAI
     }
 
     protected void ControlTroop() {
+        // For when the player is selecting the troop, but TODO: maybe move this out of AI logic
         if(IsUnderSelection){
             ShowCircle();
         }

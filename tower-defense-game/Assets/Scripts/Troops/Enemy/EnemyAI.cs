@@ -74,68 +74,6 @@ public abstract class EnemyAI : TroopAI
     }
 
 
-    protected void HandleCombat() {
-        
-        if (troopTarget != null)
-        {
-            enemyTargetCombatSystem = troopTarget.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(transform.position, troopTarget.position);
-            if (distance <= attackRange)
-            {
-                if (atkTimer <= 0f)
-                {
-                    Attack(troopTarget);
-                }
-            }
-            else
-            {
-                MoveTowardsTarget(troopTarget);
-            }
-        }
-        else if (barracksTarget != null)
-        {
-            float distance = Vector3.Distance(agent.transform.position, barracksTarget.position);
-            if (distance <= attackRange)
-            {
-                if (atkTimer <= 0f)
-                {
-                    Attack(barracksTarget);
-                    Debug.Log("attacking barracks");
-                }
-            }
-            else
-            {
-                MoveTowardsTarget(barracksTarget);
-            }
-        }
-        else if (baseTarget != null)
-        {
-
-            float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
-            if (distance <= attackRange)
-            {
-                if (agent.velocity.magnitude <= 0.1f) // TODO: I want to change this so that it starts
-                // attacking the moment the input stops and not require velocity to be 0.
-                {
-                    if (atkTimer <= 0f)
-                    {
-                        Attack(baseTarget.transform);
-                    }
-                }
-            }
-            else
-            {
-                inCombat = false;
-                MoveTowardsTarget(baseTarget.transform);
-            }
-        }
-        else
-        {
-            // we shouldn't be here so maybe error msg
-            ;
-        }
-    }
-
     public Transform GetClosestEnemyInRange()
     {
         if (agent.isStopped && troopTarget != null)

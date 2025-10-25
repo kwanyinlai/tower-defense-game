@@ -4,13 +4,11 @@ using UnityEngine;
 public class BuildMode : MonoBehaviour
 {
     // Building Parents (for organization)
-    [SerializeField] private GameObject structureParentClass;
-    [SerializeField] private GameObject structureOutlineParentClass;
+    [SerializeField] private GameObject buildingStructureParentClass
+    ;
+    [SerializeField] private GameObject buildingStructureOutlineParentClass
+    ;
 
-    [Header("Build Mode Flags")]
-    private bool isPlacingBuilding = false;
-    public bool IsPlacingBuilding{ get; set; }
-    public bool buildMenuOpen;
 
     // Asdf
     private GameObject buildMenu;
@@ -99,7 +97,8 @@ public class BuildMode : MonoBehaviour
             GameObject building = Instantiate(placeable.prefab, 
                             outline.transform.position, 
                             outline.transform.rotation,
-                            structureParentClass.transform);
+                            buildingStructureParentClass
+                            .transform);
             gridManager.OccupyArea(outline.transform.position, placeable.size, 
                             building.GetComponent<Building>().range);
             ResourcePool.DepleteResource(placeable.RequiredResources);
@@ -131,7 +130,8 @@ public class BuildMode : MonoBehaviour
     {
         selectedBuilding = allStructuresPrefabs[selection];
 
-        outline = Instantiate(selectedBuilding, structureOutlineParentClass.transform);
+        outline = Instantiate(selectedBuilding, buildingStructureOutlineParentClass
+        .transform);
 
         outline.GetComponent<SnapToGrid>().InitSnapToGrid(terrain, gameObject);
         outline.GetComponent<Placeable>().InitPlaceable();

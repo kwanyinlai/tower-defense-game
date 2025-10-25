@@ -9,14 +9,6 @@ public class CharacterMovement : MonoBehaviour
 
     private CharacterController characterController;
 
-    public enum MovementTypes
-    {
-        Character = 0,
-        Observer = 1,
-        Disabled=2
-    }
-    [SerializeField] private MovementTypes movementType = MovementTypes.Character; 
-    public MovementTypes MovementType {private get; set;}
     private float selectionDistance = 2f;
     private CharacterCameraController cameraController;
     
@@ -31,26 +23,22 @@ public class CharacterMovement : MonoBehaviour
 
     public bool IsControllable()
     {
-        return movementType == MovementTypes.Character;
+        return movementType == Player.CurrentState.ControllingCharacter;
     }
 
     void Update()
     {
-        if (movementType == MovementTypes.Character)
+        if (Player.CurrentState == PlayerStates.ControllingCharacter)
         {
             Character();
         }
-        else if (movementType == MovementTypes.Observer)
+        else if (Player.CurrentState == PlayerStates.ObserverMode)
         {
             cameraController.Observer();
         }
-        else if (movementType == MovementTypes.Disabled)
+        else if (Player.CurrentState == PlayerStates.DisabledControls)
         {
             ;
-        }
-        else
-        {
-            Debug.Log("Invalid movement type " + movementType);
         }
     }
 

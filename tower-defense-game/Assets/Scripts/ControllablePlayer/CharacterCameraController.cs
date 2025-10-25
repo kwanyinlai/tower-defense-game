@@ -85,7 +85,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 3)
         {
-            movementController.MovementType = CharacterMovement.MovementTypes.Observer;
+            movementController.MovementType = Player.CurrentState.Observer;
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);

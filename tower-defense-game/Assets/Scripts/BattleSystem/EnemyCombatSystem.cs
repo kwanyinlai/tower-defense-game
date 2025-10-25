@@ -12,7 +12,7 @@ public class EnemyCombatSystem : CombatSystem
 
     protected override void Die(){
         
-        EnemyAI.enemies.Remove(gameObject);
+        EnemyAI.allEnemyTroops.Remove(gameObject);
         foreach(GameObject player in Player.players){
             List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
             if (list.Contains(gameObject)){

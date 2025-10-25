@@ -6,8 +6,11 @@ public class BuildMode : MonoBehaviour
     // Building Parents (for organization)
     [SerializeField] private GameObject buildingStructureParentClass
     ;
-    [SerializeField] private GameObject buildingStructureOutlineParentClass
+    [SerializeField]
+    private GameObject buildingStructureOutlineParentClass
     ;
+
+    private Player playerData;
 
 
     // Asdf
@@ -29,77 +32,109 @@ public class BuildMode : MonoBehaviour
 
 
 
-    void Start(){
+    void Start() {
         buildMenu = BuildMenu.Instance.gameObject;
         buildMenu.SetActive(false);
-        buildMenuOpen = false;
-        isPlacingBuilding=false;
+        playerData = GetComponent<Player>();
         cameraController = GetComponent<CharacterCameraController>();
         gridManager = GridManager.Instance;
     }
-    
+
     void Update()
     {
+        DetermineState();
 
-        if(!gameObject.GetComponent<TroopManagment>().IsManagingTroops){
-            if(isPlacingBuilding){
-                
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    isPlacingBuilding = false;
-                    if (outline != null)
-                    {
-                        Destroy(outline);
-                    }
-                    cameraController.DeactivateBuildCam();
-
-                    gridManager.ClearBuildGrid();
-                }
-                else if (Input.GetMouseButtonDown(0))
-                {
-                    PlaceBuilding();
-                }
-                else if(Input.GetKeyDown(KeyCode.R))
-                {
-                    outline.transform.Rotate(0, 90, 0);
-                    Debug.Log("rotated"); 
-                }
-            }
-            else if (buildMenuOpen)
-            {
-                if (Input.GetKeyDown(KeyCode.Escape))
-                {
-                    buildMenuOpen = false;
-                    CloseBuildMenu();
-                    cameraController.DeactivateBuildCam();
-                    isPlacingBuilding = false;
-                }
-            }
-            else
-                if (Input.GetKeyDown(KeyCode.B))
-                {
-                    OpenBuildMenu();
-                }
-
+        if (playerData.CurrentState == Player.PlayerStates.PlacingBuilding)
+        {
+            PlayerDecidingBuildingPlacement();
+        }
+        else if (playerData.CurrentState == PlayerStates.BuildMenuOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {   
+                cameraController.DeactivateBuildCam();
+                isPlacingBuilding = false;
             }
         }
-       
-    
+        else if (playerData.CurrentState == PlayerStates.ControllingCharacter)
+        {
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                OpenBuildMenu();
+            }
+            else
+            {
+                CloseBuildMenu();
+            }
+        }
+
+    }
+
+    void StopPlacingBuilding()
+    {
+        playerData.CurrentState = PlayerStates.ControllingCharacter;
+        if (outline != null)
+        {
+            Destroy(outline);
+        }
+        cameraController.DeactivateBuildCam();
+
+        gridManager.ClearBuildGrid();
+    }
+
+    private void DetermineState()
+    {
+        if (playerData.CurrentState == PlayerStates.PlacingBuilding)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                playerData.CurrentState = PlayerStates.ControllingCharacter;
+            }
+        }
+        else if (playerData.CurrentState == PlayerStates.BuildMenuOpen)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                playerData.CurrentState = PlayerStates.ControllingCharacter;
+            }
+        }
+    }
+
+    void PlayerDecidingBuildingPlacement()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            StopPlacingBuilding();
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            PlaceBuilding();
+        }
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            outline.transform.Rotate(0, 90, 0);
+            Debug.Log("rotated");
+        }
+    }
+
+
+
+
 
     public void PlaceBuilding() // call the outline
     {
-        
+
         Placeable placeable = outline.GetComponent<Placeable>();
         if (placeable.IsBuildable(outline.transform.position) &&
             ResourcePool.EnoughResources(placeable.RequiredResources))
         {
             placeable.DebugStatement();
-            GameObject building = Instantiate(placeable.prefab, 
-                            outline.transform.position, 
+            GameObject building = Instantiate(placeable.prefab,
+                            outline.transform.position,
                             outline.transform.rotation,
                             buildingStructureParentClass
                             .transform);
-            gridManager.OccupyArea(outline.transform.position, placeable.size, 
+            gridManager.OccupyArea(outline.transform.position, placeable.size,
                             building.GetComponent<Building>().range);
             ResourcePool.DepleteResource(placeable.RequiredResources);
         }
@@ -114,16 +149,22 @@ public class BuildMode : MonoBehaviour
     public void OpenBuildMenu()
     {
         buildMenu.SetActive(true);
-        buildMenuOpen = true;
+        playerData.currentState = PlayerStates.BuildMenuOpen;
     }
-    
+
     public void CloseBuildMenu()
     {
-        buildMenu.SetActive(false);
-        buildMenuOpen = false;
-        isPlacingBuilding = true;
+        buildMenu.SetActive(false);   
+        // playerData.currentState = PlayerStates.PlacingBuilding;
+        // gridManager.DrawBuildGrid();
+        // TODO: check whether I need to call this in CloseBuildMenu or else where
+    }
+    
+    void StartBuilding()
+    {
         gridManager.DrawBuildGrid();
-
+        playerData.CurrentState = PlayerStates.PlacingBuilding;
+        gridManager.DrawBuildGrid();
     }
 
     public void SetActiveBuilding(int selection)

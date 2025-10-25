@@ -121,7 +121,7 @@ public class TroopManagment : MonoBehaviour
 
     void StopAndClearSelecting(){
         foreach(GameObject troop in selectedTroops){
-            TroopAI troopAI = troop.GetComponent<TroopAI>();
+            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
             troopAI.IsUnderSelection=false;
             troopAI.CommandingPlayer=null;
 

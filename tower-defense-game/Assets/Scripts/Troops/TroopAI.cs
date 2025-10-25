@@ -180,5 +180,7 @@ public abstract class TroopAI : MonoBehaviour
         agent.SetDestination(enemyTarget.position); 
     }
 
-    protected abstract void AddEntityToStaticList();
+    protected abstract void AddEntityToAliveList();
+
+    protected abstract void RemoveEntityFromAliveList();
 }

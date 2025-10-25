@@ -19,11 +19,11 @@ public class TroopCombatSystem : CombatSystem
     protected override void Die(){
         
         barracks.DecrementTroops();
-        foreach (GameObject troop in TroopAI.troops)
+        foreach (GameObject troop in PlayerTroopAI.allPlayerTroops)
         {
             if (troop == gameObject)
             {
-                TroopAI.troops.Remove(troop);
+                RemoveEntityFromAliveList(troop);
                 GameObject temp = gameObject.GetComponent<TroopAI>().Waypoint;
                 if (temp!=null){
                     temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);

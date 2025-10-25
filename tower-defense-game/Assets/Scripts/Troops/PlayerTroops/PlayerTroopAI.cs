@@ -255,10 +255,15 @@ public abstract class PlayerTroopAI : TroopAI
 
         return closestEnemy.transform;
     }
-    
-    protected override void AddEntityToStaticList()
+
+    protected override void AddEntityToAliveList()
     {
-        allPlayerTroops.add(this);
+        allPlayerTroops.add(gameObject);
+    }
+    
+    protected override void RemoveEntityFromAliveList()
+    {
+        allPlayerTroops.Remove(gameObject);
     }
 
 

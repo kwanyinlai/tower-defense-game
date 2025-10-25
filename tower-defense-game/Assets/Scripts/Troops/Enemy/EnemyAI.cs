@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 public abstract class EnemyAI : TroopAI
 {
-    public static List<GameObject> enemies = new List<GameObject>();
+    public static List<GameObject> allEnemyTroops = new List<GameObject>();
     protected Transform baseTarget;
     protected Transform troopTarget;
     protected Transform barracksTarget;
@@ -15,11 +15,18 @@ public abstract class EnemyAI : TroopAI
     {
         super.Start();
     }
-    
-    protected override void AddEntityToStaticList()
-    {   
-        enemies.Add(gameObject);
+
+    protected override void AddEntityToAliveList()
+    {
+        allEnemyTroops.Add(gameObject);
     }
+
+    protected override void RemoveEntityFromAliveList()
+    {
+        allEnemyTroops.Remove(gameObject);
+    }
+    
+
 
     protected virtual void Update()
     {

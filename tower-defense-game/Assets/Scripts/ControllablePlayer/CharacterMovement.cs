@@ -11,32 +11,36 @@ public class CharacterMovement : MonoBehaviour
 
     private float selectionDistance = 2f;
     private CharacterCameraController cameraController;
+
+    private Player playerData;
     
 
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-        gravCalculation = Vector3.zero;   
+        gravCalculation = Vector3.zero;
         cameraController = GetComponent<CharacterCameraController>();
+        playerData = GetComponent<Player>();
+        
     }
 
     public bool IsControllable()
     {
-        return movementType == Player.CurrentState.ControllingCharacter;
+        return playerData.CurrentState == Player.PlayerStates.ControllingCharacter;
     }
 
     void Update()
     {
-        if (Player.CurrentState == PlayerStates.ControllingCharacter)
+        if (playerData.CurrentState == Player.PlayerStates.ControllingCharacter)
         {
             Character();
         }
-        else if (Player.CurrentState == PlayerStates.ObserverMode)
+        else if (playerData.CurrentState == Player.PlayerStates.ObserverMode)
         {
             cameraController.Observer();
         }
-        else if (Player.CurrentState == PlayerStates.DisabledControls)
+        else if (playerData.CurrentState == Player.PlayerStates.DisabledControls)
         {
             ;
         }

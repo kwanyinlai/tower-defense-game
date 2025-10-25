@@ -90,7 +90,7 @@ public abstract class TroopAI : MonoBehaviour
     protected void HandleCombat()
     {
         // TODO: consider this
-        if (troopState.InCombat)
+        if (troopState == TroopState.InCombat)
         {
             FightEnemy();
         }

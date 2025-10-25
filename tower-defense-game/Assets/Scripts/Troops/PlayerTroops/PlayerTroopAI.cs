@@ -214,7 +214,7 @@ public abstract class PlayerTroopAI : TroopAI
             }
 
         }
-        transform.position += awayDir.normalized * agent.speed * Time.deltaTime;
+        transform.position += awayDir.normalized * navMeshAgent.speed * Time.deltaTime;
     }
 
 
@@ -233,12 +233,12 @@ public abstract class PlayerTroopAI : TroopAI
         float closestDistance = aggroRange;
 
         // TODO:
-        if (EnemyAI.allEnemyTroops.Count == 0)
+        if (EnemyAI.AllEnemyTroops.Count == 0)
         {
             return null;
         }
 
-        foreach (var enemy in EnemyAI.enemies)
+        foreach (var enemy in EnemyAI.AllEnemyTroops)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
@@ -259,7 +259,7 @@ public abstract class PlayerTroopAI : TroopAI
 
     protected override void AddEntityToAliveList()
     {
-        allPlayerTroops.add(gameObject);
+        allPlayerTroops.Add(gameObject);
     }
     
     public override void RemoveEntityFromAliveList()

@@ -36,8 +36,13 @@ public abstract class EnemyAI : TroopAI
 
     protected Transform GetPlayerBaseTarget()
     {
-        if (baseTarget == null){
+        if (baseTarget == null)
+        {
             return BaseManager.Instance.GetBase().transform;
+        }
+        else
+        {
+            return null;
         }
         
     }

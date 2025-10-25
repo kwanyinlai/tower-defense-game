@@ -40,7 +40,7 @@ public abstract class PlayerTroopAI : TroopAI
 
     protected virtual void Start()
     {
-        super.Start();
+        base.Start();
 
         IntializeSellResources();
         HideCircle();
@@ -49,7 +49,7 @@ public abstract class PlayerTroopAI : TroopAI
 
     protected virtual void Update()
     {
-        super.Update();
+        base.Update();
 
         // Events when player is controlling troop
         ControlTroop();
@@ -75,7 +75,7 @@ public abstract class PlayerTroopAI : TroopAI
         }
         else
         {
-            agent.SetDestination(waypoint.transform.position);
+            navMeshAgent.SetDestination(waypoint.transform.position);
             NavMeshPath path = new NavMeshPath();
             NavMesh.CalculatePath(transform.position, waypoint.transform.position, NavMesh.AllAreas, path);
             // pathIndicator.enabled = true;
@@ -91,7 +91,7 @@ public abstract class PlayerTroopAI : TroopAI
     
     protected void Disengaged() {
         // Disengaged Mechanics; move to waypoint
-        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        navMeshAgent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
         AntiClustering();
         if(IsUnderSelection){
             ;
@@ -225,7 +225,7 @@ public abstract class PlayerTroopAI : TroopAI
 
     public Transform GetClosestEnemyInRange()
     {
-        if (agent != null && agent.isOnNavMesh && agent.isStopped && enemyTarget != null)
+        if (navMeshAgent != null && navMeshAgent.isOnNavMesh && navMeshAgent.isStopped && enemyTarget != null)
         { // isStopped can't be called after dead but it is being called
             return enemyTarget;
         }

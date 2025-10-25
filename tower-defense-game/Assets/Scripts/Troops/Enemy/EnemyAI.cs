@@ -31,7 +31,7 @@ public abstract class EnemyAI : TroopAI
 
     protected virtual void Update()
     {
-        super.Update();
+        base.Update();
     }
 
     protected Transform GetPlayerBaseTarget()
@@ -63,7 +63,7 @@ public abstract class EnemyAI : TroopAI
 
     public Transform GetClosestEnemyInRange()
     {
-        if (agent.isStopped && troopTarget != null)
+        if (navMeshAgent.isStopped && troopTarget != null)
         {
             return troopTarget;
         }

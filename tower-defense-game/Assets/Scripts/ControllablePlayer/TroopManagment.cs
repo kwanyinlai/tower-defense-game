@@ -132,7 +132,7 @@ public class TroopManagment : MonoBehaviour
 
     void SelectTroops(){
                 
-        foreach (GameObject troop in TroopAI.AllPlayerTroops)
+        foreach (GameObject troop in PlayerTroopAI.AllPlayerTroops)
         {
             Vector3 playerPosition = transform.position;
             Vector3 troopPosition = troop.transform.position;
@@ -177,7 +177,7 @@ public class TroopManagment : MonoBehaviour
         foreach (GameObject troop in selectedTroops)
         {
            
-            TroopAI troopAI = troop.GetComponent<TroopAI>();
+            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
             troopAI.CommandingPlayer = null;
             troopAI.DeleteFromWaypoint();
             troopAI.Waypoint = deployedPoint;

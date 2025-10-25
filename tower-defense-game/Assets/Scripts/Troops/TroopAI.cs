@@ -67,7 +67,7 @@ public abstract class TroopAI : MonoBehaviour
         // pathIndicator.enabled = false;
         combatSystem = gameObject.GetComponent<CombatSystem>();
         navMeshAgent.speed = maxSpeed;
-        AddEntityToStaticList();
+        AddEntityToAliveList();
     }
 
 
@@ -104,9 +104,9 @@ public abstract class TroopAI : MonoBehaviour
 
     protected void MoveTowardsTarget(Transform target)
     {
-        agent.isStopped = false;
-        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow") + combatSystem.GetEffectStrength("haste")); // diff function
-        agent.SetDestination(target.position);
+        navMeshAgent.isStopped = false;
+        navMeshAgent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow") + combatSystem.GetEffectStrength("haste")); // diff function
+        navMeshAgent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
 
@@ -139,7 +139,7 @@ public abstract class TroopAI : MonoBehaviour
         // which is called by combatsystem
         enemyTargetCombatSystem = enemyTarget.GetComponent<CombatSystem>();
         float distance = Vector3.Distance(transform.position, enemyTarget.position);
-        if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)
+        if (atkTimer <= 0f && navMeshAgent.velocity.magnitude <= 0.05)
         {
             Attack(enemyTarget);
         }
@@ -153,9 +153,10 @@ public abstract class TroopAI : MonoBehaviour
     {
         if (troopState != TroopState.Retreating)
         {
+            float distance = Vector3.Distance(transform.position, enemyTarget.position);
             if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/)
             {
-                agent.isStopped = true;
+                navMeshAgent.isStopped = true;
                 troopState = TroopState.InCombat;
             }
             else
@@ -176,8 +177,8 @@ public abstract class TroopAI : MonoBehaviour
     protected void ReadjustPositioningBetweenAttack()
     {
         // have tolerance before moving
-        agent.isStopped = false;
-        agent.SetDestination(enemyTarget.position); 
+        navMeshAgent.isStopped = false;
+        navMeshAgent.SetDestination(enemyTarget.position); 
     }
 
     protected abstract void AddEntityToAliveList();

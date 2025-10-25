@@ -88,14 +88,14 @@ public class BuildMode : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                playerData.CurrentState = PlayerStates.ControllingCharacter;
+                playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
             }
         }
-        else if (playerData.CurrentState == PlayerStates.BuildMenuOpen)
+        else if (playerData.CurrentState == Player.PlayerStates.BuildMenuOpen)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                playerData.CurrentState = PlayerStates.ControllingCharacter;
+                playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
             }
         }
     }
@@ -149,7 +149,7 @@ public class BuildMode : MonoBehaviour
     public void OpenBuildMenu()
     {
         buildMenu.SetActive(true);
-        playerData.currentState = PlayerStates.BuildMenuOpen;
+        playerData.currentState = Player.PlayerStates.BuildMenuOpen;
     }
 
     public void CloseBuildMenu()

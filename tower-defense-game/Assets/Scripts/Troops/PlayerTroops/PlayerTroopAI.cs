@@ -12,7 +12,8 @@ public interface IPlayer
 public abstract class PlayerTroopAI : TroopAI
 {
 
-    public static List<GameObject> allPlayerTroops = new List<GameObject>(); // TODO: make this getter and setter
+    protected static List<GameObject> allPlayerTroops = new List<GameObject>(); 
+    public static List<GameObject> AllPlayerTroops { get; }
 
     [Header("Control Attributes")]
 

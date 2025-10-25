@@ -5,7 +5,8 @@ using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 public abstract class EnemyAI : TroopAI
 {
-    public static List<GameObject> allEnemyTroops = new List<GameObject>();
+    protected static List<GameObject> allEnemyTroops = new List<GameObject>();
+    public static List<GameObject> AllEnemyTroops { get; }
     protected Transform baseTarget;
     protected Transform troopTarget;
     protected Transform barracksTarget;

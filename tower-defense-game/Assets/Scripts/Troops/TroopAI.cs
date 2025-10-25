@@ -182,5 +182,5 @@ public abstract class TroopAI : MonoBehaviour
 
     protected abstract void AddEntityToAliveList();
 
-    protected abstract void RemoveEntityFromAliveList();
+    public abstract void RemoveEntityFromAliveList();
 }

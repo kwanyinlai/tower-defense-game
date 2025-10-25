@@ -48,7 +48,7 @@ public class BuildMode : MonoBehaviour
         {
             PlayerDecidingBuildingPlacement();
         }
-        else if (playerData.CurrentState == PlayerStates.BuildMenuOpen)
+        else if (playerData.CurrentState == Player.PlayerStates.BuildMenuOpen)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {   
@@ -56,7 +56,7 @@ public class BuildMode : MonoBehaviour
                 isPlacingBuilding = false;
             }
         }
-        else if (playerData.CurrentState == PlayerStates.ControllingCharacter)
+        else if (playerData.CurrentState == Player.PlayerStates.ControllingCharacter)
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
@@ -72,7 +72,7 @@ public class BuildMode : MonoBehaviour
 
     void StopPlacingBuilding()
     {
-        playerData.CurrentState = PlayerStates.ControllingCharacter;
+        playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
         if (outline != null)
         {
             Destroy(outline);
@@ -84,7 +84,7 @@ public class BuildMode : MonoBehaviour
 
     private void DetermineState()
     {
-        if (playerData.CurrentState == PlayerStates.PlacingBuilding)
+        if (playerData.CurrentState == Player.PlayerStates.PlacingBuilding)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {

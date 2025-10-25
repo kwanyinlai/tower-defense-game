@@ -50,11 +50,7 @@ public class BuildMode : MonoBehaviour
         }
         else if (playerData.CurrentState == Player.PlayerStates.BuildMenuOpen)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {   
-                cameraController.DeactivateBuildCam();
-                isPlacingBuilding = false;
-            }
+            ;
         }
         else if (playerData.CurrentState == Player.PlayerStates.ControllingCharacter)
         {
@@ -95,7 +91,8 @@ public class BuildMode : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
+                playerData.CurrentState = Player.PlayerStates.ControllingCharacter; 
+                cameraController.DeactivateBuildCam();
             }
         }
     }

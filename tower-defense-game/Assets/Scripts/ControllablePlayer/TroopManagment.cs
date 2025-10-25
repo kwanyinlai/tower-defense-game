@@ -10,7 +10,7 @@ public class TroopManagment : MonoBehaviour
     private List<GameObject> selectedTroops = new List<GameObject>();
     public List<GameObject> SelectedTroops{ get; }
     private float selectionRadius = 100f;
-    private bool isPlacingWaypoint = false;
+    private bool isPlacingWaypoint = false; // change flags to replace with something else
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject waypointOutline;
     private bool isManagingTroops = false;
@@ -33,8 +33,7 @@ public class TroopManagment : MonoBehaviour
         {
             StopAndClearSelecting();
         }
-        if (!gameObject.GetComponent<BuildMode>().IsPlacingBuilding &&
-            GetComponent<CharacterMovement>().IsControllable()){
+        if (playerData.currentState == Player.PlayerStates.ControllingCharacter){
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
@@ -194,7 +193,7 @@ public class TroopManagment : MonoBehaviour
         Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
         if (Physics.Raycast(transform.position + new Vector3(0f, 2f, 0f), forward, out hit, 10000f, selectableLayer) && !destroyedRay)
         {
-            TroopAI troop = hit.collider.GetComponent<TroopAI>();
+            PlayerTroopAI troop = hit.collider.GetComponent<PlayerTroopAI>();
             if (troop != null && !selectedTroops.Contains(troop.gameObject))
             {
                 troop.IsUnderSelection = true;

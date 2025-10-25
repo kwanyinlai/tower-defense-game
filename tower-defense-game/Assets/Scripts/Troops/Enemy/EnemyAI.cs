@@ -74,11 +74,11 @@ public abstract class EnemyAI : TroopAI
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
-        if (TroopAI.troops.Count == 0)
+        if (PlayerTroopAI.AllPlayerTroops.Count == 0)
         {
             return null;
         }
-        foreach (var enemy in TroopAI.troops)
+        foreach (var enemy in PlayerTroopAI.AllPlayerTroops)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 

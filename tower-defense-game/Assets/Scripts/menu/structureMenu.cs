@@ -18,7 +18,7 @@ public class structureMenu : MonoBehaviour
 
     // For Troops
     private CombatSystem selectedCombatSystem = null;
-    private TroopAI selectedTroopAI = null;
+    private PlayerTroopAI selectedTroop = null;
 
     private bool isMenuOpen = false;
 
@@ -81,7 +81,7 @@ public class structureMenu : MonoBehaviour
         else if(selectedType == Selectables.Troop)
         {
             infoTextText.text = "Health: " + selectedCombatSystem.currentHealth + "/" + selectedCombatSystem.maxHealth
-                            + "\nSell for:\n" + StaticScripts.resourcesToText(selectedTroopAI.GetSellResources());
+                            + "\nSell for:\n" + StaticScripts.resourcesToText(selectedTroop.GetSellResources()); // nTODO: static scripts
         }
     }
 
@@ -124,15 +124,15 @@ public class structureMenu : MonoBehaviour
     private void SetupTroopUI(GameObject highlightedObject)
     {
         selectedCombatSystem = highlightedObject.GetComponent<CombatSystem>();
-        selectedTroopAI = highlightedObject.GetComponent<TroopAI>();
+        selectedTroop = highlightedObject.GetComponent<TroopAI>();
 
         selectedObject = highlightedObject;
 
-        GameObject troopModel = selectedTroopAI.TroopModel;
+        GameObject troopModel = selectedTroop.TroopModel;
         defaultMaterial = troopModel.GetComponent<Renderer>().material;
         troopModel.GetComponent<Renderer>().material = highlightMaterial;
 
-        structure_name_ui.text = selectedTroopAI.TroopName;
+        structure_name_ui.text = selectedTroop.TroopName;
     }
 
     public void DisableUI()
@@ -173,7 +173,7 @@ public class structureMenu : MonoBehaviour
 
     private void SellTroop()
     {
-        ResourcePool.AddResource(selectedTroopAI.GetSellResources());
+        ResourcePool.AddResource(selectedTroop.GetSellResources());
         selectedCombatSystem.TakeDamage(100000);
 
         selectedObject = null;
@@ -197,7 +197,7 @@ public class structureMenu : MonoBehaviour
         }
         else if(selectedType == Selectables.Troop)
         {
-            selectedTroopAI.TroopModel.GetComponent<Renderer>().material = defaultMaterial;
+            selectedTroop.TroopModel.GetComponent<Renderer>().material = defaultMaterial;
         }
     }
 }

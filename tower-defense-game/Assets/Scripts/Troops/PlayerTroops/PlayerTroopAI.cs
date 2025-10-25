@@ -112,7 +112,7 @@ public abstract class PlayerTroopAI : TroopAI
     {
         if (waypoint != null)
         {
-            waypoint.GetComponent<Waypoint>().allPlayerTroopsBound.Remove(gameObject); // TODO: getter setter this
+            waypoint.GetComponent<Waypoint>().troopsBound.Remove(gameObject); // TODO: getter setter this
             waypoint = null;
         }
 

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public abstract class ITroopBehaviour : ScriptableObject
 {
-    public abstract void InteractWithTarget();
+    public abstract void InteractWithTarget(CombatSystem combatSystem);
 
     protected virtual void ApplyBuffOnStart()
     {
@@ -18,7 +18,7 @@ public abstract class ITroopBehaviour : ScriptableObject
 
 public abstract class IAttackBehaviour : ITroopBehaviour
 {
-    public void InteractWithTarget(CombatSystem combatSystem)
+    public override void InteractWithTarget(CombatSystem combatSystem)
     {
         combatSystem.TakeDamage((int)(dmg * (1 + combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
 
@@ -27,7 +27,9 @@ public abstract class IAttackBehaviour : ITroopBehaviour
 
 public abstract class ISupportBehaviour: ITroopBehaviour
 {
-    public List<GameObject> GetAlliesInRange()
+    public abstract void InteractWithTarget(CombatSystem combatSystem);
+
+    public virtual List<GameObject> GetAlliesInRange()
     {        
         List<GameObject> allies = new List<GameObject>();
 

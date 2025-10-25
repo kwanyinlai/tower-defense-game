@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
-public class structureMenu : MonoBehaviour
+public class StructureMenu : MonoBehaviour
 {
     public GameObject structureMenuUI;
     public TextMeshProUGUI structure_name_ui;

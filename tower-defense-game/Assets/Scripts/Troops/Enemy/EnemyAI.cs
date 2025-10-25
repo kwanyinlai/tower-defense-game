@@ -26,7 +26,6 @@ public abstract class EnemyAI : TroopAI
     {
         allEnemyTroops.Remove(gameObject);
     }
-    
 
 
     protected virtual void Update()

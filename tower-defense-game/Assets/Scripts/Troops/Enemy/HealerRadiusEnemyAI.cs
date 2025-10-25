@@ -13,7 +13,7 @@ public class RadiusHealerBehaviour : ISupportBehaviour
 
     public override void InteractWithTarget(CombatSystem combatSystem)
     {
-        ;
+        Heal(allyList);
     }
 
     public void Heal(List<GameObject> allyList)
@@ -30,91 +30,5 @@ public class RadiusHealerBehaviour : ISupportBehaviour
             }
         }
 
-        atkTimer = atkCooldown;
-    }
-    
-    
-
-    protected override void Update()
-    {
-        if (atkTimer > 0f) {
-            atkTimer -= Time.deltaTime;
-        } else
-        {
-            atkTimer = atkCooldown;
-        }
-
-        FindDefaultTargets();
-        
-        FindTargets();
-
-        HandleCombat();
-
-    } 
-
-    protected void FindTargets() {
-        allyList = GetAlliesInRange();
-        // sets troop target just in case something else depends on it
-        if(allyList == null)
-        {
-            troopTarget = null;
-        }
-        else
-        {
-            troopTarget = allyList[0].transform;
-        }
-
-        barracksTarget = GetClosestBarracksInRange();
-    }
-
-    protected void HandleCombat() {
-        if (troopTarget != null)
-        {
-            targetStats = troopTarget.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(transform.position, troopTarget.position);
-            if (distance <= range)
-            {
-                StopMoving();
-                if (atkTimer <= 0f)
-                {
-                    Heal(allyList);
-                }
-            }
-            else
-            {
-                MoveTowardsTarget(troopTarget);
-            }
-        }
-        else if (baseTarget != null)
-        {
-
-            float distance = Vector3.Distance(agent.transform.position, baseTarget.transform.position);
-            if (distance <= range)
-            {
-                StopMoving();
-                if (agent.velocity.magnitude <= 0.1f)
-                {
-                    if (atkTimer <= 0f)
-                    {
-                        Attack(baseTarget.transform);
-                    }
-                }
-
-            }
-            else
-            {
-                MoveTowardsTarget(baseTarget.transform);
-            }
-        }
-        else
-        {
-            StopMoving();
-        }
-        if (atkTimer > 0f) {
-            atkTimer -= Time.deltaTime;
-        } else
-        {
-            atkTimer = atkCooldown;
-        }
     }
 }

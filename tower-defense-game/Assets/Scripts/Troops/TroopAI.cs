@@ -67,17 +67,18 @@ public abstract class TroopAI : MonoBehaviour
         // pathIndicator.enabled = false;
         combatSystem = gameObject.GetComponent<CombatSystem>();
         navMeshAgent.speed = maxSpeed;
+        AddEntityToStaticList();
     }
 
 
     protected virtual void Update()
     {
-        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; }
+        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; } // modularise
 
         // Decide Whether to Engage In Combat
         DecideState();
 
-       // Combat Mechanics
+       // Handle states
         HandleState();
     }
 
@@ -95,6 +96,11 @@ public abstract class TroopAI : MonoBehaviour
         }
     }
 
+    protected void HandleMovement()
+    {
+        MoveTowardsTarget(enemyTarget); 
+    }
+
 
     protected void MoveTowardsTarget(Transform target)
     {
@@ -104,7 +110,7 @@ public abstract class TroopAI : MonoBehaviour
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
 
-    }
+    
         // pathIndicator.enabled = true;
         // pathIndicator.positionCount = path.corners.Length;
         // for (int i = 0; i < path.corners.Length; i++)
@@ -113,12 +119,11 @@ public abstract class TroopAI : MonoBehaviour
         // }
         
     }
-    protected void HandleMovement()
+    protected void DecideMovementState()
     {
         if (troopState == TroopState.Disengaged && enemyTarget != null)
         {
             troopState = TroopState.TargetDetected;
-            MoveTowardsTarget(enemyTarget);
         }
     }
 
@@ -131,12 +136,18 @@ public abstract class TroopAI : MonoBehaviour
     }
 
     protected void FightEnemy() {
-        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow")); // TOOD: this should probably be put into a separate function
         // which is called by combatsystem
-        FightEnemyInRange(); 
+        enemyTargetCombatSystem = enemyTarget.GetComponent<CombatSystem>();
+        float distance = Vector3.Distance(transform.position, enemyTarget.position);
+        if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)
+        {
+            Attack(enemyTarget);
+        }
+        else
+        {
+            ReadjustPositioningBetweenAttack();
+        }
     }
-
-    protected abstract void Disengaged(); // TODO: do we need this
 
     protected void DecideCombatState()
     {
@@ -161,20 +172,6 @@ public abstract class TroopAI : MonoBehaviour
             }
         }
     }
-
-    protected void FightEnemyInRange()
-    {
-        enemyTargetCombatSystem = enemyTarget.GetComponent<CombatSystem>();
-        float distance = Vector3.Distance(transform.position, enemyTarget.position);
-        if (atkTimer <= 0f && agent.velocity.magnitude <= 0.05)
-        {
-            Attack(enemyTarget);
-        }
-        else
-        {
-            ReadjustPositioningBetweenAttack();
-        }
-    }
     
     protected void ReadjustPositioningBetweenAttack()
     {
@@ -183,5 +180,5 @@ public abstract class TroopAI : MonoBehaviour
         agent.SetDestination(enemyTarget.position); 
     }
 
-
+    protected abstract void AddEntityToStaticList();
 }

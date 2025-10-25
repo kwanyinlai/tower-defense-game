@@ -10,53 +10,20 @@ public abstract class EnemyAI : TroopAI
     protected Transform troopTarget;
     protected Transform barracksTarget;
 
-    
+
     protected virtual void Start()
     {
         super.Start();
+    }
+    
+    protected override void AddEntityToStaticList()
+    {   
         enemies.Add(gameObject);
     }
-
-
-    protected void MoveTowardsTarget(Transform target)
-    { 
-        agent.isStopped = false;
-        agent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow") + combatSystem.GetEffectStrength("haste"));
-        agent.SetDestination(target.position);
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
-        // pathIndicator.enabled = true;
-        // pathIndicator.positionCount = path.corners.Length;
-
-        // for (int i = 0; i < path.corners.Length; i++)
-        // {
-        //     pathIndicator.SetPosition(i, path.corners[i]);
-        // }
-    }
-
-    protected void StopMoving() // what is this for
-    {
-        agent.isStopped = true;
-        // pathIndicator.enabled = false;
-    }
-
 
     protected virtual void Update()
     {
         super.Update();
-        
-        FindDefaultTargets();
-        FindTargets();
-    }
-
-    protected void FindDefaultTargets() // duplicate
-    {
-        baseTarget = GetPlayerBaseTarget();
-    }
-
-    protected void Disengaged()
-    {
-        ;
     }
 
     protected Transform GetPlayerBaseTarget()
@@ -66,11 +33,23 @@ public abstract class EnemyAI : TroopAI
         }
         
     }
-    protected void FindAndSetAllTargets()
+    protected override void FindAndSetAllTargets()
     {
         baseTarget = GetPlayerBaseTarget();
         troopTarget = GetClosestEnemyInRange();
         barracksTarget = GetClosestBarracksInRange();
+        if (troopTarget != null)
+        {
+            enemyTarget = troopTarget;
+        }
+        else if (barracksTarget != null)
+        {
+            enemyTarget = barracksTarget;
+        }
+        else
+        {
+            enemyTarget = barracksTarget;
+        }
     }
 
 

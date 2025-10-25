@@ -5,7 +5,10 @@ using System.Collections.Generic;
 
 // some sort of anchor point which they attempt to get close to always but if there are enemies in the way, they choose against it
 
-
+public interface IPlayer
+{
+    
+}
 public abstract class PlayerTroopAI : TroopAI
 {
 
@@ -38,7 +41,6 @@ public abstract class PlayerTroopAI : TroopAI
     {
         super.Start();
 
-        allPlayerTroops.Add(gameObject);
         IntializeSellResources();
         HideCircle();
     }
@@ -83,9 +85,7 @@ public abstract class PlayerTroopAI : TroopAI
             // }
 
         }
-
         // indicator towards waypoint
-
     }
     
     protected void Disengaged() {
@@ -116,7 +116,7 @@ public abstract class PlayerTroopAI : TroopAI
         }
 
     }
-    
+
 
     public void ShowCircle()
     {
@@ -217,40 +217,48 @@ public abstract class PlayerTroopAI : TroopAI
     }
 
 
-    protected void SelectAllTargets()
+    protected override void FindAndSetAllTargets()
     {
         enemyTarget = GetClosestEnemyInRange();
     }
-    
+
     public Transform GetClosestEnemyInRange()
     {
-        if (agent!=null && agent.isOnNavMesh && agent.isStopped && enemyTarget!=null){ // isStopped can't be called after dead but it is being called
+        if (agent != null && agent.isOnNavMesh && agent.isStopped && enemyTarget != null)
+        { // isStopped can't be called after dead but it is being called
             return enemyTarget;
         }
         GameObject closestEnemy = null;
         float closestDistance = aggroRange;
 
         // TODO:
-        if (EnemyAI.getListOfEnemies().Count == 0 ){
+        if (EnemyAI.getListOfEnemies().Count == 0)
+        {
             return null;
         }
 
         foreach (var enemy in EnemyAI.enemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            
+
             if (distance <= aggroRange && distance < closestDistance)
             {
                 closestEnemy = enemy;
                 closestDistance = distance;
             }
         }
-        
-        if (closestEnemy == null) {
-            return enemyTarget; 
+
+        if (closestEnemy == null)
+        {
+            return enemyTarget;
         }
 
         return closestEnemy.transform;
+    }
+    
+    protected override void AddEntityToStaticList()
+    {
+        allPlayerTroops.add(this);
     }
 
 

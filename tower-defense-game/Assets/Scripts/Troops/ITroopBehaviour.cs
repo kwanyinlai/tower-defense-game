@@ -1,9 +1,21 @@
 using UnityEngine;
+using System.Collections.Generic;
 public abstract class ITroopBehaviour : ScriptableObject
 {
     public abstract void InteractWithTarget();
 
+    protected virtual void ApplyBuffOnStart()
+    {
+        ;
+    }
+    protected virtual void IntializeSellResources()
+    {
+        //TODO: Remove and replace with code to actually add the correct resources based on building
+        sellResources.Add("Wood", 100);
+        sellResources.Add("TestResource2", 100);
+    }
 }
+
 public abstract class IAttackBehaviour : ITroopBehaviour
 {
     public void InteractWithTarget(CombatSystem combatSystem)

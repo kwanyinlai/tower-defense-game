@@ -124,7 +124,7 @@ public class structureMenu : MonoBehaviour
     private void SetupTroopUI(GameObject highlightedObject)
     {
         selectedCombatSystem = highlightedObject.GetComponent<CombatSystem>();
-        selectedTroop = highlightedObject.GetComponent<TroopAI>();
+        selectedTroop = highlightedObject.GetComponent<PlayerTroopAI>();
 
         selectedObject = highlightedObject;
 

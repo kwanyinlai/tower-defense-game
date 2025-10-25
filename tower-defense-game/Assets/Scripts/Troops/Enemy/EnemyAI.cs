@@ -49,7 +49,7 @@ public abstract class EnemyAI : TroopAI
     protected override void FindAndSetAllTargets()
     {
         baseTarget = GetPlayerBaseTarget();
-        troopTarget = GetClosestEnemyInRange();
+        troopTarget = GetClosestEnemyInRange(); // TODO: Use ITroopBehaviour and isinstance of ISupport or IAttack to select target
         barracksTarget = GetClosestBarracksInRange();
         if (troopTarget != null)
         {

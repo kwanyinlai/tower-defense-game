@@ -4,21 +4,16 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public class HealerRadiusEnemyAI : SupportEnemyAI
+public class RadiusHealerBehaviour : ISupportBehaviour
 {
 
     public float healStrength = 10;
     public float healCooldown = 2;
     protected List<GameObject> allyList = null;
 
-    public override void Attack(Transform bulletTarget)
+    public override void InteractWithTarget(CombatSystem combatSystem)
     {
-        transform.LookAt(bulletTarget);
-        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
-
-
-        Collider collider = this.GetComponent<Collider>();
-        atkTimer = atkCooldown;
+        ;
     }
 
     public void Heal(List<GameObject> allyList)
@@ -35,7 +30,6 @@ public class HealerRadiusEnemyAI : SupportEnemyAI
             }
         }
 
-        Collider collider = this.GetComponent<Collider>();
         atkTimer = atkCooldown;
     }
     

@@ -132,14 +132,14 @@ public class TroopManagment : MonoBehaviour
 
     void SelectTroops(){
                 
-        foreach (GameObject troop in TroopAI.troops)
+        foreach (GameObject troop in TroopAI.AllPlayerTroops)
         {
             Vector3 playerPosition = transform.position;
             Vector3 troopPosition = troop.transform.position;
             playerPosition.y = 0f;
             troopPosition.y = 0f;
             
-            TroopAI troopAI = troop.GetComponent<TroopAI>();
+            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
             Debug.Log("Troop AI isUnderSelection: " + troopAI.IsUnderSelection);
             if (!selectedTroops.Contains(troop) && troopAI.IsUnderSelection == false)
             {

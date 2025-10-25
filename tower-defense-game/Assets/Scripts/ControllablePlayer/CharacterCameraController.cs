@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 
 public class CharacterCameraController : MonoBehaviour
 {
-
+    private Player playerData;
     private int cameraState;
 
     private float camSpeed = 50f;
@@ -43,7 +43,8 @@ public class CharacterCameraController : MonoBehaviour
         wideCam.SetActive(false);
         buildCam.SetActive(false);
 
-        movementController = GetComponent<CharacterMovement>();        
+        movementController = GetComponent<CharacterMovement>();
+        playerData = GetComponent<Player>();
     }
 
     void Update()
@@ -56,7 +57,7 @@ public class CharacterCameraController : MonoBehaviour
 
         if (cameraState == 0)
         {
-            movementController.MovementType = CharacterMovement.MovementTypes.Character;
+            playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
             overheadCam.SetActive(true);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);
@@ -66,7 +67,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 1)
         {
-            movementController.MovementType = CharacterMovement.MovementTypes.Observer;
+            playerData.CurrentState = Player.PlayerStates.ObserverMode;
             overheadCam.SetActive(false);
             aboveCam.SetActive(true);
             wideCam.SetActive(false);
@@ -76,7 +77,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 2)
         {
-            movementController.MovementType = CharacterMovement.MovementTypes.Character; // TODO: ENUM MOVEMENT TYPE
+            playerData.CurrentState = Player.PlayerStates.DisabledControls;
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(true);
@@ -85,7 +86,6 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 3)
         {
-            movementController.MovementType = Player.CurrentState.Observer;
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);

@@ -19,7 +19,7 @@ public class TroopCombatSystem : CombatSystem
     protected override void Die(){
         
         barracks.DecrementTroops();
-        foreach (GameObject troop in PlayerTroopAI.allPlayerTroops)
+        foreach (GameObject troop in PlayerTroopAI.AllPlayerTroops)
         {
             if (troop == gameObject)
             {

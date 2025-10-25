@@ -233,7 +233,7 @@ public abstract class PlayerTroopAI : TroopAI
         float closestDistance = aggroRange;
 
         // TODO:
-        if (EnemyAI.getListOfEnemies().Count == 0)
+        if (EnemyAI.allEnemyTroops.Count == 0)
         {
             return null;
         }

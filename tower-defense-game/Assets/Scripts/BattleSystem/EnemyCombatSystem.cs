@@ -11,8 +11,8 @@ public class EnemyCombatSystem : CombatSystem
     }
 
     protected override void Die(){
-        
-        EnemyAI.allEnemyTroops.Remove(gameObject);
+
+        GetComponent<TroopAI>().RemoveEntityFromAliveList();
         foreach(GameObject player in Player.players){
             List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
             if (list.Contains(gameObject)){

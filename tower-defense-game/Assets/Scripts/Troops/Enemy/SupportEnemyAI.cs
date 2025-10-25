@@ -8,7 +8,7 @@ public abstract class SupportEnemyAI : EnemyAI
 {
     public Transform GetBestAllyInRange()
     {
-        if (EnemyAI.enemies.Count == 0)
+        if (EnemyAI.AllEnemyTroops.Count == 0)
         {
             return null;
         }

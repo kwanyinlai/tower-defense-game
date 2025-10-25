@@ -14,7 +14,7 @@ public abstract class EnemyAI : TroopAI
 
     protected virtual void Start()
     {
-        super.Start();
+        base.Start();
     }
 
     protected override void AddEntityToAliveList()

@@ -149,7 +149,7 @@ public class BuildMode : MonoBehaviour
     public void OpenBuildMenu()
     {
         buildMenu.SetActive(true);
-        playerData.currentState = Player.PlayerStates.BuildMenuOpen;
+        playerData.CurrentState = Player.PlayerStates.BuildMenuOpen;
     }
 
     public void CloseBuildMenu()
@@ -163,7 +163,7 @@ public class BuildMode : MonoBehaviour
     void StartBuilding()
     {
         gridManager.DrawBuildGrid();
-        playerData.CurrentState = PlayerStates.PlacingBuilding;
+        playerData.CurrentState = Player.PlayerStates.PlacingBuilding;
         gridManager.DrawBuildGrid();
     }
 

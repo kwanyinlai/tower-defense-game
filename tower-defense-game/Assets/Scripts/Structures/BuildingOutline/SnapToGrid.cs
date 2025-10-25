@@ -57,7 +57,7 @@ public class SnapToGrid : MonoBehaviour
         // rotation needs to be figured out
         // prevent from placing on player's position
 
-        if (buildMode.IsPlacingBuilding && !buildMode.buildMenuOpen && placeable.IsBuildable(gameObject.transform.position))
+        if (playerData.CurrentState == Player.PlayerStates.PlacingBuilding && placeable.IsBuildable(gameObject.transform.position))
         {
             transform.localScale = new Vector3(2f, 2f, 2f);
         }

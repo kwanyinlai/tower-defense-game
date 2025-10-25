@@ -8,7 +8,7 @@ public abstract class ITroopBehaviour : ScriptableObject
     {
         ;
     }
-    protected virtual void IntializeSellResources()
+    protected virtual void IntializeSellResources() // TODO: move this to sep script
     {
         //TODO: Remove and replace with code to actually add the correct resources based on building
         sellResources.Add("Wood", 100);
@@ -27,7 +27,7 @@ public abstract class IAttackBehaviour : ITroopBehaviour
 
 public abstract class ISupportBehaviour: ITroopBehaviour
 {
-    public abstract void InteractWithTarget(CombatSystem combatSystem);
+
 
     public virtual List<GameObject> GetAlliesInRange()
     {        

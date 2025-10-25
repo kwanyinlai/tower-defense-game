@@ -13,7 +13,7 @@ public class BerserkerBehaviour : IAttackBehaviour
 
     protected override void ApplyBuffOnStart()
     {
-        combatSystem.ApplyEffect("haste", hasteEffectDecimal, -1);
+        combatSystem.ApplyEffect("haste", hasteEffectDecimal, -1); // TODO: check
     }
 
 }

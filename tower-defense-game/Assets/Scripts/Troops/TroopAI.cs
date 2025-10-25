@@ -16,7 +16,7 @@ public abstract class TroopAI : MonoBehaviour
         InCombat,
         Retreating
     }
-    [SerializeField] protected ITroopBehaviour troopBehavior;
+    [SerializeField] protected ITroopBehaviour troopBehaviour;
     [Header("Troop Attributes")]
     [SerializeField] protected string troopName;
     public string TroopName{ get { return troopName; } }

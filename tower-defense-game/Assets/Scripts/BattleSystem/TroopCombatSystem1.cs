@@ -14,8 +14,6 @@ public class TroopCombatSystem : CombatSystem
     }
     [SerializeField] protected float aggroRange = 10.0f;
     public float AggroRange { get { return attackRange; } set { attackRange = value; } } // range which troop engages enemy
-    [SerializeField] protected Transform enemyTarget;
-    public Transform EnemyTarget { get { return enemyTarget; } set { enemyTarget = value; } }
 
     protected override void Start()
     {

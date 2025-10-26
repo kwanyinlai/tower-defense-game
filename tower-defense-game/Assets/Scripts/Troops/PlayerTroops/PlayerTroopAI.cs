@@ -215,12 +215,12 @@ public abstract class PlayerTroopAI : TroopAI
         float closestDistance = aggroRange;
 
         // TODO:
-        if (EnemyAI.AllEnemyTroops.Count == 0)
+        if (EnemyTroopAI.AllEnemyTroops.Count == 0)
         {
             return null;
         }
 
-        foreach (var enemy in EnemyAI.AllEnemyTroops)
+        foreach (var enemy in EnemyTroopAI.AllEnemyTroops)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
@@ -253,11 +253,5 @@ public abstract class PlayerTroopAI : TroopAI
     {
         return allPlayerTroops;
     }
-    public static List<GameObject> GetEnemyEntitiesAliveList()
-    {
-        return EnemyAI.GetAllyEntitiesAliveList();
-    }
-
-
     
 }

@@ -38,7 +38,7 @@ public class WaveManager : MonoBehaviour
 
         //Default set to 60 seconds per wave, change later for more/less time between waves.
 
-        if (waveTimer >= 60 || (waveNum > 0 && EnemyAI.AllEnemyTroops.Count == 0) || (waveNum == 0 && waveTimer >= 10))
+        if (waveTimer >= 60 || (waveNum > 0 && EnemyTroopAI.AllEnemyTroops.Count == 0) || (waveNum == 0 && waveTimer >= 10))
         {
             waveNum++;
             waveTimer = 0;

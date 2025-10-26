@@ -11,6 +11,9 @@ public class TroopCombatSystem : CombatSystem
         set { atk = value; }
     }
 
+    [SerializeField] protected float attackRange = 5.0f;
+    public float AttackRange { get { return attackRange; } set { attackRange = value; } }
+
     protected float atkCooldown { get; set; } = 1.5f;
     protected float atkTimer { get; set; } = 0f;
 

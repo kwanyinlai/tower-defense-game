@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 
 
-public abstract class TroopAI : MonoBehaviour, ITroopList
+public abstract class TroopAI : MonoBehaviour
 {
 
     [SerializeField] protected TroopState troopState; // disengaged, targetinrange, fighting enemy, retreating, undercontrol
@@ -33,9 +33,6 @@ public abstract class TroopAI : MonoBehaviour, ITroopList
 
     [SerializeField] protected float aggroRange = 10.0f;
     public float AggroRange { get { return aggroRange; } set { aggroRange = value; } } // range which troop engages enemy
-
-    [SerializeField] protected float attackRange = 5.0f;
-    public float AttackRange { get { return attackRange; } set { attackRange = value; } }
 
     // Combat Attributes
     protected TroopCombatSystem enemyTargetCombatSystem { get; set; }
@@ -154,7 +151,7 @@ public abstract class TroopAI : MonoBehaviour, ITroopList
         if (troopState != TroopState.Retreating)
         {
             float distance = Vector3.Distance(transform.position, enemyTarget.position);
-            if (distance <= attackRange /*&& agent.velocity.magnitude <= 0.1f*/)
+            if (distance <= selfCombatSystem.AttackRange /*&& agent.velocity.magnitude <= 0.1f*/)
             {
                 navMeshAgent.isStopped = true;
                 troopState = TroopState.InCombat;
@@ -184,10 +181,29 @@ public abstract class TroopAI : MonoBehaviour, ITroopList
     protected abstract void AddEntityToAliveList();
     public abstract void RemoveEntityFromAliveList();
 
+    public static List<GameObject> GetAllyEntitiesAliveList(GameObject referenceObject)
+    {
+        if (referenceObject.GetComponent<PlayerTroopAI>() != null)
+        {
+            return PlayerTroopAI.GetAllyEntitiesAliveList();
+        }
+        else
+        {
+            return EnemyTroopAI.GetAllyEntitiesAliveList();
+        }
+    }
+
+    public static List<GameObject> GetEnemyEntitiesAliveList(GameObject referenceObject)
+    {
+        if (referenceObject.GetComponent<PlayerTroopAI>() != null)
+        {
+            return EnemyTroopAI.GetAllyEntitiesAliveList();
+        }
+        else
+        {
+            return PlayerTroopAI.GetAllyEntitiesAliveList();
+        }
+    }
+
 }
 
-public interface ITroopList
-{
-    public static abstract List<GameObject> GetAllyEntitiesAliveList();
-    public static abstract List<GameObject> GetEnemyEntitiesAliveList();
-}

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-public abstract class SupportEnemyAI : EnemyAI
+public abstract class SupportEnemyAI : EnemyTroopAI
 {
     
 }

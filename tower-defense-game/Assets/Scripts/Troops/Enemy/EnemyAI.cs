@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
-public abstract class EnemyAI : TroopAI
+public abstract class EnemyTroopAI : TroopAI
 {
     protected static List<GameObject> allEnemyTroops = new List<GameObject>();
     public static List<GameObject> AllEnemyTroops { get; }
@@ -25,11 +25,6 @@ public abstract class EnemyAI : TroopAI
     public override void RemoveEntityFromAliveList()
     {
         allEnemyTroops.Remove(gameObject);
-    }
-
-    public override List<GameObject> GetEntityAliveList()
-    {
-        return allEnemyTroops;
     }
 
 
@@ -126,9 +121,5 @@ public abstract class EnemyAI : TroopAI
     public static List<GameObject> GetAllyEntitiesAliveList()
     {
         return allEnemyTroops;
-    }
-    public static List<GameObject> GetEnemyEntitiesAliveList()
-    {
-        return PlayerTroopAI.GetAllyEntitiesAliveList();
     }
 }

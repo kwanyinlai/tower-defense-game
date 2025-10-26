@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
 
-
+[CreateAssetMenu(menuName = "Troop Behaviours/Tank Behaviour")]
 public class TankEnemyAI : IAttackBehaviour
 {
     public float slowEffectDecimal = 0.10f;

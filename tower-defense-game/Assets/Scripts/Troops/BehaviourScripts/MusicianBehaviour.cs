@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
+[CreateAssetMenu(menuName = "Troop Behaviours/Musician Behaviour")]
 public class MusicianTroopAI : ISupportBehaviour
 {
 
@@ -14,12 +15,12 @@ public class MusicianTroopAI : ISupportBehaviour
     public override void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem)
     {
         allyList = GetAlliesInRange(selfCombatSystem);
-        
+
         if (allyList != null && allyList.Count != 0)
         {
             BuffAttack(allyList);
-        }        
-       
+        }
+
     }
     public void BuffAttack(List<GameObject> allyList)
     {

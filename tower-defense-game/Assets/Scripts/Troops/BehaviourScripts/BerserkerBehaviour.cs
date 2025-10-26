@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
 
-[CreateAssetMenu(menuName = "Troop Behaviours/Berserker Behavior")]
+[CreateAssetMenu(menuName = "Troop Behaviours/Berserker Behaviour")]
 public class BerserkerBehaviour : IAttackBehaviour
 {
     public float hasteEffectDecimal = 0.10f;

@@ -85,9 +85,9 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
---- !u!1 &2343332585344418765 stripped
+--- !u!1 &7266250942620803564 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 2307393782616898261, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
+  m_CorrespondingSourceObject: {fileID: 7230065492883200244, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
   m_PrefabInstance: {fileID: 36225582586820888}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8042646182892338006 stripped
@@ -177,9 +177,6 @@ PrefabInstance:
       addedObject: {fileID: 8363124638678097964}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -78741873124562874}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4164009545557612017}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
@@ -187,6 +184,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2317598854361345299}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2271034184914131769}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3950111512771300174}
   m_SourcePrefab: {fileID: 100100000, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
 --- !u!4 &86925410923215179 stripped
 Transform:
@@ -237,30 +240,8 @@ MonoBehaviour:
   shield: 0
   viewableTagList:
   - Troop
---- !u!114 &-78741873124562874
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 756326148550960113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 628dd99f0af66d947a36b929ad9ba27b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  troopName: Berserker Troop
-  troopModel: {fileID: 8643192185184541480}
-  maxSpeed: 3.5
+  atk: 10
   attackRange: 5
-  dmg: 10
-  aggroRange: 10
-  enemyTarget: {fileID: 0}
-  commandingPlayer: {fileID: 0}
-  waypoint: {fileID: 0}
-  selectedCircle: {fileID: 2343332585344418765}
-  hasteEffectDecimal: 0.1
-  troopStrengthDecimal: 1.5
 --- !u!64 &4164009545557612017
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -325,6 +306,8 @@ LineRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -346,6 +329,7 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -411,11 +395,39 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1 &8643192185184541480 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
-  m_PrefabInstance: {fileID: 485943793069399712}
+--- !u!114 &2271034184914131769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d660488b86f4c999c3d04c3b92b240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTroopAI
+  troopState: 0
+  troopBehaviour: {fileID: 11400000, guid: bac298fbc5ea14069b8b898c0629bc4c, type: 2}
+  troopName: Berserker
+  maxSpeed: 3.5
+  enemyTarget: {fileID: 0}
+  aggroRange: 10
+  commandingPlayer: {fileID: 0}
+  waypoint: {fileID: 0}
+  selectedCircle: {fileID: 7266250942620803564}
+--- !u!114 &3950111512771300174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d5f11420819418386bdf06560f7f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TroopResources
 --- !u!1001 &4619574336363694726
 PrefabInstance:
   m_ObjectHideFlags: 0

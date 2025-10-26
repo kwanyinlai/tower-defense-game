@@ -82,9 +82,6 @@ PrefabInstance:
       addedObject: {fileID: 8363124638678097964}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -1997348873380517498}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4164009545557612017}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
@@ -92,6 +89,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2317598854361345299}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8792837461201534034}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1450932135214887475}
   m_SourcePrefab: {fileID: 100100000, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
 --- !u!4 &86925410923215179 stripped
 Transform:
@@ -142,30 +145,8 @@ MonoBehaviour:
   shield: 0
   viewableTagList:
   - Troop
---- !u!114 &-1997348873380517498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 756326148550960113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2b0188e677f37243b6e3cdd091f0605, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  troopName: Musician Troop
-  troopModel: {fileID: 8643192185184541480}
-  maxSpeed: 3.5
+  atk: 10
   attackRange: 5
-  dmg: 10
-  aggroRange: 10
-  enemyTarget: {fileID: 0}
-  commandingPlayer: {fileID: 0}
-  waypoint: {fileID: 0}
-  selectedCircle: {fileID: 3602018513790507492}
-  attackBuffStrengthDecimal: 1.25
-  attackCooldown: 2
 --- !u!64 &4164009545557612017
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -230,6 +211,8 @@ LineRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -251,6 +234,7 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -316,11 +300,39 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1 &8643192185184541480 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
-  m_PrefabInstance: {fileID: 485943793069399712}
+--- !u!114 &8792837461201534034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d5f11420819418386bdf06560f7f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TroopResources
+--- !u!114 &1450932135214887475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d660488b86f4c999c3d04c3b92b240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTroopAI
+  troopState: 0
+  troopBehaviour: {fileID: 11400000, guid: 1fb92c2ad64d444318bfdf13c507b5e9, type: 2}
+  troopName: Musician
+  maxSpeed: 3.5
+  enemyTarget: {fileID: 0}
+  aggroRange: 10
+  commandingPlayer: {fileID: 0}
+  waypoint: {fileID: 0}
+  selectedCircle: {fileID: 0}
 --- !u!1001 &1295192444816466737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -378,11 +390,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
---- !u!1 &3602018513790507492 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2307393782616898261, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
-  m_PrefabInstance: {fileID: 1295192444816466737}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9143706115780026751 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8006708470641099342, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}

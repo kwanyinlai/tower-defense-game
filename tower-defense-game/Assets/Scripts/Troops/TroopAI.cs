@@ -20,8 +20,6 @@ public abstract class TroopAI : MonoBehaviour
     [Header("Troop Attributes")]
     [SerializeField] protected string troopName;
     public string TroopName { get { return troopName; } }
-    [SerializeField] protected GameObject troopModel;
-    public GameObject TroopModel { get { return troopModel; } set { troopModel = value; } } // why do we need this???
     [SerializeField] protected float maxSpeed = 3.5f;
     public float MaxSpeed { get { return maxSpeed; } }
 

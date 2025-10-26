@@ -9,7 +9,7 @@ public interface IPlayer
 {
     
 }
-public abstract class PlayerTroopAI : TroopAI
+public class PlayerTroopAI : TroopAI
 {
 
     protected static List<GameObject> allPlayerTroops = new List<GameObject>(); 

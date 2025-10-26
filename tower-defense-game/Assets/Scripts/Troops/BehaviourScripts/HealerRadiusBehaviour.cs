@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
 
-[CreateAssetMenu(menuName = "Troop Behaviours/Radius Healer Behavior")]
+[CreateAssetMenu(menuName = "Troop Behaviours/Radius Healer Behaviour")]
 public class RadiusHealerBehaviour : ISupportBehaviour
 {
 

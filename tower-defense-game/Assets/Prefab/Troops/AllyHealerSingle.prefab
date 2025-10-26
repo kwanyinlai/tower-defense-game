@@ -82,9 +82,6 @@ PrefabInstance:
       addedObject: {fileID: 8363124638678097964}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -6047662794404469487}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4164009545557612017}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
@@ -92,6 +89,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2317598854361345299}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 785664707266377778}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5796577423458818725}
   m_SourcePrefab: {fileID: 100100000, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
 --- !u!4 &86925410923215179 stripped
 Transform:
@@ -142,30 +145,8 @@ MonoBehaviour:
   shield: 0
   viewableTagList:
   - Troop
---- !u!114 &-6047662794404469487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 756326148550960113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b0af19ec079b8345bbe8c7533d38251, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  troopName: Healer Single Troop
-  troopModel: {fileID: 8643192185184541480}
-  maxSpeed: 3.5
+  atk: 10
   attackRange: 5
-  dmg: 10
-  aggroRange: 10
-  enemyTarget: {fileID: 0}
-  commandingPlayer: {fileID: 0}
-  waypoint: {fileID: 0}
-  selectedCircle: {fileID: 1999429447788173437}
-  healStrength: 10
-  healCooldown: 2
 --- !u!64 &4164009545557612017
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -230,6 +211,8 @@ LineRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -251,6 +234,7 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -316,11 +300,39 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1 &8643192185184541480 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8164078558771037576, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
-  m_PrefabInstance: {fileID: 485943793069399712}
+--- !u!114 &785664707266377778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d5f11420819418386bdf06560f7f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TroopResources
+--- !u!114 &5796577423458818725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d660488b86f4c999c3d04c3b92b240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTroopAI
+  troopState: 0
+  troopBehaviour: {fileID: 11400000, guid: 04c687008beed440b84c38eb77fa3004, type: 2}
+  troopName: Single Healer
+  maxSpeed: 3.5
+  enemyTarget: {fileID: 0}
+  aggroRange: 10
+  commandingPlayer: {fileID: 0}
+  waypoint: {fileID: 0}
+  selectedCircle: {fileID: 6912108798426577500}
 --- !u!1001 &3288647125953896220
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -496,13 +508,13 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
---- !u!1 &1999429447788173437 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2307393782616898261, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
-  m_PrefabInstance: {fileID: 4304003180620784296}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6099966232023343334 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8006708470641099342, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
+  m_PrefabInstance: {fileID: 4304003180620784296}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6912108798426577500 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7230065492883200244, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
   m_PrefabInstance: {fileID: 4304003180620784296}
   m_PrefabAsset: {fileID: 0}

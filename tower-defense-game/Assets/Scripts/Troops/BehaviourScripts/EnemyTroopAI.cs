@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Runtime.Serialization.Json;
-public abstract class EnemyTroopAI : TroopAI
+public class EnemyTroopAI : TroopAI
 {
     protected static List<GameObject> allEnemyTroops = new List<GameObject>();
     public static List<GameObject> AllEnemyTroops { get; }
@@ -43,7 +43,7 @@ public abstract class EnemyTroopAI : TroopAI
         {
             return null;
         }
-        
+
     }
     protected override void FindAndSetAllTargets()
     {

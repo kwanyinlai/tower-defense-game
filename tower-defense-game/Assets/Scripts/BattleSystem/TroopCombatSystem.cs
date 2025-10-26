@@ -1,68 +1,54 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerTroopCombatSystem : TroopCombatSystem
+public class TroopCombatSystem : CombatSystem
 {
-    private Barracks barracks;
-
-    public void setBarracks(Barracks barracks){
-        this.barracks = barracks;
+    [Header("Combat Attributes")]
+    [SerializeField] protected int atk = 10;
+    public int Attack
+    {
+        get { return atk; }
+        set { atk = value; }
     }
+
+    protected float atkCooldown { get; set; } = 1.5f;
+    protected float atkTimer { get; set; } = 0f;
+
+    protected override void Start()
+    {
+        base.Start();
+        currentHealth = maxHealth;
+        tagList = new HashSet<string>(viewableTagList);
+    }
+
+    public void DecrementAttackCoooldown(float deltaTime)
+    {
+        if (atkTimer > 0f) { atkTimer -= deltaTime; }
+
+    }
+
+        
+    public bool CanAttack()
+    {
+        return atkTimer <= 0f;
+    }
+    
+    public void ResetAttackCooldown()
+    {
+        atkTimer = atkCooldown;
+    }
+
     protected override void Die()
     {
-
-        barracks.DecrementTroops();
-        foreach (GameObject troop in PlayerTroopAI.AllPlayerTroops)
-        {
-            if (troop == gameObject)
-            {
-                troop.GetComponent<TroopAI>().RemoveEntityFromAliveList();
-                GameObject temp = gameObject.GetComponent<PlayerTroopAI>().Waypoint;
-                if (temp != null)
-                {
-                    temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
-                }
-
-
-                foreach (GameObject player in Player.players)
-                {
-                    List<GameObject> selected = player.GetComponent<TroopManagment>().SelectedTroops;
-                    if (selected.Contains(troop))
-                    {
-                        selected.Remove(troop);
-                    }
-                }
-
+        GetComponent<TroopAI>().RemoveEntityFromAliveList();
+        foreach(GameObject player in Player.players){
+            List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
+            if (list.Contains(gameObject)){
+                list.Remove(gameObject);
                 break;
             }
         }
 
         base.Die();
     }
-
-    public override void TakeDamage(int damage)
-    {
-
-        base.TakeDamage(damage);
-
-        /*TroopAI temp = gameObject.GetComponent<TroopAI>();
-
-        float tempRange = temp.aggroRange;
-        temp.aggroRange += 50f; // large enough to encapsulate any enemy but to avoid
-                                // damage from artillery (in case we implement super
-                                // long-range units)
-        temp.enemyTarget = temp.GetClosestEnemyInRange();
-        temp.aggroRange = tempRange;
-        */
-
-        // commenting this out for now because I don't know if we want this actually
-        // just to make the player do more and have more control rather than having
-        // AI go berserk
-
-        
-        
-
-
-    }
-    
 }

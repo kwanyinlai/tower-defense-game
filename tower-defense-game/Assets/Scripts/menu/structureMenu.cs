@@ -18,7 +18,7 @@ public class StructureMenu : MonoBehaviour
 
     // For Troops
     private CombatSystem selectedCombatSystem = null;
-    private PlayerTroopAI selectedTroop = null;
+    private TroopResources selectedTroop = null;
 
     private bool isMenuOpen = false;
 
@@ -124,15 +124,16 @@ public class StructureMenu : MonoBehaviour
     private void SetupTroopUI(GameObject highlightedObject)
     {
         selectedCombatSystem = highlightedObject.GetComponent<CombatSystem>();
-        selectedTroop = highlightedObject.GetComponent<PlayerTroopAI>();
+        selectedTroop = highlightedObject.GetComponent<TroopResources>();
 
         selectedObject = highlightedObject;
 
-        GameObject troopModel = selectedTroop.TroopModel;
+        GameObject troopModel = selectedTroop.gameObject;
         defaultMaterial = troopModel.GetComponent<Renderer>().material;
         troopModel.GetComponent<Renderer>().material = highlightMaterial;
 
-        structure_name_ui.text = selectedTroop.TroopName;
+        structure_name_ui.text = selectedTroop.TroopName; // i'm not sure what this is for, so i put it in
+        // TroopResources for now, but change if needed
     }
 
     public void DisableUI()
@@ -197,7 +198,7 @@ public class StructureMenu : MonoBehaviour
         }
         else if(selectedType == Selectables.Troop)
         {
-            selectedTroop.TroopModel.GetComponent<Renderer>().material = defaultMaterial;
+            selectedTroop.gameObject.GetComponent<Renderer>().material = defaultMaterial;
         }
     }
 }

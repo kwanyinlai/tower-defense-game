@@ -38,9 +38,9 @@ public abstract class TroopAI : MonoBehaviour
     public float AttackRange { get { return attackRange; } set { attackRange = value; } }
 
     // Combat Attributes
-    protected CombatSystem enemyTargetCombatSystem{ get; set; }
+    protected TroopCombatSystem enemyTargetCombatSystem{ get; set; }
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"}; // i have no clue what this is
-    protected CombatSystem selfCombatSystem { get; set; }
+    protected TroopCombatSystem selfCombatSystem { get; set; }
 
     // Movement Attributes
     
@@ -52,7 +52,7 @@ public abstract class TroopAI : MonoBehaviour
         transform.LookAt(target);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
         
-        enemyTargetCombatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
+        enemyTargetCombatSystem = target.GetComponent<TroopCombatSystem>(); // interacts directly with the target rather than creating a projectile
         if (enemyTargetCombatSystem != null)
         {
             troopBehaviour.InteractWithTarget(selfCombatSystem, enemyTargetCombatSystem);
@@ -64,7 +64,7 @@ public abstract class TroopAI : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         // pathIndicator = GetComponent<LineRenderer>();
         // pathIndicator.enabled = false;
-        selfCombatSystem = gameObject.GetComponent<CombatSystem>();
+        selfCombatSystem = gameObject.GetComponent<TroopCombatSystem>();
         navMeshAgent.speed = maxSpeed;
         AddEntityToAliveList();
     }
@@ -104,7 +104,7 @@ public abstract class TroopAI : MonoBehaviour
     protected void MoveTowardsTarget(Transform target)
     {
         navMeshAgent.isStopped = false;
-        navMeshAgent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow") + combatSystem.GetEffectStrength("haste")); // diff function
+        navMeshAgent.speed = maxSpeed * (1 - selfCombatSystem.GetEffectStrength("slow") + selfCombatSystem.GetEffectStrength("haste")); // diff function
         navMeshAgent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
@@ -136,9 +136,9 @@ public abstract class TroopAI : MonoBehaviour
 
     protected void FightEnemy() {
         // which is called by combatsystem
-        enemyTargetCombatSystem = enemyTarget.GetComponent<CombatSystem>();
+        enemyTargetCombatSystem = enemyTarget.GetComponent<TroopCombatSystem>();
         float distance = Vector3.Distance(transform.position, enemyTarget.position);
-        if (atkTimer <= 0f && navMeshAgent.velocity.magnitude <= 0.05)
+        if (selfCombatSystem.CanAttack() && navMeshAgent.velocity.magnitude <= 0.05)
         {
             Attack(enemyTarget);
         }
@@ -181,7 +181,7 @@ public abstract class TroopAI : MonoBehaviour
     }
 
     protected abstract void AddEntityToAliveList();
-
     public abstract void RemoveEntityFromAliveList();
-    public abstract List<GameObject> GetEntityAliveList();
+    public abstract List<GameObject> GetEntityAliveList(); // TODO: separate get allies in same team and enemies
+
 }

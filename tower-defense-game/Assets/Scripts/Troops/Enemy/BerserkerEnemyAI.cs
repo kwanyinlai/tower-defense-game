@@ -11,9 +11,9 @@ public class BerserkerBehaviour : IAttackBehaviour
     public float hasteEffectDecimal = 0.10f;
     public float troopStrengthDecimal = 0.50f;
 
-    protected override void ApplyBuffOnStart()
+    protected override void ApplyBuffOnStart(TroopCombatSystem selfCombatSystem)
     {
-        combatSystem.ApplyEffect("haste", hasteEffectDecimal, -1); // TODO: check
+        selfCombatSystem.ApplyEffect("haste", hasteEffectDecimal, -1); // TODO: check
     }
 
 }

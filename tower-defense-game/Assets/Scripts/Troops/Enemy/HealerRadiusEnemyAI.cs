@@ -12,18 +12,18 @@ public class RadiusHealerBehaviour : ISupportBehaviour
     public float healCooldown = 2;
     protected List<GameObject> allyList = null;
 
-    public override void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem)
+    public override void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem)
     {
-        allyList = GetAlliesInRange();
+        allyList = GetAlliesInRange(selfCombatSystem);
         Heal(allyList);
     }
 
     public void Heal(List<GameObject> allyList)
     {
-        CombatSystem targetCombat;
+        TroopCombatSystem targetCombat;
         foreach (var targetAlly in allyList)
         {
-            targetCombat = targetAlly.GetComponent<CombatSystem>();
+            targetCombat = targetAlly.GetComponent<TroopCombatSystem>();
             float previousHealStrength = targetCombat.GetEffectStrength("heal");
             if (previousHealStrength < healStrength)
             {

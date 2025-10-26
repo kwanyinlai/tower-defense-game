@@ -11,9 +11,9 @@ public class MusicianTroopAI : ISupportBehaviour
     public float attackCooldown = 2f;
     protected List<GameObject> allyList = null;
 
-    public override void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem)
+    public override void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem)
     {
-        allyList = GetAlliesInRange();
+        allyList = GetAlliesInRange(selfCombatSystem);
         
         if (allyList != null && allyList.Count != 0)
         {
@@ -26,7 +26,7 @@ public class MusicianTroopAI : ISupportBehaviour
         // CombatSystem targetCombat; // commenting out for clarity, uncomment if needed
         foreach (var targetAlly in allyList)
         {
-            targetAlly.GetComponent<CombatSystem>().ApplyEffect("attackBuff", attackBuffStrengthDecimal, attackCooldown);
+            targetAlly.GetComponent<TroopCombatSystem>().ApplyEffect("attackBuff", attackBuffStrengthDecimal, attackCooldown);
         }
     }
 

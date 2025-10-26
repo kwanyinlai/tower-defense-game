@@ -6,21 +6,8 @@ using System.Runtime.Serialization.Json;
 
 
 
-public class MeleeEnemyAI : EnemyAI
+public class MeleeTroopBehaviour : IAttackBehaviour
 {
     // public float range = 2.7f;
     
-    public override void Attack(Transform target)
-    {
-        transform.LookAt(target);
-        transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
-        
-        CombatSystem combatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
-        if (combatSystem != null)
-        {
-            combatSystem.TakeDamage((int)(selfCombatSystem.atk * (1 + combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
-        }
-        atkTimer = atkCooldown;
-    }
-
 }

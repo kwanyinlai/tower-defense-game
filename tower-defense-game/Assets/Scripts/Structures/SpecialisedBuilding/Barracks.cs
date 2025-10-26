@@ -69,7 +69,7 @@ public class Barracks : Building
         {
             ResourcePool.DepleteResource(troopResources);
             GameObject troop = Instantiate(troopPrefab, spawnPos, Random.rotation, troopEmptyObject);
-            troop.GetComponent<PlayerTroopCombatSystem>().setBarracks(this);
+            troop.GetComponent<PlayerTroopCombatSystem>().SetBarracks(this);
             currentTroops++;
         }
     }

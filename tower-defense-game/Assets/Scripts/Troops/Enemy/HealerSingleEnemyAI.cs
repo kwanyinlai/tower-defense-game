@@ -12,11 +12,11 @@ public class SingleHealerAIBehaviour : ISupportBehaviour
     public float healStrength = 10;
     public float healCooldown = 2;
 
-    public override void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem)
+    public override void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem)
     {
         Heal(enemyCombatSystem);
     }
-    public void Heal(CombatSystem targetCombat)
+    public void Heal(TroopCombatSystem targetCombat)
     {
         float previousHealStrength = targetCombat.GetEffectStrength("heal");
         targetCombat.ApplyEffect("heal", healStrength, healCooldown);

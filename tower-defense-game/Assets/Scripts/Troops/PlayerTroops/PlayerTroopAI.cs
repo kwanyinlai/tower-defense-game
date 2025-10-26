@@ -31,18 +31,11 @@ public abstract class PlayerTroopAI : TroopAI
     // Movement Attributes
     private Vector3 anchor; // for the future, not currently in use
     
-    // Resource Attributes
-    protected Dictionary<string, int> sellResources = new Dictionary<string, int>();
-
-    // Abstract Methods 
-    protected abstract void IntializeSellResources();
 
 
     protected virtual void Start()
     {
         base.Start();
-
-        IntializeSellResources();
         HideCircle();
     }
 
@@ -91,7 +84,7 @@ public abstract class PlayerTroopAI : TroopAI
     
     protected void Disengaged() {
         // Disengaged Mechanics; move to waypoint
-        navMeshAgent.speed = maxSpeed * (1 - combatSystem.GetEffectStrength("slow"));
+        navMeshAgent.speed = maxSpeed * (1 - selfCombatSystem.GetEffectStrength("slow"));
         AntiClustering();
         if(IsUnderSelection){
             ;
@@ -134,17 +127,6 @@ public abstract class PlayerTroopAI : TroopAI
         ;
         // behaviour for when selected
     }
-
-    public void SetSellResources(Dictionary<string, int> resources)
-    {
-        sellResources = resources;
-    }
-
-    public Dictionary<string, int> GetSellResources()
-    {
-        return sellResources;
-    }
-
 
 
     /*

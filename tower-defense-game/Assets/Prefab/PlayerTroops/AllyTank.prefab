@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Name
-      value: AllyRanged
+      value: AllyTank
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       propertyPath: m_Layer
@@ -69,10 +69,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7839326731979107717}
+      addedObject: {fileID: 627278780809984709}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 270312854060724666}
+      addedObject: {fileID: 5153975755696393551}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
@@ -89,6 +89,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2317598854361345299}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6619045815948515781}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2905718825592349448}
   m_SourcePrefab: {fileID: 100100000, guid: 6727d3c1e8c39420999a07923e23f1c5, type: 3}
 --- !u!4 &86925410923215179 stripped
 Transform:
@@ -294,7 +300,40 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!1001 &2664268680357710496
+--- !u!114 &6619045815948515781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d5f11420819418386bdf06560f7f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TroopResources
+--- !u!114 &2905718825592349448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756326148550960113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9d660488b86f4c999c3d04c3b92b240, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTroopAI
+  troopState: 0
+  troopBehaviour: {fileID: 11400000, guid: 04da598f751e848538b097a42ea051a1, type: 2}
+  troopName: Tank
+  maxSpeed: 3.5
+  enemyTarget: {fileID: 0}
+  aggroRange: 10
+  commandingPlayer: {fileID: 0}
+  waypoint: {fileID: 0}
+  selectedCircle: {fileID: 288047955265577087}
+--- !u!1001 &1131839176405117546
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -407,12 +446,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
---- !u!224 &7839326731979107717 stripped
+--- !u!224 &5153975755696393551 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5202642866907457317, guid: d1920dcd30874470c987d7f7650f0143, type: 3}
-  m_PrefabInstance: {fileID: 2664268680357710496}
+  m_PrefabInstance: {fileID: 1131839176405117546}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &7844658075795354612
+--- !u!1001 &7469501820130113675
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -469,8 +508,13 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
---- !u!4 &270312854060724666 stripped
+--- !u!1 &288047955265577087 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7230065492883200244, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
+  m_PrefabInstance: {fileID: 7469501820130113675}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &627278780809984709 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8006708470641099342, guid: 691a9a2ae1fb549beb10dcaeeebac905, type: 3}
-  m_PrefabInstance: {fileID: 7844658075795354612}
+  m_PrefabInstance: {fileID: 7469501820130113675}
   m_PrefabAsset: {fileID: 0}

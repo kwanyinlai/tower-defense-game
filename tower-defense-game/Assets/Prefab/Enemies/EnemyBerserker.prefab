@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 3885593972662341968}
   - component: {fileID: 2052587566374734930}
   - component: {fileID: 6540427454544848809}
+  - component: {fileID: 8348194331236647877}
   m_Layer: 9
   m_Name: EnemyBerserker
   m_TagString: Untagged
@@ -330,6 +331,24 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &8348194331236647877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7027937552822798463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beb145d88210a0042ac210bdc41cfe48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyTroopAI
+  troopState: 0
+  troopBehaviour: {fileID: 11400000, guid: bac298fbc5ea14069b8b898c0629bc4c, type: 2}
+  troopName: Berserker (Enemy)
+  maxSpeed: 3.5
+  enemyTarget: {fileID: 0}
+  aggroRange: 10
 --- !u!1001 &6628030990812331397
 PrefabInstance:
   m_ObjectHideFlags: 0

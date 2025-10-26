@@ -4,22 +4,32 @@ using System.Collections.Generic;
 public class TroopCombatSystem : CombatSystem
 {
     [Header("Combat Attributes")]
-    [SerializeField] protected float attackRange = 5.0f;
-    public float AttackRange { get { return attackRange; } set { attackRange = value; } }
-    [SerializeField] protected int dmg = 10;
-    public int Damage
+    [SerializeField] protected int atk = 10;
+    public int Attack
     {
-        get { return dmg; }
-        set { dmg = value; }
+        get { return atk; }
+        set { atk = value; }
     }
-    [SerializeField] protected float aggroRange = 10.0f;
-    public float AggroRange { get { return attackRange; } set { attackRange = value; } } // range which troop engages enemy
+
+    protected float atkCooldown { get; set; } = 1.5f;
+    protected float atkTimer { get; set; } = 0f;
 
     protected override void Start()
     {
         base.Start();
         currentHealth = maxHealth;
         tagList = new HashSet<string>(viewableTagList);
+    }
+
+    public void DecrementAttackCoooldown(float deltaTime)
+    {
+        if (atkTimer > 0f) { atkTimer -= deltaTime; }
+
+    }
+    
+    public void ResetAttackCooldown()
+    {
+        atkTimer = atkCooldown;
     }
 
     protected override void Die()

@@ -24,22 +24,22 @@ public abstract class TroopAI : MonoBehaviour
     public GameObject TroopModel{ get{ return troopModel; } set { troopModel = value; } } // why do we need this???
     [SerializeField] protected float maxSpeed = 3.5f;
     public float MaxSpeed { get { return maxSpeed; } }
-    [SerializeField] protected Transform enemyTarget;
-    public Transform EnemyTarget { get { return enemyTarget; } set { enemyTarget = value; } }
 
     [Header("Control Attributes")]
 
-    protected bool isUnderSelection = false;
-    public bool IsUnderSelection { get{ return isUnderSelection; } set{ isUnderSelection = value; } }
-
-
     // Combat Stats
-    protected float atkCooldown { get; set; } = 1.5f;
-    protected float atkTimer { get; set; } = 0f;
+    [SerializeField] protected Transform enemyTarget;
+    public Transform EnemyTarget { get { return enemyTarget; } set { enemyTarget = value; } }
+
+    [SerializeField] protected float aggroRange = 10.0f;
+    public float AggroRange { get { return aggroRange; } set { aggroRange = value; } } // range which troop engages enemy
+
+    [SerializeField] protected float attackRange = 5.0f;
+    public float AttackRange { get { return attackRange; } set { attackRange = value; } }
 
     // Combat Attributes
     protected CombatSystem enemyTargetCombatSystem{ get; set; }
-    protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
+    protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"}; // i have no clue what this is
     protected CombatSystem selfCombatSystem { get; set; }
 
     // Movement Attributes
@@ -48,6 +48,7 @@ public abstract class TroopAI : MonoBehaviour
     protected NavMeshAgent navMeshAgent;
     public virtual void Attack(Transform target)
     {
+        // gotta rename Attack
         transform.LookAt(target);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
         
@@ -56,7 +57,7 @@ public abstract class TroopAI : MonoBehaviour
         {
             troopBehaviour.InteractWithTarget(selfCombatSystem, enemyTargetCombatSystem);
         }
-        atkTimer = atkCooldown;
+        selfCombatSystem.ResetAttackCooldown();
     }
     protected virtual void Start()
     {
@@ -71,7 +72,7 @@ public abstract class TroopAI : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (atkTimer > 0f) { atkTimer -= Time.deltaTime; } // modularise
+        selfCombatSystem.DecrementAttackCoooldown(Time.deltaTime); // modularise
 
         // Decide Whether to Engage In Combat
         DecideState();

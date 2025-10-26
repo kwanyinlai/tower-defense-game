@@ -8,9 +8,9 @@ public class PlayerTroopCombatSystem : TroopCombatSystem
     public void setBarracks(Barracks barracks){
         this.barracks = barracks;
     }
+    protected override void Die()
+    {
 
-    protected override void Die(){
-        
         barracks.DecrementTroops();
         foreach (GameObject troop in PlayerTroopAI.AllPlayerTroops)
         {
@@ -18,19 +18,22 @@ public class PlayerTroopCombatSystem : TroopCombatSystem
             {
                 troop.GetComponent<TroopAI>().RemoveEntityFromAliveList();
                 GameObject temp = gameObject.GetComponent<PlayerTroopAI>().Waypoint;
-                if (temp!=null){
+                if (temp != null)
+                {
                     temp.GetComponent<Waypoint>().troopsBound.Remove(gameObject);
                 }
-                    
 
-                foreach(GameObject player in Player.players){
+
+                foreach (GameObject player in Player.players)
+                {
                     List<GameObject> selected = player.GetComponent<TroopManagment>().SelectedTroops;
-                    if(selected.Contains(troop)){
+                    if (selected.Contains(troop))
+                    {
                         selected.Remove(troop);
                     }
                 }
-                
-                break; 
+
+                break;
             }
         }
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TroopCombatSystem : CombatSystem
+public class PlayerTroopCombatSystem : TroopCombatSystem
 {
     private Barracks barracks;
 
@@ -9,13 +9,6 @@ public class TroopCombatSystem : CombatSystem
         this.barracks = barracks;
     }
 
-    protected override void Start()
-    {
-        base.Start();
-        currentHealth = maxHealth;
-        tagList = new HashSet<string>(viewableTagList);
-    }
-     
     protected override void Die(){
         
         barracks.DecrementTroops();

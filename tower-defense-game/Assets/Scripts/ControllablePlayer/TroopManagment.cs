@@ -16,6 +16,7 @@ public class TroopManagment : MonoBehaviour
     private bool isManagingTroops = false;
     // private float menuTime; // for timing how long menu is up for before it closes
     [SerializeField] private LayerMask selectableLayer;
+    private Player playerData;
     
     public bool IsManagingTroops {get; private set;}
 
@@ -23,6 +24,7 @@ public class TroopManagment : MonoBehaviour
     void Start()
     {
         isManagingTroops = false;
+        playerData = GetComponent<Player>();
         HideWaypointOutline();
     }
 
@@ -33,7 +35,7 @@ public class TroopManagment : MonoBehaviour
         {
             StopAndClearSelecting();
         }
-        if (playerData.currentState == Player.PlayerStates.ControllingCharacter){
+        if (playerData.CurrentState == Player.PlayerStates.ControllingCharacter){
 
             if (Input.GetKeyDown(KeyCode.Space))
             {

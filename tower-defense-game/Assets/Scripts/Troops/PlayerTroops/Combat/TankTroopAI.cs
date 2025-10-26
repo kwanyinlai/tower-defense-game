@@ -13,7 +13,7 @@ public class TankTroopAI : PlayerTroopAI
     protected override void Start()
     {
         base.Start();
-        combatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
+        selfCombatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
     }
     
     public override void Attack(Transform target)

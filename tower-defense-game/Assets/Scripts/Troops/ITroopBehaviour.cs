@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public abstract class ITroopBehaviour : ScriptableObject
 {
-    public abstract void InteractWithTarget(CombatSystem combatSystem);
+    public abstract void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem);
 
     protected virtual void ApplyBuffOnStart()
     {
@@ -18,9 +18,9 @@ public abstract class ITroopBehaviour : ScriptableObject
 
 public abstract class IAttackBehaviour : ITroopBehaviour
 {
-    public override void InteractWithTarget(CombatSystem combatSystem)
+    public override void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem)
     {
-        combatSystem.TakeDamage((int)(dmg * (1 + combatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
+        enemyCombatSystem.TakeDamage((int)(selfCombatSystem.dmg * (1 + selfCombatSystem.GetEffectStrength("attackBuff") - combatSystem.GetEffectStrength("attackWeaken"))));
 
     }
 }
@@ -34,7 +34,7 @@ public abstract class ISupportBehaviour: ITroopBehaviour
         List<GameObject> allies = new List<GameObject>();
 
         // adds allies within range
-        foreach (var ally in TroopAI.troops)
+        foreach (var ally in TroopAI.GetEntityAliveList)
         {
             CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(transform.position, ally.transform.position);
@@ -51,7 +51,7 @@ public abstract class ISupportBehaviour: ITroopBehaviour
 
     public Transform GetBestAllyInRange()
     {
-        if (TroopAI.troops.Count == 0)
+        if (TroopAI.GetEntityAliveList.Count == 0)
         {
             return null;
         }
@@ -59,7 +59,7 @@ public abstract class ISupportBehaviour: ITroopBehaviour
         List<GameObject> potentialAllies = new List<GameObject>();
 
         // adds allies within range
-        foreach (var ally in TroopAI.troops)
+        foreach (var ally in TroopAI.GetEntityAliveList)
         {
             float distance = Vector3.Distance(transform.position, ally.transform.position);
 

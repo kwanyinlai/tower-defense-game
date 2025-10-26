@@ -11,15 +11,15 @@ public class MusicianTroopAI : ISupportBehaviour
     public float attackCooldown = 2f;
     protected List<GameObject> allyList = null;
 
-    public override void InteractWithTarget(CombatSystem combatSystem)
+    public override void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem)
     {
         allyList = GetAlliesInRange();
         
         if (allyList != null && allyList.Count != 0)
         {
-            enemyTarget = allyList[0].transform;
+            BuffAttack(allyList);
         }        
-        BuffAttack(allyList);
+       
     }
     public void BuffAttack(List<GameObject> allyList)
     {

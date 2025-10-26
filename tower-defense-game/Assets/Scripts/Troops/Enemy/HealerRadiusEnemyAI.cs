@@ -12,7 +12,7 @@ public class RadiusHealerBehaviour : ISupportBehaviour
     public float healCooldown = 2;
     protected List<GameObject> allyList = null;
 
-    public override void InteractWithTarget(CombatSystem combatSystem)
+    public override void InteractWithTarget(CombatSystem selfCombatSystem, CombatSystem enemyCombatSystem)
     {
         allyList = GetAlliesInRange();
         Heal(allyList);

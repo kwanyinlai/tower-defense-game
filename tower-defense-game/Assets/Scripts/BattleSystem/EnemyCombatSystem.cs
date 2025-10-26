@@ -1,26 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class EnemyCombatSystem : CombatSystem
+public class EnemyCombatSystem : TroopCombatSystem
 {
-    protected override void Start()
-    {
-        base.Start();
-        currentHealth = maxHealth;
-        tagList = new HashSet<string>(viewableTagList);
-    }
+    
 
-    protected override void Die(){
 
-        GetComponent<TroopAI>().RemoveEntityFromAliveList();
-        foreach(GameObject player in Player.players){
-            List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
-            if (list.Contains(gameObject)){
-                list.Remove(gameObject);
-                break;
-            }
-        }
-
-        base.Die();
-    }
 }

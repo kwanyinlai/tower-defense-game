@@ -12,7 +12,7 @@ public class TankEnemyAI : IAttackBehaviour
 
     protected override void ApplyBuffOnStart()
     {
-        combatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
+        selfCombatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
     }
 
 }

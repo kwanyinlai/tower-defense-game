@@ -261,10 +261,15 @@ public abstract class PlayerTroopAI : TroopAI
     {
         allPlayerTroops.Add(gameObject);
     }
-    
+
     public override void RemoveEntityFromAliveList()
     {
         allPlayerTroops.Remove(gameObject);
+    }
+    
+    public override List<GameObject> GetEntityAliveList()
+    {
+        return allPlayerTroops;
     }
 
 

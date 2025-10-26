@@ -25,20 +25,6 @@ public abstract class TroopAI : MonoBehaviour
     [SerializeField] protected float maxSpeed = 3.5f;
     public float MaxSpeed { get{ return maxSpeed; } }
 
-    [Header("Combat Attributes")]
-    [SerializeField] protected float attackRange = 5.0f ;
-    public float AttackRange{ get{ return attackRange; } set{ attackRange = value; } }
-    [SerializeField] protected int dmg = 10;
-    public int Damage
-    {
-        get { return dmg; }
-        set { dmg = value; }
-    }
-    [SerializeField] protected float aggroRange = 10.0f;
-    public float AggroRange { get{ return attackRange; } set{ attackRange = value; } } // range which troop engages enemy
-    [SerializeField] protected Transform enemyTarget;
-    public Transform EnemyTarget { get{ return enemyTarget; } set{ enemyTarget = value; } }
-
     [Header("Control Attributes")]
 
     protected bool isUnderSelection = false;
@@ -50,10 +36,9 @@ public abstract class TroopAI : MonoBehaviour
     protected float atkTimer { get; set; } = 0f;
 
     // Combat Attributes
-    protected CombatSystem enemyTargetCombatSystem
-     { get; set; }
+    protected CombatSystem enemyTargetCombatSystem{ get; set; }
     protected HashSet<string> exceptionBulletList = new HashSet<string>{"Troop"};
-    protected CombatSystem combatSystem { get; set; }
+    protected CombatSystem selfCombatSystem { get; set; }
 
     // Movement Attributes
     
@@ -64,10 +49,10 @@ public abstract class TroopAI : MonoBehaviour
         transform.LookAt(target);
         transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w); // essentially only allows the y axis to move
         
-        CombatSystem combatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
-        if (combatSystem != null)
+        enemyTargetCombatSystem = target.GetComponent<CombatSystem>(); // interacts directly with the target rather than creating a projectile
+        if (enemyTargetCombatSystem != null)
         {
-            troopBehaviour.InteractWithTarget(combatSystem);
+            troopBehaviour.InteractWithTarget(selfCombatSystem, enemyTargetCombatSystem);
         }
         atkTimer = atkCooldown;
     }
@@ -76,7 +61,7 @@ public abstract class TroopAI : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         // pathIndicator = GetComponent<LineRenderer>();
         // pathIndicator.enabled = false;
-        combatSystem = gameObject.GetComponent<CombatSystem>();
+        selfCombatSystem = gameObject.GetComponent<CombatSystem>();
         navMeshAgent.speed = maxSpeed;
         AddEntityToAliveList();
     }
@@ -195,4 +180,5 @@ public abstract class TroopAI : MonoBehaviour
     protected abstract void AddEntityToAliveList();
 
     public abstract void RemoveEntityFromAliveList();
+    public abstract List<GameObject> GetEntityAliveList();
 }

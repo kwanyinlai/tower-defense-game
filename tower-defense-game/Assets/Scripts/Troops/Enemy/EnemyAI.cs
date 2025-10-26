@@ -27,6 +27,11 @@ public abstract class EnemyAI : TroopAI
         allEnemyTroops.Remove(gameObject);
     }
 
+    public override List<GameObject> GetEntityAliveList()
+    {
+        return allEnemyTroops;
+    }
+
 
     protected virtual void Update()
     {

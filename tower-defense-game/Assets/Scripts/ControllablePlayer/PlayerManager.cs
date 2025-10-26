@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     public static List<GameObject> players = new List<GameObject>();
     public enum PlayerStates {
@@ -13,11 +13,16 @@ public class Player : MonoBehaviour
         PlacingBuilding
     }
     private PlayerStates currentState;
-    public PlayerStates CurrentState {get; set;}
+    public PlayerStates CurrentState { get; set; }
 
     void Start()
     {
         players.Add(gameObject);
+    }
+
+    void Update()
+    {
+        
     }
 
     // for convenience of local coop, just a script to attach which has all controllable player objects

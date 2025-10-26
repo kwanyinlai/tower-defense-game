@@ -12,7 +12,7 @@ public class CharacterMovement : MonoBehaviour
     private float selectionDistance = 2f;
     private CharacterCameraController cameraController;
 
-    private Player playerData;
+    private PlayerManager playerData;
     
 
 
@@ -21,26 +21,26 @@ public class CharacterMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         gravCalculation = Vector3.zero;
         cameraController = GetComponent<CharacterCameraController>();
-        playerData = GetComponent<Player>();
+        playerData = GetComponent<PlayerManager>();
         
     }
 
     public bool IsControllable()
     {
-        return playerData.CurrentState == Player.PlayerStates.ControllingCharacter;
+        return playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter;
     }
 
     void Update()
     {
-        if (playerData.CurrentState == Player.PlayerStates.ControllingCharacter)
+        if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter)
         {
             Character();
         }
-        else if (playerData.CurrentState == Player.PlayerStates.ObserverMode)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.ObserverMode)
         {
             cameraController.Observer();
         }
-        else if (playerData.CurrentState == Player.PlayerStates.DisabledControls)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.DisabledControls)
         {
             ;
         }

@@ -57,8 +57,8 @@ public class SnapToGrid : MonoBehaviour
         // rotation needs to be figured out
         // prevent from placing on player's position
         if (commandingPlayer != null &&
-                commandingPlayer.GetComponent<Player>().CurrentState ==
-                Player.PlayerStates.PlacingBuilding &&
+                commandingPlayer.GetComponent<PlayerManager>().CurrentState ==
+                PlayerManager.PlayerStates.PlacingBuilding &&
                 placeable.IsBuildable(gameObject.transform.position))
         {
             transform.localScale = new Vector3(2f, 2f, 2f); // TODO: inefficient, should be edge triggered

@@ -25,7 +25,7 @@ public class PlayerTroopCombatSystem : TroopCombatSystem
                 }
 
 
-                foreach (GameObject player in Player.players)
+                foreach (GameObject player in PlayerManager.players)
                 {
                     List<GameObject> selected = player.GetComponent<TroopManagment>().SelectedTroops;
                     if (selected.Contains(troop))

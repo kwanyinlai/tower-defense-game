@@ -10,7 +10,7 @@ public class BuildMode : MonoBehaviour
     private GameObject buildingStructureOutlineParentClass
     ;
 
-    private Player playerData;
+    private PlayerManager playerData;
 
 
     // Asdf
@@ -35,7 +35,7 @@ public class BuildMode : MonoBehaviour
     void Start() {
         buildMenu = BuildMenu.Instance.gameObject;
         buildMenu.SetActive(false);
-        playerData = GetComponent<Player>();
+        playerData = GetComponent<PlayerManager>();
         cameraController = GetComponent<CharacterCameraController>();
         gridManager = GridManager.Instance;
     }
@@ -44,15 +44,15 @@ public class BuildMode : MonoBehaviour
     {
         DetermineState();
 
-        if (playerData.CurrentState == Player.PlayerStates.PlacingBuilding)
+        if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
         {
             PlayerDecidingBuildingPlacement();
         }
-        else if (playerData.CurrentState == Player.PlayerStates.BuildMenuOpen)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.BuildMenuOpen)
         {
             ;
         }
-        else if (playerData.CurrentState == Player.PlayerStates.ControllingCharacter)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter)
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
@@ -68,7 +68,7 @@ public class BuildMode : MonoBehaviour
 
     void StopPlacingBuilding()
     {
-        playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
+        playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter;
         if (outline != null)
         {
             Destroy(outline);
@@ -80,18 +80,18 @@ public class BuildMode : MonoBehaviour
 
     private void DetermineState()
     {
-        if (playerData.CurrentState == Player.PlayerStates.PlacingBuilding)
+        if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
+                playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter;
             }
         }
-        else if (playerData.CurrentState == Player.PlayerStates.BuildMenuOpen)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.BuildMenuOpen)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                playerData.CurrentState = Player.PlayerStates.ControllingCharacter; 
+                playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter; 
                 cameraController.DeactivateBuildCam();
             }
         }
@@ -146,7 +146,7 @@ public class BuildMode : MonoBehaviour
     public void OpenBuildMenu()
     {
         buildMenu.SetActive(true);
-        playerData.CurrentState = Player.PlayerStates.BuildMenuOpen;
+        playerData.CurrentState = PlayerManager.PlayerStates.BuildMenuOpen;
     }
 
     public void CloseBuildMenu()
@@ -160,7 +160,7 @@ public class BuildMode : MonoBehaviour
     void StartBuilding()
     {
         gridManager.DrawBuildGrid();
-        playerData.CurrentState = Player.PlayerStates.PlacingBuilding;
+        playerData.CurrentState = PlayerManager.PlayerStates.PlacingBuilding;
         gridManager.DrawBuildGrid();
     }
 

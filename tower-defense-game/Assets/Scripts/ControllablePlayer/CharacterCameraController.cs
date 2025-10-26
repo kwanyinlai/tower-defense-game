@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 
 public class CharacterCameraController : MonoBehaviour
 {
-    private Player playerData;
+    private PlayerManager playerData;
     private int cameraState;
 
     private float camSpeed = 50f;
@@ -44,7 +44,7 @@ public class CharacterCameraController : MonoBehaviour
         buildCam.SetActive(false);
 
         movementController = GetComponent<CharacterMovement>();
-        playerData = GetComponent<Player>();
+        playerData = GetComponent<PlayerManager>();
     }
 
     void Update()
@@ -57,7 +57,7 @@ public class CharacterCameraController : MonoBehaviour
 
         if (cameraState == 0)
         {
-            playerData.CurrentState = Player.PlayerStates.ControllingCharacter;
+            playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter;
             overheadCam.SetActive(true);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);
@@ -67,7 +67,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 1)
         {
-            playerData.CurrentState = Player.PlayerStates.ObserverMode;
+            playerData.CurrentState = PlayerManager.PlayerStates.ObserverMode;
             overheadCam.SetActive(false);
             aboveCam.SetActive(true);
             wideCam.SetActive(false);
@@ -77,7 +77,7 @@ public class CharacterCameraController : MonoBehaviour
         }
         else if (cameraState == 2)
         {
-            playerData.CurrentState = Player.PlayerStates.DisabledControls;
+            playerData.CurrentState = PlayerManager.PlayerStates.DisabledControls;
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(true);

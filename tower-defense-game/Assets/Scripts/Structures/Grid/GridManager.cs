@@ -129,7 +129,7 @@ public class GridManager : MonoBehaviour
     public bool IsTileBuildable(Vector3Int coordinates)
     {
         // check if tile is occupied by player
-        foreach (GameObject player in Player.players)
+        foreach (GameObject player in PlayerManager.players)
         {
             if (coordinates == CoordinatesToGrid(player.GetComponent<Transform>().position))
             {

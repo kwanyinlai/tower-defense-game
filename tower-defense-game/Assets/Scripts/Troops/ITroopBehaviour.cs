@@ -26,7 +26,7 @@ public abstract class ISupportBehaviour: ITroopBehaviour
         List<GameObject> allies = new List<GameObject>();
 
         // adds allies within range
-        foreach (var ally in EnemyAI.enemies)
+        foreach (var ally in TroopAI.GetEntityAliveList())
         {
             CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
             float distance = Vector3.Distance(selfCombatSystem.transform.position, ally.transform.position);

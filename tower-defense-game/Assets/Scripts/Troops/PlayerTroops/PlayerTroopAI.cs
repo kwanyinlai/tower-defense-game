@@ -248,10 +248,14 @@ public abstract class PlayerTroopAI : TroopAI
     {
         allPlayerTroops.Remove(gameObject);
     }
-    
-    public override List<GameObject> GetEntityAliveList()
+
+    public static List<GameObject> GetAllyEntitiesAliveList()
     {
         return allPlayerTroops;
+    }
+    public static List<GameObject> GetEnemyEntitiesAliveList()
+    {
+        return EnemyAI.GetAllyEntitiesAliveList();
     }
 
 

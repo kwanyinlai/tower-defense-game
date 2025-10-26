@@ -96,7 +96,7 @@ public abstract class EnemyAI : TroopAI
         return closestEnemy.transform;
     }
 
-    
+
     public Transform GetClosestBarracksInRange()
     {
         if (barracksTarget != null)
@@ -121,5 +121,14 @@ public abstract class EnemyAI : TroopAI
         }
         if (closestBarrack == null) { return null; }
         return closestBarrack.transform;
+    }
+
+    public static List<GameObject> GetAllyEntitiesAliveList()
+    {
+        return allEnemyTroops;
+    }
+    public static List<GameObject> GetEnemyEntitiesAliveList()
+    {
+        return PlayerTroopAI.GetAllyEntitiesAliveList();
     }
 }

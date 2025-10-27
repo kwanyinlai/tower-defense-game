@@ -88,7 +88,7 @@ public class SnapToGrid : MonoBehaviour
             return null;
         }
         for (int i = 0 ; i<4 ; i++){
-            if(placeable.IsBuildable( transform.position + TILEOFFSET[i] ) ){
+            if(placeable.IsBuildable(transform.position + TILEOFFSET[i] ) ){
 
                 distances[i] = Vector3.Distance(mousePos, transform.position + TILEOFFSET[i]);
             }

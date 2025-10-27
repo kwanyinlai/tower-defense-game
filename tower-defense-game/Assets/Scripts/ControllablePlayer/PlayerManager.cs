@@ -7,7 +7,7 @@ public class PlayerManager : MonoBehaviour
     public enum PlayerStates {
         ControllingCharacter,
         SelectingTroops,
-        MenuOpen,
+        BuildMenuOpen,
         ObserverMode,
         DisabledControls,
         PlacingBuilding
@@ -24,23 +24,16 @@ public class PlayerManager : MonoBehaviour
     {
         players.Add(gameObject);
     }
-    public void ToggleMenu()
+    public void StartBuilding()
     {
-        if (currentState != PlayerStates.MenuOpen)
-        {
-            currentState = PlayerStates.MenuOpen;
-        }
-        else
-        {
-            currentState = PlayerStates.ControllingCharacter;
-        }
+        currentState = PlayerStates.PlacingBuilding;
     }
 
     void Update()
     {
         // NOTE: It might feel redundant to check inputs in two scripts and only allow
         // states to change in this script, but we really want state changing to be centralised
-        Debug.Log(currentState);
+
         if (CurrentState == PlayerStates.ControllingCharacter)
         {
             if (Input.GetKeyDown(KeyCode.C))
@@ -49,11 +42,11 @@ public class PlayerManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.B))
             {
-                currentState = PlayerStates.MenuOpen;
+                currentState = PlayerStates.BuildMenuOpen;
                 
             }
         }
-        else if (CurrentState == PlayerStates.MenuOpen)
+        else if (CurrentState == PlayerStates.BuildMenuOpen)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {

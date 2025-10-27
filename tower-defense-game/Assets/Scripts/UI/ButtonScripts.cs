@@ -38,7 +38,8 @@ public class ButtonScripts : MonoBehaviour
 
     public void BuildingButtonPress()
     {
-        buildMode.gameObject.GetComponent<PlayerManager>().ToggleMenu();
+        buildMode.StartBuilding();
+        buildMode.gameObject.GetComponent<PlayerManager>().StartBuilding();
     }
 
     //Buttons for the build menu

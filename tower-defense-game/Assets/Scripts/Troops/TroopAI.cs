@@ -146,7 +146,7 @@ public abstract class TroopAI : MonoBehaviour
 
     protected void DecideCombatState()
     {
-        if (troopState != TroopState.Retreating)
+        if (troopState != TroopState.Retreating && enemyTarget != null)
         {
             float distance = Vector3.Distance(transform.position, enemyTarget.position);
             if (distance <= selfCombatSystem.AttackRange /*&& agent.velocity.magnitude <= 0.1f*/)

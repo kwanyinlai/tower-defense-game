@@ -42,12 +42,13 @@ public class BuildMode : MonoBehaviour
 
     void Update()
     {
-
+        Debug.Log("Current state is " + playerData.CurrentState);
         if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
         {
             PlayerDecidingBuildingPlacement();
+            Debug.Log("We're here!!");
         }
-        else if (playerData.CurrentState == PlayerManager.PlayerStates.MenuOpen)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.BuildMenuOpen)
         {
             OpenBuildMenu();
         }
@@ -92,7 +93,6 @@ public class BuildMode : MonoBehaviour
 
     public void PlaceBuilding() // call the outline
     {
-
         Placeable placeable = outline.GetComponent<Placeable>();
         if (placeable.IsBuildable(outline.transform.position) &&
             ResourcePool.EnoughResources(placeable.RequiredResources))
@@ -129,11 +129,10 @@ public class BuildMode : MonoBehaviour
         // TODO: check whether I need to call this in CloseBuildMenu or else where
     }
     
-    void StartBuilding()
+    public void StartBuilding()
     {
         // TODO: who's calling this
-        gridManager.DrawBuildGrid();
-        // playerData.CurrentState = PlayerManager.PlayerStates.PlacingBuilding;
+        buildMenu.SetActive(false);
         gridManager.DrawBuildGrid();
     }
 

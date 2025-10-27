@@ -46,7 +46,6 @@ public class BuildMode : MonoBehaviour
         if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
         {
             PlayerDecidingBuildingPlacement();
-            Debug.Log("We're here!!");
         }
         else if (playerData.CurrentState == PlayerManager.PlayerStates.BuildMenuOpen)
         {

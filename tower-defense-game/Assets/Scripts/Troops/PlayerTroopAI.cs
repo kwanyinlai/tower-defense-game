@@ -13,7 +13,12 @@ public class PlayerTroopAI : TroopAI
 {
 
     protected static List<GameObject> allPlayerTroops = new List<GameObject>(); 
-    public static List<GameObject> AllPlayerTroops { get; }
+    public static List<GameObject> AllPlayerTroops {
+        get
+        {
+            return allPlayerTroops;
+        }
+    }
 
     [Header("Control Attributes")]
 

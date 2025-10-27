@@ -92,7 +92,11 @@ public abstract class TroopAI : MonoBehaviour
 
     protected void HandleMovement()
     {
-        MoveTowardsTarget(enemyTarget);
+        if (enemyTarget != null)
+        {
+            MoveTowardsTarget(enemyTarget);
+        }
+       
     }
 
 

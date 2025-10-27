@@ -65,7 +65,7 @@ public class EnemyTroopAI : TroopAI
         }
         else
         {
-            enemyTarget = barracksTarget;
+            enemyTarget = baseTarget;
         }
     }
 

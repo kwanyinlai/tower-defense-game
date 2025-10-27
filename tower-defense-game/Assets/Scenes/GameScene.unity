@@ -625,6 +625,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BasicBarrackButton
       objectReference: {fileID: 0}
+    - target: {fileID: 8365475252942886866, guid: 054f5e2631f95454780eb04057ea1219, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BasicBarrackButton
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3827,7 +3831,7 @@ GameObject:
   m_Component:
   - component: {fileID: 843224273}
   m_Layer: 5
-  m_Name: Build Menu Buttons
+  m_Name: BuildMenuButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8181,6 +8185,14 @@ PrefabInstance:
       objectReference: {fileID: 1646878559}
     - target: {fileID: 2605541047200965348, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}
       propertyPath: structureOutlineParentClass
+      value: 
+      objectReference: {fileID: 1061572913}
+    - target: {fileID: 2605541047200965348, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}
+      propertyPath: buildingStructureParentClass
+      value: 
+      objectReference: {fileID: 1646878559}
+    - target: {fileID: 2605541047200965348, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}
+      propertyPath: buildingStructureOutlineParentClass
       value: 
       objectReference: {fileID: 1061572913}
     - target: {fileID: 2680552372830084585, guid: 115600583fd134d49a5c97e1c4e91f71, type: 3}

@@ -6,7 +6,12 @@ using System.Runtime.Serialization.Json;
 public class EnemyTroopAI : TroopAI
 {
     protected static List<GameObject> allEnemyTroops = new List<GameObject>();
-    public static List<GameObject> AllEnemyTroops { get; }
+    public static List<GameObject> AllEnemyTroops {
+        get
+        {
+            return allEnemyTroops;
+        } 
+    }
     protected Transform baseTarget;
     protected Transform troopTarget;
     protected Transform barracksTarget;

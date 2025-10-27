@@ -42,33 +42,24 @@ public class BuildMode : MonoBehaviour
 
     void Update()
     {
-        DetermineState();
 
         if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
         {
             PlayerDecidingBuildingPlacement();
         }
-        else if (playerData.CurrentState == PlayerManager.PlayerStates.BuildMenuOpen)
+        else if (playerData.CurrentState == PlayerManager.PlayerStates.MenuOpen)
         {
-            ;
+            OpenBuildMenu();
         }
         else if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter)
         {
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                OpenBuildMenu();
-            }
-            else
-            {
-                CloseBuildMenu();
-            }
+            CloseBuildMenu();
         }
 
     }
 
     void StopPlacingBuilding()
     {
-        playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter;
         if (outline != null)
         {
             Destroy(outline);
@@ -76,25 +67,6 @@ public class BuildMode : MonoBehaviour
         cameraController.DeactivateBuildCam();
 
         gridManager.ClearBuildGrid();
-    }
-
-    private void DetermineState()
-    {
-        if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter;
-            }
-        }
-        else if (playerData.CurrentState == PlayerManager.PlayerStates.BuildMenuOpen)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter; 
-                cameraController.DeactivateBuildCam();
-            }
-        }
     }
 
     void PlayerDecidingBuildingPlacement()
@@ -146,7 +118,7 @@ public class BuildMode : MonoBehaviour
     public void OpenBuildMenu()
     {
         buildMenu.SetActive(true);
-        playerData.CurrentState = PlayerManager.PlayerStates.BuildMenuOpen;
+        
     }
 
     public void CloseBuildMenu()
@@ -159,8 +131,9 @@ public class BuildMode : MonoBehaviour
     
     void StartBuilding()
     {
+        // TODO: who's calling this
         gridManager.DrawBuildGrid();
-        playerData.CurrentState = PlayerManager.PlayerStates.PlacingBuilding;
+        // playerData.CurrentState = PlayerManager.PlayerStates.PlacingBuilding;
         gridManager.DrawBuildGrid();
     }
 

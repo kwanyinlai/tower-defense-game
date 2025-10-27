@@ -13,7 +13,9 @@ public class TroopManagment : MonoBehaviour
     private bool isPlacingWaypoint = false; // change flags to replace with something else
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject waypointOutline;
-    private bool isManagingTroops = false;
+    private bool isManagingTroops = false; // TODO: delete this
+
+    
     // private float menuTime; // for timing how long menu is up for before it closes
     [SerializeField] private LayerMask selectableLayer;
     private PlayerManager playerData;

@@ -11,6 +11,7 @@ public class ButtonScripts : MonoBehaviour
     {
         //Keep Build Mode enabled at the start of the game so this will not raise a null reference exception
         //The Build Menu will auto disable upon game start
+
         buildMode = GameObject.Find("Player1").GetComponent<BuildMode>(); // TODO: Use Player.players
     }
 
@@ -35,72 +36,75 @@ public class ButtonScripts : MonoBehaviour
         SceneManager.LoadScene("StartMenu");
     }
 
-
+    public void BuildingButtonPress()
+    {
+        buildMode.gameObject.GetComponent<PlayerManager>().ToggleMenu();
+    }
 
     //Buttons for the build menu
     //Foldable region of a lot of similar functions
     #region
-    public void basicBarrackButton()
+    public void BasicBarrackButton()
     {
         buildMode.SetActiveBuilding(0);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void berserkerBarrackButton()
+    public void BerserkerBarrackButton()
     {
         buildMode.SetActiveBuilding(1);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void healerRBarrackButton()
+    public void HealerRadiusBarrackButton()
     {
         buildMode.SetActiveBuilding(2);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void healerSBarrackButton()
+    public void HealerSingleBarrackButton()
     {
         buildMode.SetActiveBuilding(3);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void meleeBarrackButton()
+    public void MeleeBarrackButton()
     {
         buildMode.SetActiveBuilding(4);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void musicianBarrackButton()
+    public void MusicianBarrackButton()
     {
         buildMode.SetActiveBuilding(5);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void tankBarrackButton()
+    public void TankBarrackButton()
     {
         buildMode.SetActiveBuilding(6);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
 
-    public void woodResourceButton()
+    public void WoodResourceButton()
     {
         buildMode.SetActiveBuilding(7);
-        buildMode.CloseBuildMenu();
+        BuildingButtonPress();
     }
     #endregion
 
 
-    public void sortAllBuilds()
+    public void SortAllBuilds()
     {
         GameObject options = GameObject.Find("BuildingChoices(Content)");
-        destroyAllChildren(options);
+        DestroyAllChildren(options);
         for(int i = 0; i < allButtonsPrefabs.Count; i++)
         {
             Instantiate(allButtonsPrefabs[i], options.transform);
         }
     }
 
-    public void sortBuildsBy(string category)
+    public void SortBuildsBy(string category)
     {
         string filter;
         switch (category)
@@ -119,7 +123,7 @@ public class ButtonScripts : MonoBehaviour
                 break;
         }
         GameObject options = GameObject.Find("BuildingChoices(Content)");
-        destroyAllChildren(options);
+        DestroyAllChildren(options);
         for (int i = 0; i < allButtonsPrefabs.Count; i++)
         {
             if (allButtonsPrefabs[i].tag == filter)
@@ -129,7 +133,7 @@ public class ButtonScripts : MonoBehaviour
         }
     }
 
-    private void destroyAllChildren(GameObject parent)
+    private void DestroyAllChildren(GameObject parent)
     {
         foreach (Transform child in parent.transform)
         {

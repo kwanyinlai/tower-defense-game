@@ -47,49 +47,63 @@ public class CharacterCameraController : MonoBehaviour
         playerData = GetComponent<PlayerManager>();
     }
 
-    void Update()
+    public PlayerManager.PlayerStates ChangeCameraState()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            cameraState++;
-            cameraState %= 3;
-        }
+        cameraState++;
+        cameraState %= 3;
 
         if (cameraState == 0)
         {
-            playerData.CurrentState = PlayerManager.PlayerStates.ControllingCharacter;
-            overheadCam.SetActive(true);
-            aboveCam.SetActive(false);
-            wideCam.SetActive(false);
-            buildCam.SetActive(false);
-            currentActiveCam = 0;
-
+            return PlayerManager.PlayerStates.ControllingCharacter;
         }
         else if (cameraState == 1)
         {
-            playerData.CurrentState = PlayerManager.PlayerStates.ObserverMode;
-            overheadCam.SetActive(false);
-            aboveCam.SetActive(true);
-            wideCam.SetActive(false);
-            buildCam.SetActive(false);
-            currentActiveCam = 1;
-
+            return PlayerManager.PlayerStates.ObserverMode;
         }
         else if (cameraState == 2)
         {
-            playerData.CurrentState = PlayerManager.PlayerStates.DisabledControls;
-            overheadCam.SetActive(false);
-            aboveCam.SetActive(false);
-            wideCam.SetActive(true);
-            buildCam.SetActive(false);
-            currentActiveCam = 2;
+            return PlayerManager.PlayerStates.DisabledControls;
         }
-        else if (cameraState == 3)
+        return PlayerManager.PlayerStates.ControllingCharacter; // SHOULDN'T BE HERE
+    }
+    void Update()
+    {
+
+        if (playerData.CurrentState == PlayerManager.PlayerStates.PlacingBuilding)
         {
             overheadCam.SetActive(false);
             aboveCam.SetActive(false);
             wideCam.SetActive(false);
             buildCam.SetActive(true);
+        }
+        else
+        {
+            if (cameraState == 0)
+            {
+                overheadCam.SetActive(true);
+                aboveCam.SetActive(false);
+                wideCam.SetActive(false);
+                buildCam.SetActive(false);
+                currentActiveCam = 0;
+
+            }
+            else if (cameraState == 1)
+            {
+                overheadCam.SetActive(false);
+                aboveCam.SetActive(true);
+                wideCam.SetActive(false);
+                buildCam.SetActive(false);
+                currentActiveCam = 1;
+
+            }
+            else if (cameraState == 2)
+            {
+                overheadCam.SetActive(false);
+                aboveCam.SetActive(false);
+                wideCam.SetActive(true);
+                buildCam.SetActive(false);
+                currentActiveCam = 2;
+            }
         }
     }
 

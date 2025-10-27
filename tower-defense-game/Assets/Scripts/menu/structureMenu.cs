@@ -46,7 +46,7 @@ public class StructureMenu : MonoBehaviour
     private void Update()
     {
         if(isMenuOpen){ 
-            updateText(); 
+            UpdateText(); 
         }
         if (Input.GetKeyUp(KeyCode.Escape))
         {
@@ -71,7 +71,7 @@ public class StructureMenu : MonoBehaviour
     
 
     //Contains structure health
-    private void updateText()
+    private void UpdateText()
     {
         if(selectedType ==  Selectables.Building)
         {

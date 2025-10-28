@@ -11,7 +11,7 @@ public class GridSector // for HPA*
     public readonly static int sectorHeight = 10;
 
 
-    private int2 sectorCoordinate;
+    public int2 sectorCoordinate;
 
     public enum CardinalDirections
     {
@@ -29,7 +29,7 @@ public class GridSector // for HPA*
 
     // FOR HPA*
     public bool[] neighbours = new bool[4]; // corresponds to cardinal directions
-    private float averageCost;
+    public float averageCost;
     private bool hasSectorChanged = false; // flag to check if we need to recalc fields
 
 

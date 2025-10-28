@@ -57,15 +57,23 @@ public class SectorManager : MonoBehaviour
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    sectors[x, y].neighbours[i] =
-                    ComputeConnectivity(
-                        sectors[x, y],
-                        sectors[x + directions[i].x, y + directions[i].y],
-                        i);
+                    if ((0<=x + directions.x <=sectors.GetLength(0) && (0<=x+directions.y<=sectors.GetLength(1))))
+                    {
+                        sectors[x, y].neighbours[i] = ComputeConnectivity(
+                                                            sectors[x, y],
+                                                            sectors[x + directions[i].x, y + directions[i].y],
+                                                            i);
+                    }
+                    
 
                 }
             }
         }
+    }
+
+    private bool IsTwoNodesConnected(GridNode a, GridNode b)
+    {
+        return a.walkCost == float.MaxValue && b.walkCost == float.MaxValue;
     }
 
     private bool ComputeConnectivity(GridSector from, GridSector to, int cardinality)
@@ -75,8 +83,8 @@ public class SectorManager : MonoBehaviour
         {
             for (int x = 0; x < GridSector.sectorWidth; x++)
             {
-                if (from.localGrid[x, GridSector.sectorHeight - 1].walkCost == float.MaxValue &&
-                    to.localGrid[x, 0].walkCost == float.MaxValue)
+                if (!IsTwoNodesConnected(from.localGrid[x, GridSector.sectorHeight - 1],
+                    to.localGrid[x, 0]))
                 {
                     return false;
                 }
@@ -86,8 +94,7 @@ public class SectorManager : MonoBehaviour
         {
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
-                if (from.localGrid[GridSector.sectorWidth - 1, y].walkCost == float.MaxValue &&
-                    to.localGrid[0, y].walkCost == float.MaxValue)
+                if (!IsTwoNodesConnected(from.localGrid[GridSector.sectorWidth - 1, y]. to.localGrid[0, y].walkCost))
                 {
                     return false;
                 }
@@ -97,8 +104,7 @@ public class SectorManager : MonoBehaviour
         {
             for (int x = 0; x < GridSector.sectorWidth; x++)
             {
-                if (from.localGrid[x, 0].walkCost == float.MaxValue &&
-                    to.localGrid[x, GridSector.sectorHeight - 1].walkCost == float.MaxValue)
+                if (!IsTwoNodesConnected(from.localGrid[x, 0], to.localGrid[x, GridSector.sectorHeight - 1]))
                 {
                     return false;
                 }
@@ -108,8 +114,7 @@ public class SectorManager : MonoBehaviour
         {
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
-                if (from.localGrid[0, y].walkCost == float.MaxValue &&
-                    to.localGrid[GridSector.sectorHeight - 1, y].walkCost == float.MaxValue)
+                if (!IsTwoNodesConnected(from.localGrid[0, y].walkCost, to.localGrid[GridSector.sectorHeight - 1, y]))
                 {
                     return false;
                 }

@@ -49,14 +49,20 @@ public class GridSector // for HPA*
         }
     }
 
-    public void GenerateVectorField(int2 localTarget)
+    public void GenerateVectorField(List<GridNode> exitNodes)
     {
-        for (int x = 0; x < sectorWidth; x++)
+        // BFS
+        HashSet<GridNode> visited = new HashSet<GridNode>();
+        Queue<GridNode> uncheckedNodes = new Queue<GridNode>();
+        foreach (var node in exitNodes)
         {
-            for (int y = 0; y < sectorHeight; y++)
-            {
-                vectorField[x, y] = new Vector2(localTarget.x - x, localTarget.y - y).normalized;
-            }
+            uncheckedNodes.Enqueue(node);
+        }
+
+        while (uncheckedNodes.Count > 0)
+        {
+            var current = uncheckedNodes.Dequeue();
+            for
         }
     }
 
@@ -67,4 +73,18 @@ public class GridSector // for HPA*
     //     return cost;
     // }
     // // TODO:
+
+    public List<GridNode> GetNeighbouringNodes()
+    {
+        int2[] directions = {
+            new int2(0,1),
+            new int2(1,0),
+            new int2(0,-1),
+            new int2(-1,0)
+            }; // corresponding to NESW
+        for (int i = 0; i < 4; i++)
+        {
+            pass;
+        }
+    }
 }

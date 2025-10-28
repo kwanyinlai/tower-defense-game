@@ -1,27 +1,30 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Mathematics;
+
+[System.Serializable]
+public struct GridNode
+{
+    public GridNode(int x, int y) // might have to assign walk cost later on creation
+    {
+        walkCost = 1;
+        territoryStatus = (int)GridManager.TerritoryStatus.NotAssigned;
+        buildable = true;
+        coord = new Vector2(x, y);
+    }
+
+
+    public float walkCost;
+    // public int sectorID; // TODO: Figure out how to not have to initialise this on creation
+    // but later in the code
+    public int territoryStatus; // refer to TerritoryStatus enum
+    public bool buildable;
+    public Vector2 coord;
+
+}
 
 public class GridManager : MonoBehaviour
 {
-    public struct GridNode
-    {
-        public GridNode(int x, int y)
-        {
-            walkable = true;
-            territoryStatus = (int)TerritoryStatus.NotAssigned;
-            buildable = true;
-            coord = new Vector2(x, y);
-        }
-
-        public bool walkable;
-        // public int sectorID; // TODO: Figure out how to not have to initialise this on creation
-        // but later in the code
-        public int territoryStatus; // refer to TerritoryStatus enum
-        public bool buildable;
-        public Vector2 coord;
-        
-    }
-
     public static readonly int gridWidth = 200; // number of tiles
     public static readonly int gridHeight = 200;
     public static readonly float tileSize = 4f;
@@ -91,17 +94,26 @@ public class GridManager : MonoBehaviour
         
         buildableTiles = new List<GameObject>();
 
-        // grid = new bool[gridWidth, gridHeight];
-        
-        
+        // // Set up global grid
 
-        for (int x = 0; x < gridWidth; x++)
+        // for (int x = 0; x < gridWidth; x++)
+        // {
+        //     for (int z = 0; z < gridHeight; z++)
+        //     {
+        //         grid[x, z] = new GridNode(x, z);
+        //     }
+        // }
+        
+        // Set up global grid and sectors at the same time
+
+        for (int x = 0; x < gridWidth / GridSector.sectorWidth; x++)
         {
-            for (int z = 0; z < gridHeight; z++)
+            for (int y = 0; y < gridHeight / GridSector.sectorHeight; y++)
             {
-                grid[x, z] = new GridNode(x, z);
+                SectorManager.InitializeSector(new int2(x, y), grid);
             }
         }
+
         // starterTerritoryIsAssigned = false;
 
     }
@@ -148,7 +160,7 @@ public class GridManager : MonoBehaviour
         return grid[coordinates.x, coordinates.z].buildable;
     }
 
-    public bool IsTileAreaBuildable(Vector3 coordinates, Vector2Int size)
+    public bool IsTileAreaBuildable(Vector3 coordinates, int2 size)
     {
         Vector3 gridCoords = CoordinatesToGrid(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
@@ -168,7 +180,7 @@ public class GridManager : MonoBehaviour
 
     
 
-    public void OccupyArea(Vector3 coordinates, Vector2Int size, int range)
+    public void OccupyArea(Vector3 coordinates, int2 size, int range)
     {
         Vector3Int gridPos = CoordinatesToGrid(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
@@ -195,7 +207,7 @@ public class GridManager : MonoBehaviour
             }
         }
     }
-    public void StopOccupying(Vector3 coordinates, Vector2Int size)
+    public void StopOccupying(Vector3 coordinates, int2 size)
     {
         
         Vector3Int gridPos = CoordinatesToGrid(coordinates);

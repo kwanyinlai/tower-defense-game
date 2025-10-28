@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Unity.Mathematics;
 using System.Collections.Generic;
 
 public class StructureMenu : MonoBehaviour
@@ -183,10 +184,10 @@ public class StructureMenu : MonoBehaviour
     }
 
 
-    Vector2Int CalculateOccupyingSize()
+    int2 CalculateOccupyingSize()
     {
         MeshRenderer meshRenderer = selectedBuildingScript.building_model.GetComponent<MeshRenderer>();
-        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
+        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
                 Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
     }
 

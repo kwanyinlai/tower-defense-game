@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 public class Placeable : MonoBehaviour
 {
     // attach to the outline
 
     private MeshRenderer meshRenderer;
-    public Vector2Int size;
-    protected Vector2Int gridCoords;
+    public int2 size;
+    protected int2 gridCoords;
     public GameObject prefab;
     public int offset;
     
@@ -50,8 +51,8 @@ public class Placeable : MonoBehaviour
         requiredResources.TryAdd("TestResource2", 150);
     }
 
-    Vector2Int CalculateOccupyingSize(){
-        return new Vector2Int(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
+    int2 CalculateOccupyingSize(){
+        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
                 Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
     }
 

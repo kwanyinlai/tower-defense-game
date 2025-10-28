@@ -33,7 +33,8 @@ public abstract class TroopAI : MonoBehaviour
     public float AggroRange { get { return aggroRange; } set { aggroRange = value; } } // range which troop engages enemy
 
     // Combat Attributes
-    protected TroopCombatSystem enemyTargetCombatSystem { get{ return enemyTargetCombatSystem; } }
+    protected TroopCombatSystem enemyTargetCombatSystem;
+    public TroopCombatSystem EnemyTargetCombatSystem { get{ return enemyTargetCombatSystem; } }
     protected HashSet<string> exceptionBulletList = new HashSet<string> { "Troop" }; // i have no clue what this is
     protected TroopCombatSystem selfCombatSystem;
     public TroopCombatSystem SelfCombatSystem { get { return selfCombatSystem; } }
@@ -106,7 +107,7 @@ public abstract class TroopAI : MonoBehaviour
     protected void MoveTowardsTarget(Transform target)
     {
         navMeshAgent.isStopped = false;
-        navMeshAgent.speed = 
+        navMeshAgent.speed = maxSpeed * (1 - selfCombatSystem.GetEffectStrength("slow") + selfCombatSystem.GetEffectStrength("haste")); // diff function
         navMeshAgent.SetDestination(target.position);
         NavMeshPath path = new NavMeshPath();
         NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);

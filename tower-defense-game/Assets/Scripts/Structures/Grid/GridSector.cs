@@ -51,29 +51,84 @@ public class GridSector // for HPA*
 
     public void GenerateVectorField(List<GridNode> exitNodes)
     {
-        // BFS
-        HashSet<GridNode> visited = new HashSet<GridNode>();
-        Queue<GridNode> uncheckedNodes = new Queue<GridNode>();
-        foreach (var node in exitNodes)
+        // Perform Dijkstra's from goal 
+        for (int x = 0; x < localGrid.GetLength(0); x++)
         {
-            uncheckedNodes.Enqueue(node);
+            for (int y = 0; y < localGrid.GetLength(1); y++)
+            {
+                costField[x, y] = float.MaxValue;
+            }
         }
 
+        PriorityQueue<GridNode, float> uncheckedNodes = new PriorityQueue<GridNode, float>();
+        // enqueue all border nodes first
+        foreach (var node in exitNodes)
+        {
+            costField[node.x, node.y]= 0f;
+            uncheckedNodes.Enqueue(node, 0f);
+        }
+        // first generate cost field, each node points to closest exit
         while (uncheckedNodes.Count > 0)
         {
             var current = uncheckedNodes.Dequeue();
             foreach (var neighbour in GetNeighbouringNodes(current))
             {
-                if (!visited.Contains(neighbour))
+                float tentativeCost = costField[current.x, current.y] + neighbour.walkCost;
+                if (tentativeCost < costField[neighbour.x, neighbour.y])
                 {
-                    costField[neighbour.x, neighbour.y] = costField[current.x, current.y] + neighbour.walkCost;
-                    var currVector = vectorField[current.x, current.y];
-                    vectorField[neighbour.x, neighbour.y] = new Vector2(neighbour.x, neighbour.y).normalized(); // TODO: figure out how to
-                    // make continuous flow vectors
-                    visited.Add(neighbour);
-                    uncheckedNodes.Enqueue(neighbour);
+                    costField[neighbour.x, neighbour.y] = tentativeCost;
+                    uncheckedNodes.Enqueue(neighbour, tentativeCost);
                 }
-                
+            }
+        }
+    }
+
+    public void GenerateVectorField(GridNode goalNode)
+    {
+        // Perform Dijkstra's from goal 
+        for (int x = 0; x < localGrid.GetLength(0); x++)
+        {
+            for (int y = 0; y < localGrid.GetLength(1); y++)
+            {
+                costField[x, y] = float.MaxValue;
+            }
+        }
+
+        PriorityQueue<GridNode, float> uncheckedNodes = new PriorityQueue<GridNode, float>();
+        // enqueue all border nodes first
+
+        costField[goalNode.x, goalNode.y]= 0f;
+        uncheckedNodes.Enqueue(goalNode, 0);
+        
+        // first generate cost field, each node points to closest exit
+        while (uncheckedNodes.Count > 0)
+        {
+            var current = uncheckedNodes.Dequeue();
+            foreach (var neighbour in GetNeighbouringNodes(current))
+            {
+                float tentativeCost = costField[current.x, current.y] + neighbour.walkCost;
+                if (tentativeCost < costField[neighbour.x, neighbour.y])
+                {
+                    costField[neighbour.x, neighbour.y] = tentativeCost;
+                    uncheckedNodes.Enqueue(neighbour, tentativeCost);
+                }
+            }
+        }
+    }
+
+    private void GenerateVectorField()
+    {
+        for (int x =0; x < localGrid.GetLength(0); x++)
+        {
+            for(int y=0; y<localGrid.GetLength(1); y++)
+            {
+                float x1 = x > 0 ? costField[x - 1, y] : costField[x, y];
+                float x2 = x < costField.GetLength(0) - 1 ? costField[x + 1, y] : costField[x, y];
+                float y1 = y > 0 ? costField[x, y - 1] : costField[x, y];
+                float y2 = y < costField.GetLength(1) - 1 ? costField[x, y + 1] : costField[x, y];
+                float dx = x2 - x1;
+                float dy = y2 - y1;
+                vectorField[x, y] = -1 * new Vector2(dx, dy).normalized;
             }
         }
     }
@@ -97,10 +152,11 @@ public class GridSector // for HPA*
             }; // corresponding to NESW
         for (int i = 0; i < 4; i++)
         {
-            if (0<=node.x + directions[i].x <localGrid.GetLength(0) && 0<=node.y + directions[i].y < localGrid.GetLength(1))
+            if (0 <= node.x + directions[i].x < localGrid.GetLength(0) && 0 <= node.y + directions[i].y < localGrid.GetLength(1))
             {
                 neighbours[i] = localGrid[node.x + directions[i].x, node.y + directions[i].y];
             }
         }
+        return neighbours;
     }
 }

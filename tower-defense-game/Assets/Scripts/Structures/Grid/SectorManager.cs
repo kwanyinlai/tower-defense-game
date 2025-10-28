@@ -57,11 +57,13 @@ public class SectorManager : MonoBehaviour
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    if ((0<=x + directions.x <=sectors.GetLength(0) && (0<=x+directions.y<=sectors.GetLength(1))))
+                    int tempX = x + directions[i].x;
+                    int tempY = y + directions[i].y;
+                    if (0<=tempX && tempX <=sectors.GetLength(0) && 0<= tempY && tempY <=sectors.GetLength(1))
                     {
                         sectors[x, y].neighbours[i] = ComputeConnectivity(
                                                             sectors[x, y],
-                                                            sectors[x + directions[i].x, y + directions[i].y],
+                                                            sectors[tempX, tempY],
                                                             i);
                     }
                     
@@ -94,7 +96,7 @@ public class SectorManager : MonoBehaviour
         {
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
-                if (!IsTwoNodesConnected(from.localGrid[GridSector.sectorWidth - 1, y]. to.localGrid[0, y].walkCost))
+                if (!IsTwoNodesConnected(from.localGrid[GridSector.sectorWidth - 1, y], to.localGrid[0, y]))
                 {
                     return false;
                 }
@@ -114,7 +116,7 @@ public class SectorManager : MonoBehaviour
         {
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
-                if (!IsTwoNodesConnected(from.localGrid[0, y].walkCost, to.localGrid[GridSector.sectorHeight - 1, y]))
+                if (!IsTwoNodesConnected(from.localGrid[0, y], to.localGrid[GridSector.sectorHeight - 1, y]))
                 {
                     return false;
                 }

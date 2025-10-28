@@ -64,7 +64,7 @@ public class GridSector // for HPA*
         // enqueue all border nodes first
         foreach (var node in exitNodes)
         {
-            costField[node.x, node.y]= 0f;
+            costField[node.localX, node.localY]= 0f;
             uncheckedNodes.Enqueue(node, 0f);
         }
         // first generate cost field, each node points to closest exit
@@ -73,10 +73,10 @@ public class GridSector // for HPA*
             var current = uncheckedNodes.Dequeue();
             foreach (var neighbour in GetNeighbouringNodes(current))
             {
-                float tentativeCost = costField[current.x, current.y] + neighbour.walkCost;
-                if (tentativeCost < costField[neighbour.x, neighbour.y])
+                float tentativeCost = costField[current.localX, current.localY] + neighbour.walkCost;
+                if (tentativeCost < costField[neighbour.localX, neighbour.localY])
                 {
-                    costField[neighbour.x, neighbour.y] = tentativeCost;
+                    costField[neighbour.localX, neighbour.localY] = tentativeCost;
                     uncheckedNodes.Enqueue(neighbour, tentativeCost);
                 }
             }
@@ -97,7 +97,7 @@ public class GridSector // for HPA*
         PriorityQueue<GridNode, float> uncheckedNodes = new PriorityQueue<GridNode, float>();
         // enqueue all border nodes first
 
-        costField[goalNode.x, goalNode.y]= 0f;
+        costField[goalNode.localX, goalNode.localY]= 0f;
         uncheckedNodes.Enqueue(goalNode, 0);
         
         // first generate cost field, each node points to closest exit
@@ -106,10 +106,10 @@ public class GridSector // for HPA*
             var current = uncheckedNodes.Dequeue();
             foreach (var neighbour in GetNeighbouringNodes(current))
             {
-                float tentativeCost = costField[current.x, current.y] + neighbour.walkCost;
-                if (tentativeCost < costField[neighbour.x, neighbour.y])
+                float tentativeCost = costField[current.localX, current.localY] + neighbour.walkCost;
+                if (tentativeCost < costField[neighbour.localX, neighbour.localY])
                 {
-                    costField[neighbour.x, neighbour.y] = tentativeCost;
+                    costField[neighbour.localX, neighbour.localY] = tentativeCost;
                     uncheckedNodes.Enqueue(neighbour, tentativeCost);
                 }
             }
@@ -152,9 +152,10 @@ public class GridSector // for HPA*
             }; // corresponding to NESW
         for (int i = 0; i < 4; i++)
         {
-            if (0 <= node.x + directions[i].x < localGrid.GetLength(0) && 0 <= node.y + directions[i].y < localGrid.GetLength(1))
+            if (0 <= node.localX + directions[i].x && node.localX + directions[i].x < localGrid.GetLength(0) &&
+                0 <= node.localY + directions[i].y && node.localY + directions[i].y< localGrid.GetLength(1))
             {
-                neighbours[i] = localGrid[node.x + directions[i].x, node.y + directions[i].y];
+                neighbours[i] = localGrid[node.localX + directions[i].x, node.localY + directions[i].y];
             }
         }
         return neighbours;

@@ -5,12 +5,15 @@ using Unity.Mathematics;
 [System.Serializable]
 public struct GridNode
 {
-    public GridNode(int x, int y) // might have to assign walk cost later on creation
+    public GridNode(int globalX, int globalY) // might have to assign walk cost later on creation
     {
         walkCost = 1;
         territoryStatus = (int)GridManager.TerritoryStatus.NotAssigned;
         buildable = true;
-        coord = new Vector2(x, y);
+        this.globalX = globalX;
+        this.globalY = globalY;
+        localX = -1;
+        localY = -1;
     }
 
 
@@ -19,7 +22,10 @@ public struct GridNode
     // but later in the code
     public int territoryStatus; // refer to TerritoryStatus enum
     public bool buildable;
-    public Vector2 coord;
+    public int globalX;
+    public int globalY; // coordinates in global grid
+    public int localX;
+    public int localY; // coordinates in local sector grid.
 
 }
 

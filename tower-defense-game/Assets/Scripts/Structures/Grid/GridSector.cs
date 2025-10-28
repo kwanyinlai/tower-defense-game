@@ -62,7 +62,19 @@ public class GridSector // for HPA*
         while (uncheckedNodes.Count > 0)
         {
             var current = uncheckedNodes.Dequeue();
-            for
+            foreach (var neighbour in GetNeighbouringNodes(current))
+            {
+                if (!visited.Contains(neighbour))
+                {
+                    costField[neighbour.x, neighbour.y] = costField[current.x, current.y] + neighbour.walkCost;
+                    var currVector = vectorField[current.x, current.y];
+                    vectorField[neighbour.x, neighbour.y] = new Vector2(neighbour.x, neighbour.y).normalized(); // TODO: figure out how to
+                    // make continuous flow vectors
+                    visited.Add(neighbour);
+                    uncheckedNodes.Enqueue(neighbour);
+                }
+                
+            }
         }
     }
 
@@ -74,8 +86,9 @@ public class GridSector // for HPA*
     // }
     // // TODO:
 
-    public List<GridNode> GetNeighbouringNodes()
+    public GridNode[] GetNeighbouringNodes(GridNode node)
     {
+        GridNode[] neighbours = new GridNode[4]; 
         int2[] directions = {
             new int2(0,1),
             new int2(1,0),
@@ -84,7 +97,10 @@ public class GridSector // for HPA*
             }; // corresponding to NESW
         for (int i = 0; i < 4; i++)
         {
-            pass;
+            if (0<=node.x + directions[i].x <localGrid.GetLength(0) && 0<=node.y + directions[i].y < localGrid.GetLength(1))
+            {
+                neighbours[i] = localGrid[node.x + directions[i].x, node.y + directions[i].y];
+            }
         }
     }
 }

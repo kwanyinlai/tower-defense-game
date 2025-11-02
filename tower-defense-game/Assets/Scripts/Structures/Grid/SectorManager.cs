@@ -41,18 +41,14 @@ public class SectorManager : MonoBehaviour
         {
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
-                GridNode newGridNode = new GridNode(sectorCoordinates.x + x, sectorCoordinates.y + y);
+                GridNode newGridNode = globalGrid[sectorCoordinates.x + x, sectorCoordinates.y + y];
 
 
 
                 newGridNode.localX = x;
                 newGridNode.localY = y; // TODO: assigning manually but this feels like bad practice
                 // so think fo better way to impl
-
-
-                
                 newSectorLocalGrid[x, y] = newGridNode;
-                globalGrid[x, y] = newGridNode;
 
             }
         }

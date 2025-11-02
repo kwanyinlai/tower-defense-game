@@ -102,13 +102,13 @@ public class GridManager : MonoBehaviour
 
         // // Set up global grid
 
-        // for (int x = 0; x < gridWidth; x++)
-        // {
-        //     for (int z = 0; z < gridHeight; z++)
-        //     {
-        //         grid[x, z] = new GridNode(x, z);
-        //     }
-        // }
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int z = 0; z < gridHeight; z++)
+            {
+                grid[x, z] = new GridNode(x, z);
+            }
+        }
         
         // Set up global grid and sectors at the same time
 

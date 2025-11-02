@@ -77,7 +77,6 @@ public class BuildMode : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("hi");
             PlaceBuilding();
         }
         else if (Input.GetKeyDown(KeyCode.R))

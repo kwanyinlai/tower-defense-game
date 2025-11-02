@@ -5,9 +5,7 @@ public class CharacterCameraController : MonoBehaviour
 {
     private PlayerManager playerData;
     private int cameraState;
-
     private float camSpeed = 50f;
-
     private CinemachineCamera overhead;
     [SerializeField] private GameObject overheadCam;
     public Vector3 OverheadCamForward
@@ -29,8 +27,6 @@ public class CharacterCameraController : MonoBehaviour
     [SerializeField] private GameObject buildCam;
 
     private int currentActiveCam;
-
-
     private CharacterMovement movementController;
 
     void Start()

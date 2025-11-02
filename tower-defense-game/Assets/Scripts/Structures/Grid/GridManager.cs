@@ -156,14 +156,13 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight ||
-            grid[coordinates.x, coordinates.z].territoryStatus == (int)TerritoryStatus.NotAssigned) 
+        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight)
         {
             return false;
-            
         }
 
-        return grid[coordinates.x, coordinates.z].buildable;
+        return grid[coordinates.x, coordinates.z].buildable &&
+            grid[coordinates.x, coordinates.z].territoryStatus == (int)TerritoryStatus.Assigned;
     }
 
     public bool IsTileAreaBuildable(Vector3 coordinates, int2 size)
@@ -173,12 +172,9 @@ public class GridManager : MonoBehaviour
         {
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-                // if (!IsTileBuildable(new Vector3Int(x, 0, z))){
-                //     return false;
-                // } // This is very inefficient
-                if (!grid[x,z].buildable){
+                if (!IsTileBuildable(new Vector3Int(x, 0, z))){
                     return false;
-                }
+                } 
             }
         }
         return true;

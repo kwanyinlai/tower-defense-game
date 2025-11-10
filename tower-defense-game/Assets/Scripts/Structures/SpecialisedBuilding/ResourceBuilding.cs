@@ -6,18 +6,22 @@ public class ResourceBuilding : Building
 {
     protected float collectionInterval = 3f;
     protected float timer = 0f;
+    public string nodeType;
     [SerializeField]private GameObject resourceNode;
+    ResourceNode nodeScript;
 
 
     new protected void Start()
     {
         base.Start();
-        foreach(Transform child in GameObject.Find("Resource Nodes").transform)
+        Transform allNodes = GameObject.Find("Resource Nodes").transform;
+        foreach(Transform child in allNodes)
         {
-            if(child.gameObject.activeInHierarchy && StaticScripts.horizontalDistance(child.position.x, child.position.y, 
-                transform.position.x, transform.position.y) < range)
+            if(child.gameObject.activeInHierarchy && child.gameObject.name == nodeType &&
+                Vector2.Distance(child.position, transform.position) < range)
             {
                 resourceNode = child.gameObject;
+                nodeScript = resourceNode.GetComponent<ResourceNode>();
                 break;
             }
         }
@@ -34,7 +38,7 @@ public class ResourceBuilding : Building
         if (timer >= collectionInterval && resourceNode != null)
         {
             timer = 0f;
-            resourceNode.GetComponent<ResourceNode>().CollectResources();
+            nodeScript.CollectResources();
         }
     }
 

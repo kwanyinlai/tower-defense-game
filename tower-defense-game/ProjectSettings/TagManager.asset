@@ -9,6 +9,7 @@ TagManager:
   - WallTypeButton
   - ResourceBuildingButton
   - Troop
+  - ResourceNode
   layers:
   - Default
   - TransparentFX

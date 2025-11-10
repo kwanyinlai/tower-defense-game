@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class ResourceNode : MonoBehaviour
 {
+    public string resourceType;
     private int maxTimesCollected;
     private int timesCollected;
     private Dictionary<string, int> resourcesPerCollect;
@@ -21,7 +22,7 @@ public class ResourceNode : MonoBehaviour
     private void SetResourcesPerCollect()
     {
         resourcesPerCollect = new Dictionary<string, int>();
-        resourcesPerCollect.Add("Wood", 10);
+        resourcesPerCollect.Add(resourceType, 10);
     }
 
     void Update()

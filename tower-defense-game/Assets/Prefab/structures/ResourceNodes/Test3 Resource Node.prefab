@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6283317995200786697}
   - component: {fileID: 320843707814340287}
   m_Layer: 0
-  m_Name: Wood Resource Node
+  m_Name: Test3 Resource Node
   m_TagString: ResourceNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,4 +126,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df089477a4b8483197da4cfe3739b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceType: Wood
+  resourceType: TestResource3

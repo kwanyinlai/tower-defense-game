@@ -3,29 +3,26 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 
 [System.Serializable]
-public struct GridNode
+public class GridNode
 {
     public GridNode(int globalX, int globalY) // might have to assign walk cost later on creation
     {
-        walkCost = 1;
+        walkCost = 1f;
         territoryStatus = (int)GridManager.TerritoryStatus.NotAssigned;
         buildable = true;
         this.globalX = globalX;
         this.globalY = globalY;
-        localX = -1;
-        localY = -1;
     }
 
 
     public float walkCost;
-    // public int sectorID; // TODO: Figure out how to not have to initialise this on creation
-    // but later in the code
     public int territoryStatus; // refer to TerritoryStatus enum
     public bool buildable;
     public int globalX;
     public int globalY; // coordinates in global grid
     public int localX;
     public int localY; // coordinates in local sector grid.
+    public GridSector gridSector;
 
 }
 
@@ -52,6 +49,11 @@ public class GridManager : MonoBehaviour
         set { target = value; }
     }
     private bool starterTerritoryIsAssigned;
+
+    public static float Distance (GridNode node1, GridNode node2)
+    {
+        return Mathf.Sqrt((node1.globalX - node2.globalX) *(node1.globalX - node2.globalX)+ (node1.globalY - node2.globalY) *  (node1.globalY - node2.globalY));
+    }
 
     public static GridManager Instance { get; private set; }
 
@@ -97,7 +99,7 @@ public class GridManager : MonoBehaviour
         grid = new GridNode[gridWidth, gridHeight];
 
         playerPos = new List<Transform>();
-        
+
         buildableTiles = new List<GameObject>();
 
         // // Set up global grid
@@ -109,21 +111,29 @@ public class GridManager : MonoBehaviour
                 grid[x, z] = new GridNode(x, z);
             }
         }
-        
-        // Set up global grid and sectors at the same time
+
+        // Set up sectors and local grids of sectors (assign local coords of GridNode) at the same time
 
         for (int x = 0; x < gridWidth / GridSector.sectorWidth; x++)
         {
             for (int y = 0; y < gridHeight / GridSector.sectorHeight; y++)
             {
-                SectorManager.InitializeSector(new int2(x, y), grid);
+                SectorManager.Instance.InitializeSector(new int2(x, y), grid);
+
             }
         }
+        
 
         // starterTerritoryIsAssigned = false;
 
     }
-    
+
+    public GridNode NodeFromWorldPos(Vector3 coordinates)
+    {
+        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; 
+        int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
+        return grid[x,z];
+    }
 
 
     void SetStarterTerritory()

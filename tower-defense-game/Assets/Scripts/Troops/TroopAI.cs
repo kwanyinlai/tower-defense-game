@@ -23,6 +23,10 @@ public abstract class TroopAI : MonoBehaviour
     [SerializeField] protected float maxSpeed = 3.5f;
     public float MaxSpeed { get { return maxSpeed; } }
 
+
+    public Vector2 currVelocity = Vector2.zero;
+    public float acceleration = 5f;
+
     [Header("Control Attributes")]
 
     // Combat Stats
@@ -40,6 +44,8 @@ public abstract class TroopAI : MonoBehaviour
     public TroopCombatSystem SelfCombatSystem { get { return selfCombatSystem; } }
 
     // Movement Attributes
+    private List<GridSector> highLevelPath;
+    private GridNode localTargetNode;
 
     // private LineRenderer pathIndicator;
     protected NavMeshAgent navMeshAgent;
@@ -106,11 +112,87 @@ public abstract class TroopAI : MonoBehaviour
 
     protected void MoveTowardsTarget(Transform target)
     {
-        navMeshAgent.isStopped = false;
-        navMeshAgent.speed = maxSpeed * (1 - selfCombatSystem.GetEffectStrength("slow") + selfCombatSystem.GetEffectStrength("haste")); // diff function
-        navMeshAgent.SetDestination(target.position);
-        NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
+         
+        GridManager gridManager = GridManager.Instance;
+
+        GridNode currentNode = gridManager.NodeFromWorldPos(transform.position);
+
+        if (highLevelPath == null)
+        {
+            highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
+                currentNode.gridSector,
+                localTargetNode.gridSector // TODO: maybe store as attribute in troopAI
+            );
+        }
+       
+
+        if (highLevelPath[0] == currentNode.gridSector)
+        {
+            highLevelPath.RemoveAt(0);
+            if (highLevelPath.Count == 0)
+            {
+                localTargetNode = gridManager.NodeFromWorldPos(target.position);
+            }
+            else
+            {
+                if (highLevelPath.Count > 1)
+                {
+                    localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+                        currentNode,
+                        highLevelPath[0],
+                        highLevelPath[1]
+                    );
+                }
+                else
+                {
+                    localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+                        currentNode,
+                        highLevelPath[0]
+                    );
+                }
+            }
+        }
+
+        Vector2 dirVector = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode);
+
+        // check whether the current sector is adjacent to the next target sector
+        // if not, regenerate the path because we have veered off path
+        if (!SectorManager.Instance.SectorAreNeighbours(currentNode.gridSector, highLevelPath[0]))
+        {
+            highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
+                currentNode.gridSector,
+                localTargetNode.gridSector // TODO: maybe store as attribute in troopAI
+            );
+            return;
+        }
+
+        // Steer
+
+
+        Vector2 desiredVelocity = dirVector.normalized * maxSpeed;
+
+        currVelocity = Vector2.MoveTowards(currVelocity, desiredVelocity, acceleration * Time.deltaTime);
+
+        transform.position += (Vector3)(currVelocity * Time.deltaTime);
+
+        if (currVelocity.sqrMagnitude > 0.01f)
+        {
+            float angle = Mathf.Atan2(currVelocity.y, currVelocity.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, 0f, angle);
+        }
+
+
+        
+
+        // Vector2Int sectorLocalPos = new Vector2Int(
+        //     gridCo
+        // )
+        
+        // navMeshAgent.isStopped = false;
+        // navMeshAgent.speed = maxSpeed * (1 - selfCombatSystem.GetEffectStrength("slow") + selfCombatSystem.GetEffectStrength("haste")); // diff function
+        // navMeshAgent.SetDestination(target.position);
+        // NavMeshPath path = new NavMeshPath();
+        // NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, path);
 
 
         // pathIndicator.enabled = true;

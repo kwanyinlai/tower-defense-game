@@ -33,54 +33,60 @@ public class SectorManager : MonoBehaviour
         grid = GridManager.Instance.GetGrid();
     }
 
-    public static void InitializeSector(int2 sectorCoordinates, GridNode[,] globalGrid)
+    public void InitializeSector(int2 sectorCoordinates, GridNode[,] globalGrid)
     {
         GridSector newSector = new GridSector(sectorCoordinates);
-        GridNode[,] newSectorLocalGrid = new GridNode[GridSector.sectorWidth, GridSector.sectorHeight];
         for (int x = 0; x < GridSector.sectorWidth; x++)
         {
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
-                GridNode newGridNode = globalGrid[sectorCoordinates.x + x, sectorCoordinates.y + y];
+                GridNode newGridNode = globalGrid[sectorCoordinates.x * GridSector.sectorWidth + x, sectorCoordinates.y * GridSector.sectorHeight + y];
 
-
-
+                newGridNode.gridSector = newSector;
                 newGridNode.localX = x;
                 newGridNode.localY = y; // TODO: assigning manually but this feels like bad practice
                 // so think fo better way to impl
-                newSectorLocalGrid[x, y] = newGridNode;
+                newSector.localGrid[x, y] = newGridNode;
+  
 
             }
         }
+        Debug.Log("we're here");
+        newSector.GenerateCostFieldForBorders();
+
+        sectors[sectorCoordinates.x, sectorCoordinates.y] = newSector;
+        newSector.AggregateCosts();
+        Debug.Log("ASDASDASDAS");
     }
 
-    private void CheckAllSectorConnections()
-    {
-        for (int x = 0; x < sectors.GetLength(0); x++)
-        {
-            for (int y = 0; y < sectors.GetLength(1); y++)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    int tempX = x + directions[i].x;
-                    int tempY = y + directions[i].y;
-                    if (0<=tempX && tempX <=sectors.GetLength(0) && 0<= tempY && tempY <=sectors.GetLength(1))
-                    {
-                        sectors[x, y].neighbours[i] = ComputeConnectivity(
-                                                            sectors[x, y],
-                                                            sectors[tempX, tempY],
-                                                            i);
-                    }
-                    
+    // private void CheckAllSectorConnections()
+    // {
+    //     for (int x = 0; x < sectors.GetLength(0); x++)
+    //     {
+    //         for (int y = 0; y < sectors.GetLength(1); y++)
+    //         {
+    //             for (int i = 0; i < 4; i++)
+    //             {
+    //                 int tempX = x + directions[i].x;
+    //                 int tempY = y + directions[i].y;
+    //                 if (0<=tempX && tempX < sectors.GetLength(0) && 0<= tempY && tempY < sectors.GetLength(1))
+    //                 {
+    //                     sectors[x, y].neighbours[i] = ComputeConnectivity(
+    //                                                         sectors[x, y],
+    //                                                         sectors[tempX, tempY],
+    //                                                         i);
+    //                 }
 
-                }
-            }
-        }
-    }
+
+    //             }
+    //         }
+    //     }
+    // }
+
 
     private bool IsTwoNodesConnected(GridNode a, GridNode b)
     {
-        return a.walkCost == float.MaxValue && b.walkCost == float.MaxValue;
+        return a.walkCost < float.MaxValue && b.walkCost < float.MaxValue;
     }
 
     private bool ComputeConnectivity(GridSector from, GridSector to, int cardinality)
@@ -130,6 +136,11 @@ public class SectorManager : MonoBehaviour
         return true;
     }
 
+    public bool SectorAreNeighbours(GridSector sector1, GridSector sector2)
+    {
+        return Mathf.Abs(sector1.sectorCoordinate.x - sector2.sectorCoordinate.x) + Mathf.Abs(sector1.sectorCoordinate.y - sector2.sectorCoordinate.y) == 1;
+    }
+    
     public List<GridSector> GenerateHighLevelSectorPath(GridSector start, GridSector goal)
     {
         PriorityQueue<GridSector, float> openSet = new PriorityQueue<GridSector, float>();
@@ -183,9 +194,34 @@ public class SectorManager : MonoBehaviour
         }
         return sectorPath;
     }
-    
+
     private float AStarHeuristic(GridSector from, GridSector to)
     {
         return Mathf.Abs(from.sectorCoordinate.x - to.sectorCoordinate.x) + Mathf.Abs(from.sectorCoordinate.y - to.sectorCoordinate.y);
     } // using Manhattan for now since only 4, but might need to change
+    
+    private void OnDrawGizmos()
+    {
+        if (sectors == null)
+        {
+            return;
+        }
+
+        for (int x = 0; x<sectors.GetLength(0); x++)
+        {
+            for (int y =0; y< sectors.GetLength(1); y++)
+            {
+                Vector3 origin = new Vector3(
+                    (x * GridSector.sectorWidth - GridManager.gridWidth / 2) * GridManager.tileSize,
+                    0f,
+                    (y * GridSector.sectorHeight - GridManager.gridHeight / 2) * GridManager.tileSize
+                );
+
+                Gizmos.DrawWireCube(
+                    origin + new Vector3(GridSector.sectorWidth * GridManager.tileSize / 2, 0f, GridSector.sectorHeight * GridManager.tileSize / 2),
+                    new Vector3(GridSector.sectorWidth * GridManager.tileSize, 0.1f, GridSector.sectorHeight * GridManager.tileSize)
+                );
+            }
+        }
+    }
 }

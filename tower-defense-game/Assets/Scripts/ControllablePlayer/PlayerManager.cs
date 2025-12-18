@@ -42,8 +42,10 @@ public class PlayerManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.B))
             {
-                currentState = PlayerStates.BuildMenuOpen;
-                
+                currentState = PlayerStates.BuildMenuOpen;   
+            }
+            if (Input.GetKeyDown(KeyCode.O)) {
+                currentState = PlayerStates.SelectingTroops;
             }
         }
         else if (CurrentState == PlayerStates.BuildMenuOpen)
@@ -60,6 +62,11 @@ public class PlayerManager : MonoBehaviour
                 currentState = PlayerStates.ControllingCharacter;
             }
             
+        } else if(currentState == PlayerStates.SelectingTroops) {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                currentState = PlayerStates.ControllingCharacter;
+            }
         }
         
     }

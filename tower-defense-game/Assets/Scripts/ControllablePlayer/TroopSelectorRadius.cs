@@ -4,15 +4,10 @@ using System.Collections.Generic;
 
 public class TroopSelectorRadius : MonoBehaviour
 {
-    private List<GameObject> troopsInRadius = new List<GameObject>();
-    private bool isAcceptingCollisions = false;
+    private List<GameObject> troopsInRadius = new List<GameObject>(); // List for all troops in radius
+    public List<GameObject> TroopsInRadius { get {return troopsInRadius; }} // List for all troops in radius
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
+    // Adds all collisions to the collision list if they are a troop
     private void OnTriggerEnter(Collider collision)
     {
         GameObject obj = collision.gameObject;
@@ -21,6 +16,7 @@ public class TroopSelectorRadius : MonoBehaviour
         }
     }
 
+    // Removes all collisions from the collision list if they are a troop
     private void OnTriggerExit(Collider collision)
     {
         GameObject obj = collision.gameObject;
@@ -29,21 +25,8 @@ public class TroopSelectorRadius : MonoBehaviour
         }
     }
 
-    public List<GameObject> GetTroopsInRadius() {
-        return troopsInRadius;
-    }
-
+    // Clears all troops in collision list
     public void ClearTroopsInRadius() {
         troopsInRadius.Clear();
-    }
-
-    public void SetIsAcceptingCollisions(bool isAccepting) {
-        isAcceptingCollisions = isAccepting;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

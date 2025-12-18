@@ -27,7 +27,7 @@ public class CharacterMovement : MonoBehaviour
 
     public bool IsControllable()
     {
-        return playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter;
+        return playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter || playerData.CurrentState == PlayerManager.PlayerStates.SelectingTroops;
     }
 
     void Update()

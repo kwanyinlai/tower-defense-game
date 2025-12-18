@@ -3,24 +3,30 @@ using System.Collections.Generic;
 
 public class TroopControllerManager : MonoBehaviour
 {
-    enum ControlState {
+    public enum ControlState {
         Selecting,
-        Controling,
+        Controlling,
         Nothing
     }
 
     private float timeElapsed;
     private float bubbleSize;
     private bool isGrowing;
+
     private const float BUBBLE_GROWTH_RATE = 15.0f;
     private const float BUBBLE_MAX_SCALE = 45.0f;
     private const float MAX_RADIUS = 45.0f;
     private const float TAP_THRESHOLD = 0.35f;
+    private const float BUBBLE_INIT_SIZE = 1.0f;
+    
     [SerializeField] private GameObject bubbleIndicator;
     [SerializeField] private TroopSelectorRadius troopSelectorRadius;
+    [SerializeField] private PlayerManager playerData;
+    
     private List<GameObject> selectedTroops = new List<GameObject>();
     private Transform bubbleIndicatorTransform;
     private ControlState controlState = ControlState.Nothing;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +34,7 @@ public class TroopControllerManager : MonoBehaviour
         bubbleIndicator.SetActive(false);
         bubbleIndicatorTransform = bubbleIndicator.transform; // bubbleIndicator.GetComponent<Transform>();
         timeElapsed = -1;
+        playerData = GetComponent<PlayerManager>();
     }
 
     // Update is called once per frame
@@ -44,50 +51,68 @@ public class TroopControllerManager : MonoBehaviour
 
     // Handles any inputs
     void HandleInputs() {
-        if(Input.GetKeyDown(KeyCode.O)) {
-            if(controlState == ControlState.Controling) {
-                StopControling();
+        // Checks whether inputs are meant for starting/stopping selecting or stopping controlling (or statement is because PlayerManager's input checker could run before or after this)
+        if(playerData.CurrentState == PlayerManager.PlayerStates.SelectingTroops || playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter) {
+            // Starts selecting
+            if(Input.GetKeyDown(KeyCode.O)) {
+                if(controlState == ControlState.Controlling) {
+                    StopControlling();
+                }
+                SetupSelecting();
             }
-            SetupSelecting();
-        }
 
-        if(Input.GetKeyUp(KeyCode.O)) {
-            if(isGrowing) {
-                AddTroopsInRadius();
-            } else {
-                SelectClosestTroop();
+            // Stops selecting or controlling
+            if(Input.GetKeyUp(KeyCode.Escape) && controlState != ControlState.Nothing) {
+                StopControlling();
             }
-            timeElapsed = -1;
         }
+        
+        // Checks wheter inputs are meant for selecting or controlling
+        if(playerData.CurrentState == PlayerManager.PlayerStates.SelectingTroops) {
+            // Proccess whether selection input is for wide spread (radius) or single
+            if(Input.GetKeyUp(KeyCode.O)) {
+                if(isGrowing) {
+                    AddTroopsInRadius();
+                } else {
+                    SelectClosestTroop();
+                }
+                timeElapsed = -1;
+            }
 
-        if(Input.GetKeyUp(KeyCode.Return) && controlState == ControlState.Selecting) {
-            SetupControl();
-        }
-
-        if(Input.GetKeyUp(KeyCode.Escape) && controlState != ControlState.Nothing) {
-            StopControling();
+            // Makes all troops selected to following flag 
+            if(Input.GetKeyUp(KeyCode.Return) && controlState == ControlState.Selecting) {
+                SetupControl();
+            }
         }
     }
 
+    // Sets up selecting input
     void SetupSelecting() {
-        timeElapsed = 0;
-        bubbleSize = 1.0f;
         controlState = ControlState.Selecting;
+        timeElapsed = 0;
+        bubbleSize = BUBBLE_INIT_SIZE;
         isGrowing = false;
     }
 
+    // Sets up control by making all selected troops to follow flag
     void SetupControl() {
-        controlState = ControlState.Controling;
-        Debug.Log("TESTING " + selectedTroops.Count + " under command");
-        troopSelectorRadius.SetIsAcceptingCollisions(false);
-        troopSelectorRadius.ClearTroopsInRadius();
-        bubbleIndicator.SetActive(false);
-        foreach(GameObject troop in selectedTroops) {
-            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-            troopAI.IsUnderSelection = true;
+        controlState = ControlState.Controlling;
+        if(selectedTroops.Count == 0) {
+            // Cancels control mode if no troops selected (allows players to redo selecting without having to cancel)
+            StopControlling();
+        } else {
+            // Sets all selected troops to follow and hides bubble indicator
+            troopSelectorRadius.ClearTroopsInRadius();
+            bubbleIndicatorTransform.localScale = new Vector3(BUBBLE_INIT_SIZE, 0.1f, BUBBLE_INIT_SIZE);
+            bubbleIndicator.SetActive(false);
+            foreach(GameObject troop in selectedTroops) {
+                PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
+                troopAI.IsUnderSelection = true;
+            }
         }
     }
 
+    // Selects the closest troops that's not already in the selected list
     void SelectClosestTroop() {
         GameObject closestTroop = null;
         double closestDistance = 0.0;
@@ -105,17 +130,26 @@ public class TroopControllerManager : MonoBehaviour
         }
     }
 
-    void StopControling() {
+    // Stops controlling all troops and returns them to default state
+    void StopControlling() {
         controlState = ControlState.Nothing;
+        // Returns all controlled troops to default state
         foreach(GameObject troop in selectedTroops) {
             PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
             troopAI.IsUnderSelection = false;
         }
+        // Hides bubble indicator
+        if(bubbleIndicator.activeSelf == true){
+            troopSelectorRadius.ClearTroopsInRadius();
+            bubbleIndicatorTransform.localScale = new Vector3(BUBBLE_INIT_SIZE, 0.1f, BUBBLE_INIT_SIZE);
+            bubbleIndicator.SetActive(false);
+        }
         selectedTroops.Clear();
     }
 
+    // Adds all troops in the bubble indicator
     void AddTroopsInRadius() {
-        foreach(GameObject troop in troopSelectorRadius.GetTroopsInRadius()) {
+        foreach(GameObject troop in troopSelectorRadius.TroopsInRadius) {
             selectedTroops.Add(troop);
         }
     }
@@ -123,23 +157,19 @@ public class TroopControllerManager : MonoBehaviour
     // Decides when to increase the radius selector and if it is visible
     void IncreaseSelectionRadius() {
         timeElapsed += Time.deltaTime;
-        // Either increase bubble size or init bubble size
         if(isGrowing) {
             if(bubbleSize < BUBBLE_MAX_SCALE) {
+                // Formula for bubble size growth
                 bubbleSize = (timeElapsed - TAP_THRESHOLD) * BUBBLE_GROWTH_RATE;
-                // 44.0f/9.0f * (timeElapsed - 3.0f - TAP_THRESHOLD) * (timeElapsed - 3.0f - TAP_THRESHOLD) + 45.0f;
-                // 21.5f/3.375f * (timeElapsed -1.5f) * (timeElapsed -1.5f) * (timeElapsed -1.5f) + 22.5f;
                 if(bubbleSize > BUBBLE_MAX_SCALE) {
                     bubbleSize = BUBBLE_MAX_SCALE;
                 }
                 bubbleIndicatorTransform.localScale = new Vector3(bubbleSize, 0.1f, bubbleSize);
             }
         } else if(timeElapsed > TAP_THRESHOLD) {
-            // When to know the difference between a taping and holding a button
+            // Signals code that the selection input is meant for wide area and reveals bubble indicator
             bubbleIndicator.SetActive(true);
-            // bubbleIndicator is visible w/ dimensions of 1
             bubbleIndicatorTransform.localScale = new Vector3(bubbleSize, 0.1f, bubbleSize);
-            troopSelectorRadius.SetIsAcceptingCollisions(true);
             troopSelectorRadius.ClearTroopsInRadius();
             isGrowing = true;
         }

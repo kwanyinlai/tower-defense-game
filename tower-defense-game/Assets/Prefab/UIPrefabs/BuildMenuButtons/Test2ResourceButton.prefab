@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3332905951073950243
+--- !u!1 &3350578820843231538
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,9 +8,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7366261997177517712}
-  - component: {fileID: 590996769439984137}
-  - component: {fileID: 1049476531764647724}
+  - component: {fileID: 4335847140868726529}
+  - component: {fileID: 4926377826784363640}
+  - component: {fileID: 1628006342048048480}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -18,40 +18,40 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &7366261997177517712
+--- !u!224 &4335847140868726529
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3332905951073950243}
+  m_GameObject: {fileID: 3350578820843231538}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7207864976085967694}
+  m_Father: {fileID: 456568004511524099}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &590996769439984137
+--- !u!222 &4926377826784363640
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3332905951073950243}
+  m_GameObject: {fileID: 3350578820843231538}
   m_CullTransparentMesh: 1
---- !u!114 &1049476531764647724
+--- !u!114 &1628006342048048480
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3332905951073950243}
+  m_GameObject: {fileID: 3350578820843231538}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Basic Barrack
+  m_text: Test2 Collector
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &7287753651581646086
+--- !u!1 &5810102389326506061
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,53 +144,53 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7207864976085967694}
-  - component: {fileID: 4549717460965730635}
-  - component: {fileID: 4486035003568095876}
-  - component: {fileID: 8365475252942886866}
-  - component: {fileID: 4623516582442921515}
+  - component: {fileID: 456568004511524099}
+  - component: {fileID: 126484360786639534}
+  - component: {fileID: 1460617312346916802}
+  - component: {fileID: 8977356838380338764}
+  - component: {fileID: 4670407421148714562}
   m_Layer: 5
-  m_Name: BasicBarrackButton
-  m_TagString: BarrackTypeButton
+  m_Name: Test2ResourceButton
+  m_TagString: ResourceBuildingButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &7207864976085967694
+--- !u!224 &456568004511524099
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287753651581646086}
+  m_GameObject: {fileID: 5810102389326506061}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7366261997177517712}
+  - {fileID: 4335847140868726529}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 277.01, y: -100}
-  m_SizeDelta: {x: 200, y: 200}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4549717460965730635
+--- !u!222 &126484360786639534
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287753651581646086}
+  m_GameObject: {fileID: 5810102389326506061}
   m_CullTransparentMesh: 1
---- !u!114 &4486035003568095876
+--- !u!114 &1460617312346916802
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287753651581646086}
+  m_GameObject: {fileID: 5810102389326506061}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -214,13 +214,13 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8365475252942886866
+--- !u!114 &8977356838380338764
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287753651581646086}
+  m_GameObject: {fileID: 5810102389326506061}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -254,35 +254,32 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 4486035003568095876}
+  m_TargetGraphic: {fileID: 1460617312346916802}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4623516582442921515}
+      - m_Target: {fileID: 4670407421148714562}
         m_TargetAssemblyTypeName: ButtonScripts, Assembly-CSharp
-        m_MethodName: BasicBarrackButton
+        m_MethodName: Test2ResourceButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: barrack
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4623516582442921515
+--- !u!114 &4670407421148714562
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287753651581646086}
+  m_GameObject: {fileID: 5810102389326506061}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d3cbafd2c7e65a42b647f0a28658655, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allButtonsPrefabs:
-  - {fileID: 4596395588477862925, guid: 01e11b63b9f318f4ab2c0f4bb6823d48, type: 3}
-  - {fileID: 7287753651581646086}
-  - {fileID: 5529939355292146539, guid: 87923b422e1cf484ca46e7b24cb7a710, type: 3}
+  allButtonsPrefabs: []

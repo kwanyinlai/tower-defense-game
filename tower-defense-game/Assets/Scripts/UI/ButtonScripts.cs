@@ -92,6 +92,11 @@ public class ButtonScripts : MonoBehaviour
         buildMode.SetActiveBuilding(7);
         BuildingButtonPress();
     }
+    public void Test2ResourceButton()
+    {
+        buildMode.SetActiveBuilding(8);
+        BuildingButtonPress();
+    }
     #endregion
 
 

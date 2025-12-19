@@ -124,7 +124,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8508567505911949690}
         m_TargetAssemblyTypeName: ButtonScripts, Assembly-CSharp
-        m_MethodName: woodResourceButton
+        m_MethodName: WoodResourceButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -10,7 +10,7 @@ public class StructureMenu : MonoBehaviour
     public Material highlightMaterial;
 
     private TextMeshProUGUI infoTextText; //Text of infoText
-    private GameObject selectedObject = null;
+    [SerializeField]private GameObject selectedObject = null;
     private Material defaultMaterial = null;
     
     // For Buildings

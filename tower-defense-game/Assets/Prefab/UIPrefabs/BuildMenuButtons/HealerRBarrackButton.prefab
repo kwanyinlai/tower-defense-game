@@ -124,7 +124,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3779396213172098703}
         m_TargetAssemblyTypeName: ButtonScripts, Assembly-CSharp
-        m_MethodName: healerRBarrackButton
+        m_MethodName: HealerRadiusBarrackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

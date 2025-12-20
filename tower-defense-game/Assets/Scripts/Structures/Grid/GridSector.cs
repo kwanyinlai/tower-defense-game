@@ -114,9 +114,6 @@ public class GridSector // for HPA*
         {
             return false;
         }
-
-        Debug.Log("Checking connection from node at global coords: " + node.globalX + ", " + node.globalY + " to node at global coords: " + (node.globalX + dir.x) + ", " + (node.globalY + dir.y));
-
         return GridManager.Instance.GetGrid()[node.globalX + dir.x, node.globalY + dir.y].walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
     }
 

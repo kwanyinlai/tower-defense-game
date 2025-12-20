@@ -119,7 +119,6 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < gridHeight / GridSector.sectorHeight; y++)
             {
                 SectorManager.Instance.InitializeSector(new int2(x, y), grid);
-                Debug.Log("Initialized sector at coords: " + x + ", " + y);
 
             }
         }

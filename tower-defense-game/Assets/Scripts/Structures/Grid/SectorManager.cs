@@ -41,7 +41,6 @@ public class SectorManager : MonoBehaviour
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
                 GridNode newGridNode = globalGrid[sectorCoordinates.x * GridSector.sectorWidth + x, sectorCoordinates.y * GridSector.sectorHeight + y];
-                Debug.Log("Assigning node at global coords: " + (sectorCoordinates.x * GridSector.sectorWidth + x) + ", " + (sectorCoordinates.y * GridSector.sectorHeight + y) + " to sector at local coords: " + x + ", " + y);
                 newGridNode.gridSector = newSector;
                 newGridNode.localX = x;
                 newGridNode.localY = y; // TODO: assigning manually but this feels like bad practice
@@ -57,7 +56,6 @@ public class SectorManager : MonoBehaviour
 
         sectors[sectorCoordinates.x, sectorCoordinates.y] = newSector;
         newSector.AggregateCosts();
-        Debug.Log("ASDASDASDAS");
     }
 
     // private void CheckAllSectorConnections()

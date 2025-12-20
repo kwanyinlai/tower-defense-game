@@ -1,73 +1,87 @@
 using System;
 using System.Collections.Generic;
 
-public class PriorityQueue<TItem, TPriority> where TPriority : IComparable<TPriority>
+public class PriorityQueue<T>
 {
-    private List<(TItem item, TPriority priority)> heap = new List<(TItem, TPriority)>();
+    private readonly List<(T Item, float Priority)> _heap = new();
 
-    public int Count => heap.Count;
+    public float Count => _heap.Count;
 
-    public void Enqueue(TItem item, TPriority priority)
+    // Add an item with a priority
+    public void Enqueue(T item, float priority)
     {
-        heap.Add((item, priority));
-        HeapifyUp(heap.Count - 1);
+        _heap.Add((item, priority));
+        HeapifyUp(_heap.Count - 1);
     }
 
-    public TItem Dequeue()
+    // Remove and return the item with the smallest priority
+    public T Dequeue()
     {
-        if (heap.Count == 0) throw new InvalidOperationException("Queue is empty.");
-        var root = heap[0].item;
-        var last = heap[heap.Count - 1];
-        heap[0] = last;
-        heap.RemoveAt(heap.Count - 1);
+        if (_heap.Count == 0)
+            throw new InvalidOperationException("Queue is empty");
+
+        T result = _heap[0].Item;
+
+        // Move last item to root
+        _heap[0] = _heap[^1];
+        _heap.RemoveAt(_heap.Count - 1);
+
         HeapifyDown(0);
-        return root;
+
+        return result;
     }
 
-    public void UpdatePriority(TItem item, TPriority newPriority)
+    // Look at the next item without removing it
+    public T Peek()
     {
-        int index = heap.FindIndex(x => EqualityComparer<TItem>.Default.Equals(x.item, item));
-        if (index == -1) throw new InvalidOperationException("Item not found.");
-        heap[index] = (item, newPriority);
-        HeapifyUp(index);
-        HeapifyDown(index);
+        if (_heap.Count == 0)
+            throw new InvalidOperationException("Queue is empty");
+
+        return _heap[0].Item;
     }
+
+    // --- Heap helpers ---
 
     private void HeapifyUp(int index)
     {
-        var child = heap[index];
         while (index > 0)
         {
-            int parentIndex = (index - 1) / 2;
-            var parent = heap[parentIndex];
-            if (child.priority.CompareTo(parent.priority) >= 0) break;
-            heap[index] = parent;
-            index = parentIndex;
+            int parent = (index - 1) / 2;
+
+            if (_heap[index].Priority >= _heap[parent].Priority)
+                break;
+
+            Swap(index, parent);
+            index = parent;
         }
-        heap[index] = child;
     }
 
     private void HeapifyDown(int index)
     {
-        var item = heap[index];
-        int childIndex;
-        while ((childIndex = GetLeftChildIndex(index)) < heap.Count)
+        while (true)
         {
-            int rightChildIndex = GetRightChildIndex(index);
-            if (rightChildIndex < heap.Count &&
-                heap[rightChildIndex].priority.CompareTo(heap[childIndex].priority) < 0)
-            {
-                childIndex = rightChildIndex;
-            }
+            int left = index * 2 + 1;
+            int right = index * 2 + 2;
+            int smallest = index;
 
-            if (item.priority.CompareTo(heap[childIndex].priority) <= 0) break;
+            if (left < _heap.Count &&
+                _heap[left].Priority < _heap[smallest].Priority)
+                smallest = left;
 
-            heap[index] = heap[childIndex];
-            index = childIndex;
+            if (right < _heap.Count &&
+                _heap[right].Priority < _heap[smallest].Priority)
+                smallest = right;
+
+            if (smallest == index)
+                break;
+
+            Swap(index, smallest);
+            index = smallest;
         }
-        heap[index] = item;
     }
 
-    private int GetLeftChildIndex(int parentIndex) => 2 * parentIndex + 1;
-    private int GetRightChildIndex(int parentIndex) => 2 * parentIndex + 2;
+    private void Swap(int a, int b)
+    {
+        (_heap[a], _heap[b]) = (_heap[b], _heap[a]);
+    }
 }

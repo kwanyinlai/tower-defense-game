@@ -12,6 +12,7 @@ public class GridSector // for HPA*
 
     public int2 sectorCoordinate;
 
+    
     public enum CardinalDirections
     {
         North = 0,
@@ -22,10 +23,10 @@ public class GridSector // for HPA*
 
     public GridNode[,] localGrid = new GridNode[sectorWidth, sectorHeight];
 
-    private float[][,] borderCostFields;
+    private float[][,] borderCostFields = new float[4][,]; // NESW
 
     // Linked hash
-    private FlowFieldCache cachedFields;
+    private FlowFieldCache cachedFields = new FlowFieldCache(10);
 
     private int cacheSize = 10;
 
@@ -105,14 +106,16 @@ public class GridSector // for HPA*
     
     private static bool CheckConnected(GridNode node, int2 dir)
     {
-        if (node.globalX + dir.x >= GridManager.Instance.GetGrid().GetLength(0) || node.globalX + dir.y < 0)
+        if (node.globalX + dir.x >= GridManager.Instance.GetGrid().GetLength(0) || node.globalX + dir.x < 0)
         {
             return false;
         }
-        if (node.globalY + dir.y >= GridManager.Instance.GetGrid().GetLength(1) || node.globalX + dir.y < 0)
+        if (node.globalY + dir.y >= GridManager.Instance.GetGrid().GetLength(1) || node.globalY + dir.y < 0)
         {
             return false;
         }
+
+        Debug.Log("Checking connection from node at global coords: " + node.globalX + ", " + node.globalY + " to node at global coords: " + (node.globalX + dir.x) + ", " + (node.globalY + dir.y));
 
         return GridManager.Instance.GetGrid()[node.globalX + dir.x, node.globalY + dir.y].walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
     }
@@ -184,7 +187,7 @@ public class GridSector // for HPA*
             }
         }
 
-        var pq = new PriorityQueue<GridNode, float>();
+        var pq = new PriorityQueue<GridNode>();
         Dictionary<GridNode, float> nodeCosts = new Dictionary<GridNode, float>();
 
         // Add source nodes
@@ -236,7 +239,7 @@ public class GridSector // for HPA*
             }
         }
 
-        PriorityQueue<GridNode, float> uncheckedNodes = new PriorityQueue<GridNode, float>();
+        PriorityQueue<GridNode> uncheckedNodes = new PriorityQueue<GridNode>();
         // enqueue all border nodes first
 
         costField[goalNode.localX, goalNode.localY] = 0f;
@@ -431,6 +434,7 @@ public class FlowFieldCache
     public FlowFieldCache(int cacheSize)
     {
         this.cacheSize = cacheSize;
+        cachedFields = new Dictionary<GridNode, CacheItem>();
     }
     private class CacheItem
     {
@@ -466,12 +470,13 @@ public class FlowFieldCache
 
     public void AddFlowFieldToCache(GridNode targetNode, Vector2[,] flowField)
     {
-        if (!cachedFields.TryGetValue(targetNode, out CacheItem item))
+        if (cachedFields.TryGetValue(targetNode, out CacheItem item))
         {
             item.flowField = flowField;
             UpdateMostRecentlyUsed(item);
             return;
         }
+
         item = new CacheItem(targetNode, flowField);
         AddNodeToHead(item);
         cachedFields[targetNode] = item;

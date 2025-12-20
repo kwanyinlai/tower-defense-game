@@ -119,6 +119,7 @@ public class GridManager : MonoBehaviour
             for (int y = 0; y < gridHeight / GridSector.sectorHeight; y++)
             {
                 SectorManager.Instance.InitializeSector(new int2(x, y), grid);
+                Debug.Log("Initialized sector at coords: " + x + ", " + y);
 
             }
         }
@@ -128,10 +129,16 @@ public class GridManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Get the GridNode corresponding to world coordinates in 3D space
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <returns>GridNode</returns>
     public GridNode NodeFromWorldPos(Vector3 coordinates)
     {
         int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; 
         int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
+        Debug.Log("NodeFromWorldPos called with coordinates: " + coordinates + ", resulting in grid coords: " + x + ", " + z);
         return grid[x,z];
     }
 

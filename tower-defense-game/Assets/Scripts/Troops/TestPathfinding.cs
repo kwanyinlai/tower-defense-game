@@ -17,7 +17,7 @@ public class TestPathfinding : MonoBehaviour
 
   
     // Combat Stats
-    [SerializeField] protected Vector3 enemyTarget;
+    [SerializeField] protected Vector3? enemyTarget;
 
     
 
@@ -27,7 +27,7 @@ public class TestPathfinding : MonoBehaviour
 
         if (enemyTarget != null)
         {
-            MoveTowardsTarget(enemyTarget);
+            MoveTowardsTarget(enemyTarget.Value);
         }
     }
 
@@ -39,6 +39,7 @@ public class TestPathfinding : MonoBehaviour
             RaycastHit hit;
 
             int floorLayerMask = LayerMask.GetMask("Floor");
+            Debug.Log("Shooting ray at mouse position");
 
             if (Physics.Raycast(ray, out hit, 100f, floorLayerMask))
             {
@@ -55,10 +56,11 @@ public class TestPathfinding : MonoBehaviour
 
     protected void MoveTowardsTarget(Vector3 target)
     { 
+        CheckReachedTarget(target);
         Debug.Log("Moving towards target: " + target);
         GridManager gridManager = GridManager.Instance;
 
-        GridNode currentNode = gridManager.NodeFromWorldPos(target);
+        GridNode currentNode = gridManager.NodeFromWorldPos(transform.position);
         localTargetNode = gridManager.NodeFromWorldPos(target);
 
         if (highLevelPath == null)
@@ -138,6 +140,20 @@ public class TestPathfinding : MonoBehaviour
 
         
 
+    }
+
+    private void CheckReachedTarget(Vector3? target)
+    {
+        if (target == null) return;
+        Vector3 targetValue = target.Value;
+        float distanceToTarget = Vector3.Distance(transform.position, targetValue);
+        if (distanceToTarget < 0.1f)
+        {
+            Debug.Log("Reached target at: " + targetValue);
+            enemyTarget = null;
+            currVelocity = Vector2.zero;
+            highLevelPath = null;
+        }
     }
 
 

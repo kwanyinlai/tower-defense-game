@@ -4,11 +4,11 @@ using UnityEngine;
 public class BuildMode : MonoBehaviour
 {
     // Building Parents (for organization)
-    [SerializeField] private GameObject buildingStructureParentClass
-    ;
+    [SerializeField] private GameObject buildingStructureParentClass;
     [SerializeField]
-    private GameObject buildingStructureOutlineParentClass
-    ;
+    private GameObject buildingStructureOutlineParentClass;
+
+    
 
     private PlayerManager playerData;
 
@@ -55,6 +55,7 @@ public class BuildMode : MonoBehaviour
         {
             CloseBuildMenu();
         }
+
 
     }
 

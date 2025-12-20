@@ -41,17 +41,18 @@ public class SectorManager : MonoBehaviour
             for (int y = 0; y < GridSector.sectorHeight; y++)
             {
                 GridNode newGridNode = globalGrid[sectorCoordinates.x * GridSector.sectorWidth + x, sectorCoordinates.y * GridSector.sectorHeight + y];
-
+                Debug.Log("Assigning node at global coords: " + (sectorCoordinates.x * GridSector.sectorWidth + x) + ", " + (sectorCoordinates.y * GridSector.sectorHeight + y) + " to sector at local coords: " + x + ", " + y);
                 newGridNode.gridSector = newSector;
                 newGridNode.localX = x;
                 newGridNode.localY = y; // TODO: assigning manually but this feels like bad practice
+
+                // might cause issues later with references,
                 // so think fo better way to impl
                 newSector.localGrid[x, y] = newGridNode;
   
 
             }
         }
-        Debug.Log("we're here");
         newSector.GenerateCostFieldForBorders();
 
         sectors[sectorCoordinates.x, sectorCoordinates.y] = newSector;
@@ -143,13 +144,17 @@ public class SectorManager : MonoBehaviour
     
     public List<GridSector> GenerateHighLevelSectorPath(GridSector start, GridSector goal)
     {
-        PriorityQueue<GridSector, float> openSet = new PriorityQueue<GridSector, float>();
+        PriorityQueue<GridSector> openSet = new PriorityQueue<GridSector>();
         Dictionary<GridSector, GridSector> cameFrom = new Dictionary<GridSector, GridSector>();
         Dictionary<GridSector, float> fScore = new Dictionary<GridSector, float>();
         Dictionary<GridSector, float> gScore = new Dictionary<GridSector, float>();
         HashSet<GridSector> inOpenSet = new HashSet<GridSector>();
 
+
+        gScore[start] = 0f;
+        fScore[start] = AStarHeuristic(start, goal);
         openSet.Enqueue(start, fScore[start]);
+        inOpenSet.Add(start);
 
         while (openSet.Count > 0)
         {
@@ -162,11 +167,10 @@ public class SectorManager : MonoBehaviour
             }
             for (int i = 0; i < 4; i++)
             {
-                var neighbour = sectors[current.sectorCoordinate.x + directions[i].x,
-                                    current.sectorCoordinate.y + directions[i].y];
-                var tentativeGScore = gScore[current] + neighbour.averageCost; // calc cost
 
-
+                GridSector neighbour = current.neighbours[i];
+                float currentG = gScore.ContainsKey(current) ? gScore[current] : float.PositiveInfinity;
+                var tentativeGScore = currentG + neighbour.averageCost; // calc cost
                 if (!gScore.ContainsKey(neighbour) || tentativeGScore < gScore[neighbour])
                 {
                     cameFrom[neighbour] = current;

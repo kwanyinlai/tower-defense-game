@@ -7,11 +7,19 @@ public class TroopSelectorRadius : MonoBehaviour
     private List<GameObject> troopsInRadius = new List<GameObject>(); // List for all troops in radius
     public List<GameObject> TroopsInRadius { get {return troopsInRadius; }} // List for all troops in radius
 
+    private List<PlayerTroopAI> troopAIList = new List<PlayerTroopAI>();
+    public List<GameObject> TroopAIList { get {return troopsInRadius; }}
+
+    public Material selectedMaterial;
+
     // Adds all collisions to the collision list if they are a troop
     private void OnTriggerEnter(Collider collision)
     {
         GameObject obj = collision.gameObject;
         if(obj.CompareTag("Troop")) {
+            PlayerTroopAI troopAI = obj.GetComponent<PlayerTroopAI>();
+            troopAI.ShowCircle();
+            troopAIList.Add(troopAI);
             troopsInRadius.Add(obj);
         }
     }
@@ -21,7 +29,12 @@ public class TroopSelectorRadius : MonoBehaviour
     {
         GameObject obj = collision.gameObject;
         if(obj.CompareTag("Troop")) {
-            troopsInRadius.Remove(obj);
+            int index = troopsInRadius.IndexOf(obj);
+            if(index != -1) {
+                troopAIList[index].HideCircle();
+                troopAIList.RemoveAt(index);
+                troopsInRadius.RemoveAt(index);
+            }
         }
     }
 

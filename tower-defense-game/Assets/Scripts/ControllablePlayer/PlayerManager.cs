@@ -63,7 +63,7 @@ public class PlayerManager : MonoBehaviour
             }
             
         } else if(currentState == PlayerStates.SelectingTroops) {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Return))
             {
                 currentState = PlayerStates.ControllingCharacter;
             }

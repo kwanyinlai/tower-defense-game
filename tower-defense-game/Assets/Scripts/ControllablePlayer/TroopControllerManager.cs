@@ -21,7 +21,8 @@ public class TroopControllerManager : MonoBehaviour
     
     [SerializeField] private GameObject bubbleIndicator;
     [SerializeField] private TroopSelectorRadius troopSelectorRadius;
-    [SerializeField] private PlayerManager playerData;
+    
+    private PlayerManager playerData;
     
     private List<GameObject> selectedTroops = new List<GameObject>();
     private Transform bubbleIndicatorTransform;
@@ -55,15 +56,17 @@ public class TroopControllerManager : MonoBehaviour
         if(playerData.CurrentState == PlayerManager.PlayerStates.SelectingTroops || playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter) {
             // Starts selecting
             if(Input.GetKeyDown(KeyCode.O)) {
-                if(controlState == ControlState.Controlling) {
-                    StopControlling();
-                }
                 SetupSelecting();
             }
 
             // Stops selecting or controlling
             if(Input.GetKeyUp(KeyCode.Escape) && controlState != ControlState.Nothing) {
                 StopControlling();
+            }
+
+            // Makes all troops selected to following flag 
+            if(Input.GetKeyUp(KeyCode.Return) && controlState == ControlState.Selecting) {
+                SetupControl();
             }
         }
         
@@ -74,14 +77,9 @@ public class TroopControllerManager : MonoBehaviour
                 if(isGrowing) {
                     AddTroopsInRadius();
                 } else {
-                    SelectClosestTroop();
+                    AddClosestTroop();
                 }
                 timeElapsed = -1;
-            }
-
-            // Makes all troops selected to following flag 
-            if(Input.GetKeyUp(KeyCode.Return) && controlState == ControlState.Selecting) {
-                SetupControl();
             }
         }
     }
@@ -99,6 +97,7 @@ public class TroopControllerManager : MonoBehaviour
         controlState = ControlState.Controlling;
         if(selectedTroops.Count == 0) {
             // Cancels control mode if no troops selected (allows players to redo selecting without having to cancel)
+            Debug.Log("NONE FOUND!!!");
             StopControlling();
         } else {
             // Sets all selected troops to follow and hides bubble indicator
@@ -107,26 +106,28 @@ public class TroopControllerManager : MonoBehaviour
             bubbleIndicator.SetActive(false);
             foreach(GameObject troop in selectedTroops) {
                 PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-                troopAI.IsUnderSelection = true;
+                troopAI.SetupControl();
             }
         }
     }
 
     // Selects the closest troops that's not already in the selected list
-    void SelectClosestTroop() {
+    void AddClosestTroop() {
         GameObject closestTroop = null;
         double closestDistance = 0.0;
         Vector3 playerPos = gameObject.transform.position;
         foreach(GameObject troop in PlayerTroopAI.AllPlayerTroops) {
             double currDistance = Vector3.Distance(troop.transform.position, playerPos);
-            if(closestTroop == null || (currDistance < closestDistance && !selectedTroops.Contains(troop))) {
+            if((closestTroop == null || currDistance < closestDistance) && !selectedTroops.Contains(troop)) {
                 closestTroop = troop;
                 closestDistance = currDistance;
             }
         }
 
         if(closestTroop != null && closestDistance <= MAX_RADIUS) {
+            PlayerTroopAI troopAI = closestTroop.GetComponent<PlayerTroopAI>();
             selectedTroops.Add(closestTroop);
+            troopAI.ShowCircle();
         }
     }
 
@@ -136,7 +137,7 @@ public class TroopControllerManager : MonoBehaviour
         // Returns all controlled troops to default state
         foreach(GameObject troop in selectedTroops) {
             PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-            troopAI.IsUnderSelection = false;
+            troopAI.DisableControl();
         }
         // Hides bubble indicator
         if(bubbleIndicator.activeSelf == true){
@@ -144,7 +145,15 @@ public class TroopControllerManager : MonoBehaviour
             bubbleIndicatorTransform.localScale = new Vector3(BUBBLE_INIT_SIZE, 0.1f, BUBBLE_INIT_SIZE);
             bubbleIndicator.SetActive(false);
         }
-        selectedTroops.Clear();
+
+        // selectedTroops.Clear();
+        while(selectedTroops.Count > 0) {
+            // Checks for if troop has been already killed
+            if(selectedTroops[0] != null) {
+                selectedTroops[0].GetComponent<PlayerTroopAI>().HideCircle();
+            }
+            selectedTroops.RemoveAt(0);
+        }
     }
 
     // Adds all troops in the bubble indicator

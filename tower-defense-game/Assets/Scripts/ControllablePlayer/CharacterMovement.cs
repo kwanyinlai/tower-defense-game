@@ -32,7 +32,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-        if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter)
+        if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter || playerData.CurrentState == PlayerManager.PlayerStates.SelectingTroops)
         {
             Character();
         }

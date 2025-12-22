@@ -53,13 +53,25 @@ public class PlayerTroopAI : TroopAI
         ControlTroop();
     }
 
+    public void SetupControl() {
+        IsUnderSelection = true;
+        troopState = TroopState.Controlled;
+        ShowCircle();
+    }
+
+    public void DisableControl() {
+        IsUnderSelection = false;
+        troopState = TroopState.Disengaged;
+        HideCircle();
+    }
+
     protected void ControlTroop() {
         // For when the player is selecting the troop, but TODO: maybe move this out of AI logic
         if(IsUnderSelection && troopState == TroopState.Disengaged){
-            ShowCircle();
+            // ShowCircle();
         }
         else{
-            HideCircle();
+            // HideCircle();
         }
     }
 

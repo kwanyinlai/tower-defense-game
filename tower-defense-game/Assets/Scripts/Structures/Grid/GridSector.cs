@@ -127,7 +127,7 @@ public class GridSector // for HPA*
                 for (int x = 0; x < sectorWidth; x++)
                 {
                     var node = localGrid[x, sectorHeight - 1];
-                    if (GridSector.CheckConnected(node, new int2(0, -1))) // check connected
+                    if (CheckConnected(node, new int2(0, -1))) // check connected
                     {
                         border.Add(node);
                     }
@@ -138,7 +138,7 @@ public class GridSector // for HPA*
                 for (int y = 0; y < sectorHeight; y++)
                 {
                     var node = localGrid[sectorWidth - 1, y];
-                    if (GridSector.CheckConnected(node, new int2(1, 0)))
+                    if (CheckConnected(node, new int2(1, 0)))
                     {
                         border.Add(node);
                     }
@@ -149,7 +149,7 @@ public class GridSector // for HPA*
                 for (int x = 0; x < sectorWidth; x++)
                 {
                     var node = localGrid[x, 0];
-                    if (GridSector.CheckConnected(node, new int2(0, 1)))
+                    if (CheckConnected(node, new int2(0, 1)))
                     {
                         border.Add(node);
                     }
@@ -160,7 +160,7 @@ public class GridSector // for HPA*
                 for (int y = 0; y < sectorHeight; y++)
                 {
                     var node = localGrid[0, y];
-                    if (GridSector.CheckConnected(node, new int2(-1, 0)))
+                    if (CheckConnected(node, new int2(-1, 0)))
                     {
                         border.Add(node);
                     }

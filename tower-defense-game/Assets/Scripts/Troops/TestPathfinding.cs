@@ -37,6 +37,7 @@ public class TestPathfinding : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
+            
 
             int floorLayerMask = LayerMask.GetMask("Floor");
             Debug.Log("Shooting ray at mouse position");
@@ -46,7 +47,7 @@ public class TestPathfinding : MonoBehaviour
                 // Set the clicked position as target
                 Debug.Log("Mouse clicked at: " + hit.point);
                 Vector3 clickPos = hit.point;
-                clickPos.z = 0f; // Ensure movement in 2D plane
+                clickPos.y = 0; // Assuming a 2D plane at z=0
                 enemyTarget = clickPos;
             }
         }
@@ -56,18 +57,26 @@ public class TestPathfinding : MonoBehaviour
 
     protected void MoveTowardsTarget(Vector3 target)
     { 
-        CheckReachedTarget(target);
-        Debug.Log("Moving towards target: " + target);
+        if (CheckReachedTarget(target))
+        {
+            return;
+        }
         GridManager gridManager = GridManager.Instance;
 
         GridNode currentNode = gridManager.NodeFromWorldPos(transform.position);
+
         localTargetNode = gridManager.NodeFromWorldPos(target);
+
+        Debug.Log("Current Node " + currentNode == null);
+        Debug.Log("Local Target Node " + localTargetNode == null);
+
+        Debug.Log("Current Node: " + currentNode.globalX + ", " + currentNode.globalY);
+        Debug.Log("Local Target Node: " + localTargetNode.globalX + ", " + localTargetNode.globalY);
+        Debug.Log("Current Node Sector: " + currentNode.gridSector == null);
+        Debug.Log("Local Target Node Sector: " + localTargetNode.gridSector == null);
 
         if (highLevelPath == null)
         {   
-            Debug.Log("Current Node Coordinate: " + currentNode.globalX + ", " + currentNode.globalY);
-            Debug.Log("Current Node Sector: " + currentNode.gridSector);
-            Debug.Log("Current Node Sector is not null: " + (currentNode.gridSector != null));
             highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
                 currentNode.gridSector,
                 localTargetNode.gridSector // TODO: maybe store as attribute in troopAI
@@ -75,41 +84,48 @@ public class TestPathfinding : MonoBehaviour
         }
        
         
-        if (highLevelPath.Count > 0 && highLevelPath[0] == currentNode.gridSector)
+        if (highLevelPath.Count > 0 && highLevelPath[highLevelPath.Count-1] == currentNode.gridSector)
         {
-            highLevelPath.RemoveAt(0);
-            if (highLevelPath.Count == 0)
+            highLevelPath.RemoveAt(highLevelPath.Count-1);
+        }
+        
+        if (highLevelPath.Count == 0)
+        {
+            localTargetNode = gridManager.NodeFromWorldPos(target);
+        }
+        else
+        {
+            if (highLevelPath.Count > 1)
             {
-                localTargetNode = gridManager.NodeFromWorldPos(target);
+                localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+                    currentNode,
+                    highLevelPath[0],
+                    highLevelPath[1]
+                );
             }
             else
             {
-                if (highLevelPath.Count > 1)
-                {
-                    localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                        currentNode,
-                        highLevelPath[0],
-                        highLevelPath[1]
-                    );
-                }
-                else
-                {
-                    localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                        currentNode,
-                        highLevelPath[0]
-                    );
-                }
+                localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+                    currentNode,
+                    highLevelPath[0]
+                );
             }
         }
+        
 
-        Vector2 dirVector;
-        if  (highLevelPath.Count == 0)
+        
+        Vector3 delta;
+        if  (highLevelPath.Count <= 1)
         {
-            dirVector = (target - transform.position).normalized;
+            delta = (target - transform.position);
         }
         else{
-            dirVector = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode);
+            delta = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode);
+            Debug.Log("I'm querying from the flow field");
         }
+
+        Vector2 dirVector = new Vector2(delta.x, delta.z).normalized;
+        Debug.Log($"DIR VECTOR = {dirVector}");
 
         // check whether the current sector is adjacent to the next target sector
         // if not, regenerate the path because we have veered off path
@@ -129,7 +145,7 @@ public class TestPathfinding : MonoBehaviour
 
         currVelocity = Vector2.MoveTowards(currVelocity, dirVector.normalized * maxSpeed, acceleration * Time.deltaTime);
 
-        transform.position += (Vector3)(currVelocity * Time.deltaTime);
+        transform.position += new Vector3(currVelocity.x, 0f, currVelocity.y) * Time.deltaTime;
 
         if (currVelocity.sqrMagnitude > 0.01f)
         {
@@ -142,18 +158,18 @@ public class TestPathfinding : MonoBehaviour
 
     }
 
-    private void CheckReachedTarget(Vector3? target)
-    {
-        if (target == null) return;
-        Vector3 targetValue = target.Value;
-        float distanceToTarget = Vector3.Distance(transform.position, targetValue);
+    private bool CheckReachedTarget(Vector3 target)
+    {   
+        float distanceToTarget = Vector3.Distance(transform.position, target);
         if (distanceToTarget < 0.1f)
         {
-            Debug.Log("Reached target at: " + targetValue);
+            Debug.Log("Reached target at: " + target);
             enemyTarget = null;
             currVelocity = Vector2.zero;
             highLevelPath = null;
+            return true;
         }
+        return false;
     }
 
 

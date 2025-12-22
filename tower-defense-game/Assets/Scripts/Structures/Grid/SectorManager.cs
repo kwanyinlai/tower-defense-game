@@ -33,30 +33,11 @@ public class SectorManager : MonoBehaviour
         grid = GridManager.Instance.GetGrid();
     }
 
-    public void InitializeSector(int2 sectorCoordinates, GridNode[,] globalGrid)
+    public void SetSectors(GridSector[,] sectors)
     {
-        GridSector newSector = new GridSector(sectorCoordinates);
-        for (int x = 0; x < GridSector.sectorWidth; x++)
-        {
-            for (int y = 0; y < GridSector.sectorHeight; y++)
-            {
-                GridNode newGridNode = globalGrid[sectorCoordinates.x * GridSector.sectorWidth + x, sectorCoordinates.y * GridSector.sectorHeight + y];
-                newGridNode.gridSector = newSector;
-                newGridNode.localX = x;
-                newGridNode.localY = y; // TODO: assigning manually but this feels like bad practice
-
-                // might cause issues later with references,
-                // so think fo better way to impl
-                newSector.localGrid[x, y] = newGridNode;
-  
-
-            }
-        }
-        newSector.GenerateCostFieldForBorders();
-
-        sectors[sectorCoordinates.x, sectorCoordinates.y] = newSector;
-        newSector.AggregateCosts();
+        this.sectors = sectors;
     }
+
 
     // private void CheckAllSectorConnections()
     // {

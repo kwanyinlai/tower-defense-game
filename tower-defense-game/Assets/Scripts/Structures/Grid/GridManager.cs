@@ -27,8 +27,10 @@ public class GridNode
 }
 
 public class GridManager : MonoBehaviour
+
 {
     public static readonly int gridWidth = 200; // number of tiles
+    private static int TERRITORY_RADIUS = 5;
     public static readonly int gridHeight = 200;
     public static readonly float tileSize = 4f;
 
@@ -102,29 +104,53 @@ public class GridManager : MonoBehaviour
 
         buildableTiles = new List<GameObject>();
 
-        // // Set up global grid
+        GridSector[,] sectors = new GridSector[gridWidth / GridSector.sectorWidth, gridHeight / GridSector.sectorHeight];
 
-        for (int x = 0; x < gridWidth; x++)
+        // new code to generate grid and sectors at the same time
+
+        for (int x = 0; x < sectors.GetLength(0); x++)
         {
-            for (int z = 0; z < gridHeight; z++)
+            for (int y = 0; y < sectors.GetLength(1); y++)
             {
-                grid[x, z] = new GridNode(x, z);
+                GridSector sector = new GridSector(new int2(x, y));
+                sectors[x, y] = sector;
+
+                for (int i = 0; i < GridSector.sectorWidth; i++)
+                {
+                    for (int j = 0; j < GridSector.sectorHeight; j++)
+                    {
+                        int globalX = x * GridSector.sectorWidth + i;
+                        int globalY = y * GridSector.sectorHeight + j;
+                        GridNode newNode = new GridNode(globalX, globalY);
+                        grid[globalX, globalY] = newNode;
+                        newNode.gridSector = sector;
+                        sector.localGrid[i, j] = newNode;
+                    }
+                }
+                Debug.Log($"Grid sector at coordinates {sector.sectorCoordinate.x}, {sector.sectorCoordinate.y} has finisehed generating");
+
+                
+                sector.AggregateCosts();
+                
             }
         }
+        SectorManager.Instance.SetSectors(sectors); // initialize sectors in SectorManager
 
-        // Set up sectors and local grids of sectors (assign local coords of GridNode) at the same time
-
-        for (int x = 0; x < gridWidth / GridSector.sectorWidth; x++)
+        // Generate sector neighbors
+        for (int x = 0; x < sectors.GetLength(0); x++)
         {
-            for (int y = 0; y < gridHeight / GridSector.sectorHeight; y++)
+            for (int y = 0; y < sectors.GetLength(1); y++)
             {
-                SectorManager.Instance.InitializeSector(new int2(x, y), grid);
-
+                GridSector sector = sectors[x, y];
+                sector.neighbours[(int)GridSector.CardinalDirections.North] = (y < sectors.GetLength(1) - 1) ? sectors[x, y + 1] : null;
+                sector.neighbours[(int)GridSector.CardinalDirections.East] = (x < sectors.GetLength(0) - 1) ? sectors[x + 1, y] : null;
+                sector.neighbours[(int)GridSector.CardinalDirections.South] = (y > 0) ? sectors[x, y - 1] : null;
+                sector.neighbours[(int)GridSector.CardinalDirections.West] = (x > 0) ? sectors[x - 1, y] : null;
+                // GenerateCostFieldForBorders requires grid to be fully initialised, which is not the case
+                // if done in the previous for loop
+                sector.GenerateCostFieldForBorders();
             }
         }
-        
-
-        // starterTerritoryIsAssigned = false;
 
     }
 
@@ -137,7 +163,6 @@ public class GridManager : MonoBehaviour
     {
         int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; 
         int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
-        Debug.Log("NodeFromWorldPos called with coordinates: " + coordinates + ", resulting in grid coords: " + x + ", " + z);
         return grid[x,z];
     }
 
@@ -146,12 +171,12 @@ public class GridManager : MonoBehaviour
     {
         Vector3 pos = target.transform.position;
         Vector3Int gridPos = CoordinatesToGrid(pos);
-        for(int i = gridPos.x - 5; i <= gridPos.x + 5; i++)
+        for(int i = gridPos.x - TERRITORY_RADIUS; i <= gridPos.x + TERRITORY_RADIUS; i++)
         {
-            for(int j =  gridPos.z - 5; j <= gridPos.z + 5; j++)
+            for(int j =  gridPos.z - TERRITORY_RADIUS; j <= gridPos.z + TERRITORY_RADIUS; j++)
             {
                 float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
-                if(distSquared < 25)
+                if(distSquared < Mathf.Pow(TERRITORY_RADIUS, 2))
                 {
                     grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
                 }

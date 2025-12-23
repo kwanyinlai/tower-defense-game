@@ -67,13 +67,6 @@ public class TestPathfinding : MonoBehaviour
 
         localTargetNode = gridManager.NodeFromWorldPos(target);
 
-        Debug.Log("Current Node " + currentNode == null);
-        Debug.Log("Local Target Node " + localTargetNode == null);
-
-        Debug.Log("Current Node: " + currentNode.globalX + ", " + currentNode.globalY);
-        Debug.Log("Local Target Node: " + localTargetNode.globalX + ", " + localTargetNode.globalY);
-        Debug.Log("Current Node Sector: " + currentNode.gridSector == null);
-        Debug.Log("Local Target Node Sector: " + localTargetNode.gridSector == null);
 
         if (highLevelPath == null)
         {   
@@ -83,10 +76,16 @@ public class TestPathfinding : MonoBehaviour
             );
         }
        
+        Debug.Log($"Current length of path {highLevelPath.Count}");
+        Debug.Log($"Last sector in path {highLevelPath[highLevelPath.Count - 1].sectorCoordinate.x}, {highLevelPath[highLevelPath.Count-1].sectorCoordinate.y}");
+        Debug.Log($"First sector in path {highLevelPath[0].sectorCoordinate.x}, {highLevelPath[0].sectorCoordinate.y}");
+        Debug.Log($"Last sector is our node  {currentNode.gridSector == highLevelPath[highLevelPath.Count-1]}");
+        Debug.Log($"First sector is our current node {currentNode.gridSector == highLevelPath[0]}");
         
-        if (highLevelPath.Count > 0 && highLevelPath[highLevelPath.Count-1] == currentNode.gridSector)
+        if (highLevelPath.Count > 0 && highLevelPath[0] == currentNode.gridSector)
         {
-            highLevelPath.RemoveAt(highLevelPath.Count-1);
+            Debug.Log("why are we removing");
+            highLevelPath.RemoveAt(0);
         }
         
         if (highLevelPath.Count == 0)
@@ -95,27 +94,31 @@ public class TestPathfinding : MonoBehaviour
         }
         else
         {
-            if (highLevelPath.Count > 1)
-            {
-                localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                    currentNode,
-                    highLevelPath[0],
-                    highLevelPath[1]
-                );
-            }
-            else
-            {
-                localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                    currentNode,
-                    highLevelPath[0]
-                );
-            }
+            localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+                currentNode,
+                highLevelPath[0]
+            );
+            // if (highLevelPath.Count > 1)
+            // {
+            //     localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+            //         currentNode,
+            //         highLevelPath[0],
+            //         highLevelPath[1]
+            //     );
+            // }
+            // else
+            // {
+            //     localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+            //         currentNode,
+            //         highLevelPath[0]
+            //     );
+            // }
         }
         
 
         
         Vector3 delta;
-        if  (highLevelPath.Count <= 1)
+        if  (highLevelPath.Count < 1)
         {
             delta = (target - transform.position);
         }
@@ -129,7 +132,7 @@ public class TestPathfinding : MonoBehaviour
 
         // check whether the current sector is adjacent to the next target sector
         // if not, regenerate the path because we have veered off path
-        if (highLevelPath.Count > 0 && !SectorManager.Instance.SectorAreNeighbours(currentNode.gridSector, highLevelPath[0]))
+        if (highLevelPath.Count > 0 && !SectorManager.Instance.SectorAreNeighbours(currentNode.gridSector, highLevelPath[highLevelPath.Count-1]))
         {
             highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
                 currentNode.gridSector,

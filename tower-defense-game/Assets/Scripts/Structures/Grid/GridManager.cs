@@ -146,7 +146,7 @@ public class GridManager : MonoBehaviour
                 sector.neighbours[(int)GridSector.CardinalDirections.East] = (x < sectors.GetLength(0) - 1) ? sectors[x + 1, y] : null;
                 sector.neighbours[(int)GridSector.CardinalDirections.South] = (y > 0) ? sectors[x, y - 1] : null;
                 sector.neighbours[(int)GridSector.CardinalDirections.West] = (x > 0) ? sectors[x - 1, y] : null;
-                // GenerateCostFieldForBorders requires grid to be fully initialised, which is not the case
+                // GenerateCostFieldForBorders() requires grid to be fully initialised, which is not the case
                 // if done in the previous for loop
                 sector.GenerateCostFieldForBorders();
             }

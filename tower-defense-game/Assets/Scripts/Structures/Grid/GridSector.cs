@@ -252,7 +252,7 @@ public class GridSector // for HPA*
                 {
                     continue;
                 }
-                float tentativeCost = costField[current.localX, current.localY] + neighbour.walkCost;
+                float tentativeCost = neighbour.walkCost;
                 if (tentativeCost < costField[neighbour.localX, neighbour.localY])
                 {
                     costField[neighbour.localX, neighbour.localY] = tentativeCost;

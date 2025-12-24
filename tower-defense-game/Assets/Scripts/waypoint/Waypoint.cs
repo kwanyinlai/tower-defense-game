@@ -43,4 +43,31 @@ public class Waypoint : MonoBehaviour
         return null;
     }
 
+    // Removes any deleted troops from the troopsBound list
+    public void FilterTroops() {
+        for(int i = troopsBound.Count - 1; i >= 0; i--) {
+            if(troopsBound[i] == null) {
+                troopsBound.RemoveAt(i);
+            }
+        }
+    }
+
+    public List<GameObject> PickupWaypoint() {
+        FilterTroops();
+        allWaypoints.Remove(self);
+        Destoy(gameObject);
+        return troopsBound;
+    }
+
+    // Places waypoint and sets all troops from list in paramter to be under waypoint's control 
+    public void PlaceWaypoint(List<GameObject> troops) {
+        foreach(GameObject troop in troops) {
+            if(troop != null) {
+                troopsBound.Add(troop);
+                PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
+                troopAI.SetupControl(gameObject, true);
+            }
+        }
+    }
+
 }

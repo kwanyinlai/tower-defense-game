@@ -9,9 +9,7 @@ public class TroopSelectorRadius : MonoBehaviour
 
     private List<PlayerTroopAI> troopAIList = new List<PlayerTroopAI>();
     public List<GameObject> TroopAIList { get {return troopsInRadius; }}
-
-    public Material selectedMaterial;
-
+    
     // Adds all collisions to the collision list if they are a troop
     private void OnTriggerEnter(Collider collision)
     {

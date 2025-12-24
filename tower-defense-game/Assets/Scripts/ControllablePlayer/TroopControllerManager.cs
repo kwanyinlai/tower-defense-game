@@ -65,8 +65,12 @@ public class TroopControllerManager : MonoBehaviour
             }
 
             // Makes all troops selected to following flag 
-            if(Input.GetKeyUp(KeyCode.Return) && controlState == ControlState.Selecting) {
-                SetupControl();
+            if(Input.GetKeyUp(KeyCode.Return)) {
+                if(controlState == ControlState.Selecting) {
+                    SetupControl();
+                } else if(controlState == ControLState.Controlling) {
+                    PlaceWaypoint();
+                }
             }
         }
         
@@ -97,7 +101,6 @@ public class TroopControllerManager : MonoBehaviour
         controlState = ControlState.Controlling;
         if(selectedTroops.Count == 0) {
             // Cancels control mode if no troops selected (allows players to redo selecting without having to cancel)
-            Debug.Log("NONE FOUND!!!");
             StopControlling();
         } else {
             // Sets all selected troops to follow and hides bubble indicator
@@ -106,7 +109,7 @@ public class TroopControllerManager : MonoBehaviour
             bubbleIndicator.SetActive(false);
             foreach(GameObject troop in selectedTroops) {
                 PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-                troopAI.SetupControl();
+                troopAI.SetupControl(gameObject, false);
             }
         }
     }
@@ -128,6 +131,11 @@ public class TroopControllerManager : MonoBehaviour
             PlayerTroopAI troopAI = closestTroop.GetComponent<PlayerTroopAI>();
             selectedTroops.Add(closestTroop);
             troopAI.ShowCircle();
+        }
+
+        // Edge-case in order for the player not to be stuck in selecting mode
+        if(selectedTroops.Count == 0) {
+            StopControlling();
         }
     }
 
@@ -182,5 +190,32 @@ public class TroopControllerManager : MonoBehaviour
             troopSelectorRadius.ClearTroopsInRadius();
             isGrowing = true;
         }
+    }
+
+    void PlaceWaypoint() {
+        // Call FindNearestWaypoint and if there's a waypoint that's close
+            // Create popup that asks if want to merge, if yes, then just call AddWaypoint to closest waypoint
+            // If no do the following
+                // Create new waypoint object
+                // Call PlaceWaypoint on object 
+                // Clear selectedTroop list from this script
+    }
+
+    void PickupWaypoint(GameObject waypoint) {
+        // Calls PickupWaypoint on object
+        // Adds troop list returned from PickupWaypoint to this script
+        // Call SetupControl(gameObject, true) on all troops
+    }
+
+    void WaypointInRadius() {
+        // Calls FindNearestWaypoint on Waypoint and sees if there's a waypoint that's close
+        // Check if waypoint is within radius
+        // Make global variable that stores closest waypoint
+            // If global variable is null, set new waypoint as value
+            // If global variable is not equal to new waypoint, set new waypoint as new value and then revert material of old waypoint
+        // Set closest waypoint to a new material to indicator highlighting
+        // Have this function be called in radius
+        // Have HandleInputs see check if closest waypoint is not null and if return key is pressed
+            // If so, then call pickup waypoint  
     }
 }

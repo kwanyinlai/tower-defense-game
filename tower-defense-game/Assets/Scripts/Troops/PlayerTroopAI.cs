@@ -23,6 +23,8 @@ public class PlayerTroopAI : TroopAI
     [Header("Control Attributes")]
 
     protected bool isUnderSelection = false;
+    protected bool canGetDistracted = false;
+    protected GameObject followingObject;
     public bool IsUnderSelection { get{ return isUnderSelection; } set{ isUnderSelection = value; } }
 
     [SerializeField] protected GameObject commandingPlayer;
@@ -53,9 +55,11 @@ public class PlayerTroopAI : TroopAI
         ControlTroop();
     }
 
-    public void SetupControl() {
+    public void SetupControl(GameObject following, bool canGetDistracted) {
         IsUnderSelection = true;
         troopState = TroopState.Controlled;
+        waypoint = following;
+        this.canGetDistracted = canGetDistracted;
         ShowCircle();
     }
 
@@ -67,11 +71,10 @@ public class PlayerTroopAI : TroopAI
 
     protected void ControlTroop() {
         // For when the player is selecting the troop, but TODO: maybe move this out of AI logic
-        if(IsUnderSelection && troopState == TroopState.Disengaged){
-            // ShowCircle();
-        }
-        else{
-            // HideCircle();
+        if(IsUnderSelection){
+            if(!canGetDistracted || troopState == TroopState.Disengaged || troopState == TroopState.Retreating) {
+                GoToWaypoint();
+            }
         }
     }
 
@@ -219,7 +222,9 @@ public class PlayerTroopAI : TroopAI
 
     protected override void FindAndSetAllTargets()
     {
-        enemyTarget = GetClosestEnemyInRange();
+        if(troopState != TroopState.Controlled || canGetDistracted) {
+            enemyTarget = GetClosestEnemyInRange();
+        }
     }
 
     public Transform GetClosestEnemyInRange()

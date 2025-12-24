@@ -54,8 +54,8 @@ public class Waypoint : MonoBehaviour
 
     public List<GameObject> PickupWaypoint() {
         FilterTroops();
-        allWaypoints.Remove(self);
-        Destoy(gameObject);
+        allWaypoints.Remove(gameObject);
+        Destroy(gameObject);
         return troopsBound;
     }
 

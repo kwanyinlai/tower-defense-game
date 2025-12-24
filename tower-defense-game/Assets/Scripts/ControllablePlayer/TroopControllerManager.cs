@@ -68,7 +68,7 @@ public class TroopControllerManager : MonoBehaviour
             if(Input.GetKeyUp(KeyCode.Return)) {
                 if(controlState == ControlState.Selecting) {
                     SetupControl();
-                } else if(controlState == ControLState.Controlling) {
+                } else if(controlState == ControlState.Controlling) {
                     PlaceWaypoint();
                 }
             }

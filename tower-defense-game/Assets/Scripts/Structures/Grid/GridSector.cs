@@ -252,7 +252,7 @@ public class GridSector // for HPA*
                 {
                     continue;
                 }
-                float tentativeCost = neighbour.walkCost;
+                float tentativeCost = costField[current.localX, current.localY] + neighbour.walkCost;
                 if (tentativeCost < costField[neighbour.localX, neighbour.localY])
                 {
                     costField[neighbour.localX, neighbour.localY] = tentativeCost;
@@ -270,13 +270,30 @@ public class GridSector // for HPA*
         {
             for (int y = 0; y < localGrid.GetLength(1); y++)
             {
-                float x1 = x > 0 ? costField[x - 1, y] : costField[x, y];
-                float x2 = x < costField.GetLength(0) - 1 ? costField[x + 1, y] : costField[x, y];
-                float y1 = y > 0 ? costField[x, y - 1] : costField[x, y];
-                float y2 = y < costField.GetLength(1) - 1 ? costField[x, y + 1] : costField[x, y];
-                float dx = x2 - x1;
-                float dy = y2 - y1;
-                newField[x, y] = -1 * new Vector2(dx, dy).normalized;
+                float minCost = float.MaxValue;
+                Vector2 direction = Vector2.zero;
+
+                foreach (var neighbour in GetNeighbouringNodes(localGrid[x, y]))
+                {
+                    if (neighbour == null)
+                    {
+                        continue;
+                    }
+
+                    int nx = neighbour.localX;
+                    int ny = neighbour.localY;
+
+
+
+                    if (costField[nx, ny] < minCost)
+                    {
+                        minCost = costField[nx, ny];
+                        direction = new Vector2(x - nx, y - ny);
+                    }
+                }
+
+
+                newField[x, y] = direction.normalized;
             }
         }
         return newField;

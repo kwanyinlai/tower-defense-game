@@ -125,10 +125,11 @@ public class GridManager : MonoBehaviour
                         grid[globalX, globalY] = newNode;
                         newNode.gridSector = sector;
                         sector.localGrid[i, j] = newNode;
+                        newNode.localX = i;
+                        newNode.localY = j;
                     }
                 }
-                Debug.Log($"Grid sector at coordinates {sector.sectorCoordinate.x}, {sector.sectorCoordinate.y} has finisehed generating");
-
+               
                 
                 sector.AggregateCosts();
                 

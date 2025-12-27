@@ -260,16 +260,37 @@ public class GridSector // for HPA*
                 }
             }
         }
-        return GenerateVectorFieldFromCost(costField);
+        return GenerateVectorFieldFromCost(costField, goalNode);
     }
 
-    private Vector2[,] GenerateVectorFieldFromCost(float[,] costField) // multigoal dijk
+    private Vector2[,] GenerateVectorFieldFromCost(float[,] costField, GridNode targetNode) // multigoal dijk
     {
         Vector2[,] newField = new Vector2[sectorWidth, sectorHeight];
         for (int x = 0; x < localGrid.GetLength(0); x++)
         {
             for (int y = 0; y < localGrid.GetLength(1); y++)
             {
+                // point out if this is the exeit node (catches other cases too)
+                if (x == targetNode.localX && y == targetNode.localY)
+                {
+                    if (x == 0)
+                    {
+                        newField[x, y] = new Vector2(-1f, 0f);
+                    }
+                    else if (y == 0)
+                    {
+                        newField[x, y] = new Vector2(0f, -1f);
+                    }
+                    else if (x == sectorWidth - 1)
+                    {
+                        newField[x, y] = new Vector2(1f, 0f);
+                    }
+                    else if (y == sectorHeight - 1)
+                    {
+                        newField[x, y] = new Vector2(0f, 1f);
+                    }
+                    continue;
+                }
                 float minCost = float.MaxValue;
                 Vector2 direction = Vector2.zero;
 
@@ -280,6 +301,7 @@ public class GridSector // for HPA*
                         continue;
                     }
 
+
                     int nx = neighbour.localX;
                     int ny = neighbour.localY;
 
@@ -288,7 +310,7 @@ public class GridSector // for HPA*
                     if (costField[nx, ny] < minCost)
                     {
                         minCost = costField[nx, ny];
-                        direction = new Vector2(x - nx, y - ny);
+                        direction = new Vector2(nx - x, ny - y); 
                     }
                 }
 
@@ -342,21 +364,40 @@ public class GridSector // for HPA*
     //     return null;
     // }
 
-    public Vector2 QueryFlowField(GridNode currentNode, GridNode targetNode)
+    public Vector2 QueryFlowField(GridNode currentNode, GridNode targetNode, Vector2 currentDirection)
     {
         if (cachedFields.TryGetFlowField(targetNode, out Vector2[,] cachedField))
         {
-            return cachedField[currentNode.localX, currentNode.localY];
+            return InterpolateFieldVectors(currentNode, currentDirection, cachedField);
         }
 
         Vector2[,] newField = GenerateVectorField(targetNode);
         cachedFields.AddFlowFieldToCache(targetNode, newField);
-        return newField[currentNode.localX, currentNode.localY];
+        return InterpolateFieldVectors(currentNode, currentDirection, newField);
+    }
+
+    private Vector2 InterpolateFieldVectors(GridNode currentNode, Vector2 currentDirection, Vector2[,] field)
+    {
+        Vector2 interpolatedDirection = currentDirection;
+        float interpolationFactor = 0.2f; // tune
+
+        foreach (var neighbour in GetNeighbouringNodes(currentNode))
+        {
+            if (neighbour == null)
+            {
+                continue;
+            }
+            interpolatedDirection = Vector2.Lerp(interpolatedDirection, field[neighbour.localX, neighbour.localY], interpolationFactor);
+        }
+        return interpolatedDirection.normalized;
     }
 
     public Vector2 GetCentre()
     {
-        return new Vector2((float)((sectorCoordinate.x + 0.5)*sectorWidth), (float)((sectorCoordinate.y +0.5)*sectorHeight));
+        return new Vector2(
+            (sectorCoordinate.x * sectorWidth) + (sectorWidth / 2f),
+            (sectorCoordinate.y * sectorHeight) + (sectorHeight / 2f)
+        );
     }
 
     // take into account the next sector, and the next after

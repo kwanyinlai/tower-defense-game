@@ -38,14 +38,14 @@ public class PlayerTroopAI : TroopAI
     
 
 
-    protected virtual void Start()
+    protected override void Start()
     {
         base.Start();
         HideCircle();
     }
 
 
-    protected virtual void Update()
+    protected override void Update()
     {
         base.Update();
 

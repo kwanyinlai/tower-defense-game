@@ -16,8 +16,7 @@ public class EnemyTroopAI : TroopAI
     protected Transform troopTarget;
     protected Transform barracksTarget;
 
-
-    protected virtual void Start()
+    protected override void Start()
     {
         base.Start();
     }
@@ -33,7 +32,7 @@ public class EnemyTroopAI : TroopAI
     }
 
 
-    protected virtual void Update()
+    protected override void Update()
     {
         base.Update();
     }

@@ -32,6 +32,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
+
         if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter)
         {
             Character();
@@ -87,8 +88,4 @@ public class CharacterMovement : MonoBehaviour
 
     }
 
-    void OnMouseDown()
-    {
-        Debug.Log("Pressed!");
-    }
 }

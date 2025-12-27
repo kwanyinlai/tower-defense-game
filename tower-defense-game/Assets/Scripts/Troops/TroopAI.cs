@@ -129,31 +129,22 @@ public abstract class TroopAI : MonoBehaviour
         if (highLevelPath[0] == currentNode.gridSector)
         {
             highLevelPath.RemoveAt(0);
-            if (highLevelPath.Count == 0)
+            if (highLevelPath.Count <= 1)
             {
                 localTargetNode = gridManager.NodeFromWorldPos(target.position);
             }
             else
             {
-                if (highLevelPath.Count > 1)
-                {
-                    localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                        currentNode,
-                        highLevelPath[0],
-                        highLevelPath[1]
-                    );
-                }
-                else
-                {
-                    localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                        currentNode,
-                        highLevelPath[0]
-                    );
-                }
+            
+                localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
+                    currentNode,
+                    highLevelPath[1]
+                );
+                
             }
         }
 
-        Vector2 dirVector = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode);
+        Vector2 dirVector = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode, new Vector2(currVelocity.x, currVelocity.y));
 
         // check whether the current sector is adjacent to the next target sector
         // if not, regenerate the path because we have veered off path
@@ -169,7 +160,7 @@ public abstract class TroopAI : MonoBehaviour
         // Steer
 
 
-        Vector2 desiredVelocity = dirVector.normalized * maxSpeed;
+        Vector2 desiredVelocity = dirVector * maxSpeed;
 
         currVelocity = Vector2.MoveTowards(currVelocity, desiredVelocity, acceleration * Time.deltaTime);
 

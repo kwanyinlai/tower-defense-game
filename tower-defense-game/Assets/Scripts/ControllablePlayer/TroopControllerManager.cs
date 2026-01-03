@@ -18,11 +18,17 @@ public class TroopControllerManager : MonoBehaviour
     private const float MAX_RADIUS = 45.0f;
     private const float TAP_THRESHOLD = 0.35f;
     private const float BUBBLE_INIT_SIZE = 1.0f;
+
+    private const float MAX_PICKUP_DISTANCE = 5.0f;
     
     [SerializeField] private GameObject bubbleIndicator;
     [SerializeField] private TroopSelectorRadius troopSelectorRadius;
+
+    [SerializeField] private GameObject waypointOutline;
+    [SerializeField] private GameObject waypointPrefab;
     
     private PlayerManager playerData;
+    private GameObject closestWaypoint;
     
     private List<GameObject> selectedTroops = new List<GameObject>();
     private Transform bubbleIndicatorTransform;
@@ -41,6 +47,7 @@ public class TroopControllerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        WaypointInRadius();
         HandleInputs();
 
         if(timeElapsed != -1) {
@@ -66,7 +73,9 @@ public class TroopControllerManager : MonoBehaviour
 
             // Makes all troops selected to following flag 
             if(Input.GetKeyUp(KeyCode.Return)) {
-                if(controlState == ControlState.Selecting) {
+                if(closestWaypoint != null) {
+                    PickupWaypoint(closestWaypoint);
+                } else if(controlState == ControlState.Selecting) {
                     SetupControl();
                 } else if(controlState == ControlState.Controlling) {
                     PlaceWaypoint();
@@ -195,27 +204,44 @@ public class TroopControllerManager : MonoBehaviour
     void PlaceWaypoint() {
         // Call FindNearestWaypoint and if there's a waypoint that's close
             // Create popup that asks if want to merge, if yes, then just call AddWaypoint to closest waypoint
-            // If no do the following
-                // Create new waypoint object
-                // Call PlaceWaypoint on object 
-                // Clear selectedTroop list from this script
+            
+        // Gives control of troops to waypoint
+        GameObject waypoint = Instantiate(waypointPrefab, waypointOutline.transform.position, Quaternion.identity) as GameObject;
+        waypoint.GetComponent<Waypoint>().PlaceWaypoint(selectedTroops);
+        selectedTroops.Clear();
     }
 
     void PickupWaypoint(GameObject waypoint) {
-        // Calls PickupWaypoint on object
-        // Adds troop list returned from PickupWaypoint to this script
-        // Call SetupControl(gameObject, true) on all troops
+        // Calls PickupWaypoint on object                               x
+        // Adds troop list returned from PickupWaypoint to this script  x
+        // Call SetupControl(gameObject, true) on all troops            x
+        Debug.Log("Picking Up Waypoint " + waypoint.name + " AT " + waypoint.transform.position);
+        Waypoint waypointScript = waypoint.GetComponent<Waypoint>();
+        selectedTroops = waypointScript.PickupWaypoint();
+        foreach(GameObject troop in selectedTroops) {
+            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
+            troopAI.SetupControl(gameObject, false);
+        }
     }
 
     void WaypointInRadius() {
-        // Calls FindNearestWaypoint on Waypoint and sees if there's a waypoint that's close
-        // Check if waypoint is within radius
-        // Make global variable that stores closest waypoint
-            // If global variable is null, set new waypoint as value
-            // If global variable is not equal to new waypoint, set new waypoint as new value and then revert material of old waypoint
-        // Set closest waypoint to a new material to indicator highlighting
-        // Have this function be called in radius
-        // Have HandleInputs see check if closest waypoint is not null and if return key is pressed
-            // If so, then call pickup waypoint  
+        GameObject waypoint = Waypoint.FindNearestWaypoint(gameObject.transform.position);
+        if(waypoint == null) {
+            closestWaypoint = null;
+        } else if(Vector3.Distance(waypoint.transform.position, gameObject.transform.position) <= MAX_PICKUP_DISTANCE) {
+            if(waypoint != closestWaypoint) {
+                // Unhighlight old waypoint nad highlight new one
+                closestWaypoint = waypoint;
+            }
+        }
+        // Calls FindNearestWaypoint on Waypoint and sees if there's a waypoint that's close    x
+        // Check if waypoint is within radius                                                   x
+        // Make global variable that stores closest waypoint                                    x
+            // If global variable is null, set new waypoint as value                            x       
+            // If global variable is not equal to new waypoint, set new waypoint as new value and then revert material of old waypoint  x
+        // Set closest waypoint to a new material to indicator highlighting                     x
+        // Have this function be called in radius                                               x                                               
+        // Have HandleInputs see check if closest waypoint is not null and if return key is pressed x
+            // If so, then call pickup waypoint                                                 x
     }
 }

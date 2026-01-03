@@ -154,7 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0745967a15187d44783db609fcf0bfc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TroopSelectorRadius
-  selectedMaterial: {fileID: 0}
 --- !u!1001 &3022572856649392312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -449,6 +448,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TroopControllerManager
   bubbleIndicator: {fileID: 4127702719966759349}
   troopSelectorRadius: {fileID: 6968042695354122253}
+  waypointOutline: {fileID: 4641876528032571485}
+  waypointPrefab: {fileID: 998503910232365536, guid: 68055b8ea3f3d407b857df6207c15aba, type: 3}
 --- !u!4 &3348686369444480851 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2c579b71ccbaf4043b187d43e3d5aa03, type: 3}

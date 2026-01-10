@@ -16,9 +16,11 @@ public class TroopSelectorRadius : MonoBehaviour
         GameObject obj = collision.gameObject;
         if(obj.CompareTag("Troop")) {
             PlayerTroopAI troopAI = obj.GetComponent<PlayerTroopAI>();
-            troopAI.ShowCircle();
-            troopAIList.Add(troopAI);
-            troopsInRadius.Add(obj);
+            if(!troopAI.IsUnderSelection) {
+                troopAI.ShowCircle();
+                troopAIList.Add(troopAI);
+                troopsInRadius.Add(obj);
+            }
         }
     }
 

@@ -13,10 +13,16 @@ public class Waypoint : MonoBehaviour
     
     private static List<GameObject> allWaypoints = new List<GameObject>();
     public List<GameObject> troopsBound = new List<GameObject>();
-
+    
+    [SerializeField] private Material highlightMaterial;
+    private Renderer flagRender;
+    private Material defaultMaterial;
+    
 
     void Start(){
         allWaypoints.Add(gameObject);
+        flagRender = transform.GetChild(0).GetComponent<Renderer>();
+        defaultMaterial = flagRender.material;
     }
 
     void Update(){
@@ -70,4 +76,11 @@ public class Waypoint : MonoBehaviour
         }
     }
 
+    public void HighlightFlag() {
+        flagRender.material = highlightMaterial;
+    }
+
+    public void UnhighlightFlag() {
+        flagRender.material = defaultMaterial;
+    }
 }

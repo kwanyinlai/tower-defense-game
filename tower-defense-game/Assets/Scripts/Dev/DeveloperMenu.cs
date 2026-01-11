@@ -114,7 +114,7 @@ public class DeveloperMenu : MonoBehaviour
                         if (node != null)
                         {
                             var sc = node.gridSector.sectorCoordinate;
-                            info += $"\nSector: {sc.x}, {sc.y}\nNode Global: {node.globalX}, {node.globalY}\nNode Local: {node.localX}, {node.localY}";
+                            info += $"\nSector: {sc.x}, {sc.y}\nNode Global: {node.globalPos.x}, {node.globalPos.y}\nNode Local: {node.localPos.x}, {node.localPos.y}";
                         }
                         else info += "\nNode: null";
                     }

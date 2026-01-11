@@ -132,7 +132,7 @@ public class TestPathfinding : MonoBehaviour
             dirVector = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode, new Vector2(currVelocity.x, currVelocity.y));
             // dirVector.Normalize();
             // dirVector.y *= -1;
-            // if (dirVector.y == -1 && localTargetNode.globalY - currentNode.globalY < 0)
+            // if (dirVector.y == -1 && localTargetNode.globalPos.y - currentNode.globalPos.y < 0)
             // {
             //     ;
             // }

@@ -68,7 +68,7 @@ public class GridSector // for HPA*
     //     // enqueue all border nodes first
     //     foreach (var node in exitNodes)
     //     {
-    //         costField[node.localX, node.localY]= 0f;
+    //         costField[node.localPos.x, node.localPos.y]= 0f;
     //         uncheckedNodes.Enqueue(node, 0f);
     //     }
     //     // first generate cost field, each node points to closest exit
@@ -77,10 +77,10 @@ public class GridSector // for HPA*
     //         var current = uncheckedNodes.Dequeue();
     //         foreach (var neighbour in GetNeighbouringNodes(current))
     //         {
-    //             float tentativeCost = costField[current.localX, current.localY] + neighbour.walkCost;
-    //             if (tentativeCost < costField[neighbour.localX, neighbour.localY])
+    //             float tentativeCost = costField[current.localPos.x, current.localPos.y] + neighbour.walkCost;
+    //             if (tentativeCost < costField[neighbour.localPos.x, neighbour.localPos.y])
     //             {
-    //                 costField[neighbour.localX, neighbour.localY] = tentativeCost;
+    //                 costField[neighbour.localPos.x, neighbour.localPos.y] = tentativeCost;
     //                 uncheckedNodes.Enqueue(neighbour, tentativeCost);
     //             }
     //         }
@@ -106,15 +106,15 @@ public class GridSector // for HPA*
     
     private static bool CheckConnected(GridNode node, int2 dir)
     {
-        if (node.globalX + dir.x >= GridManager.Instance.GetGrid().GetLength(0) || node.globalX + dir.x < 0)
+        if (node.globalPos.x + dir.x >= GridManager.Instance.GetGrid().GetLength(0) || node.globalPos.x + dir.x < 0)
         {
             return false;
         }
-        if (node.globalY + dir.y >= GridManager.Instance.GetGrid().GetLength(1) || node.globalY + dir.y < 0)
+        if (node.globalPos.y + dir.y >= GridManager.Instance.GetGrid().GetLength(1) || node.globalPos.y + dir.y < 0)
         {
             return false;
         }
-        return GridManager.Instance.GetGrid()[node.globalX + dir.x, node.globalY + dir.y].walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
+        return GridManager.Instance.GetGrid()[node.globalPos.x + dir.x, node.globalPos.y + dir.y].walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
     }
 
     private List<GridNode> GetBorderNodes(CardinalDirections dir)
@@ -190,7 +190,7 @@ public class GridSector // for HPA*
         // Add source nodes
         foreach (var src in sourceNodes)
         {
-            field[src.localX, src.localY] = 0f;
+            field[src.localPos.x, src.localPos.y] = 0f;
             pq.Enqueue(src, 0f);
             nodeCosts[src] = 0f;
         }
@@ -202,7 +202,7 @@ public class GridSector // for HPA*
             float currentCost = nodeCosts[current];
 
             // Skip if we already found a better path
-            if (currentCost > field[current.localX, current.localY])
+            if (currentCost > field[current.localPos.x, current.localPos.y])
                 continue;
 
             foreach (var neighbour in GetNeighbouringNodes(current))
@@ -211,9 +211,9 @@ public class GridSector // for HPA*
 
                 float tentativeCost = currentCost + neighbour.walkCost;
 
-                if (tentativeCost < field[neighbour.localX, neighbour.localY])
+                if (tentativeCost < field[neighbour.localPos.x, neighbour.localPos.y])
                 {
-                    field[neighbour.localX, neighbour.localY] = tentativeCost;
+                    field[neighbour.localPos.x, neighbour.localPos.y] = tentativeCost;
                     pq.Enqueue(neighbour, tentativeCost);
                     nodeCosts[neighbour] = tentativeCost;
                 }
@@ -239,7 +239,7 @@ public class GridSector // for HPA*
         PriorityQueue<GridNode> uncheckedNodes = new PriorityQueue<GridNode>();
         // enqueue all border nodes first
 
-        costField[goalNode.localX, goalNode.localY] = 0f;
+        costField[goalNode.localPos.x, goalNode.localPos.y] = 0f;
         uncheckedNodes.Enqueue(goalNode, 0);
 
         // first generate cost field, each node points to closest exit
@@ -252,10 +252,10 @@ public class GridSector // for HPA*
                 {
                     continue;
                 }
-                float tentativeCost = costField[current.localX, current.localY] + neighbour.walkCost;
-                if (tentativeCost < costField[neighbour.localX, neighbour.localY])
+                float tentativeCost = costField[current.localPos.x, current.localPos.y] + neighbour.walkCost;
+                if (tentativeCost < costField[neighbour.localPos.x, neighbour.localPos.y])
                 {
-                    costField[neighbour.localX, neighbour.localY] = tentativeCost;
+                    costField[neighbour.localPos.x, neighbour.localPos.y] = tentativeCost;
                     uncheckedNodes.Enqueue(neighbour, tentativeCost);
                 }
             }
@@ -271,7 +271,7 @@ public class GridSector // for HPA*
             for (int y = 0; y < localGrid.GetLength(1); y++)
             {
                 // point out if this is the exeit node (catches other cases too)
-                if (x == targetNode.localX && y == targetNode.localY)
+                if (x == targetNode.localPos.x && y == targetNode.localPos.y)
                 {
                     if (x == 0)
                     {
@@ -302,8 +302,8 @@ public class GridSector // for HPA*
                     }
 
 
-                    int nx = neighbour.localX;
-                    int ny = neighbour.localY;
+                    int nx = neighbour.localPos.x;
+                    int ny = neighbour.localPos.y;
 
 
 
@@ -348,10 +348,10 @@ public class GridSector // for HPA*
             }; // corresponding to NESW
         for (int i = 0; i < 4; i++)
         {
-            if (0 <= node.localX + directions[i].x && node.localX + directions[i].x < localGrid.GetLength(0) &&
-                0 <= node.localY + directions[i].y && node.localY + directions[i].y < localGrid.GetLength(1))
+            if (0 <= node.localPos.x + directions[i].x && node.localPos.x + directions[i].x < localGrid.GetLength(0) &&
+                0 <= node.localPos.y + directions[i].y && node.localPos.y + directions[i].y < localGrid.GetLength(1))
             {
-                neighbours.Add(localGrid[node.localX + directions[i].x, node.localY + directions[i].y]);
+                neighbours.Add(localGrid[node.localPos.x + directions[i].x, node.localPos.y + directions[i].y]);
             }
         }
         return neighbours;
@@ -387,7 +387,7 @@ public class GridSector // for HPA*
             {
                 continue;
             }
-            interpolatedDirection = Vector2.Lerp(interpolatedDirection, field[neighbour.localX, neighbour.localY], interpolationFactor);
+            interpolatedDirection = Vector2.Lerp(interpolatedDirection, field[neighbour.localPos.x, neighbour.localPos.y], interpolationFactor);
         }
         return interpolatedDirection.normalized;
     }
@@ -415,14 +415,14 @@ public class GridSector // for HPA*
         float bestCost = Mathf.Infinity;
 
         Vector2 targetCenter = nextNextSector.GetCentre();
-        Vector2 currentNodePos = new Vector2(currentNode.globalX, currentNode.globalY);
+        Vector2 currentNodePos = new Vector2(currentNode.globalPos.x, currentNode.globalPos.y);
 
         Vector2 desiredDir = (targetCenter - currentNodePos).normalized;
 
         foreach (var node in candidates)
         {
-            float baseCost = currentNode.gridSector.borderCostFields[(int)borderDir][node.localX, node.localY];
-            Vector2 nodePos = new Vector2(node.globalX, node.globalY);
+            float baseCost = currentNode.gridSector.borderCostFields[(int)borderDir][node.localPos.x, node.localPos.y];
+            Vector2 nodePos = new Vector2(node.globalPos.x, node.globalPos.y);
             Vector2 toExit = (nodePos - currentNodePos).normalized;
             float alignment = Vector2.Dot(desiredDir, toExit);
             float penalty = (1f - alignment) * alignmentWeight;
@@ -456,14 +456,14 @@ public class GridSector // for HPA*
 
         Vector2 targetCenter = nextSector.GetCentre();
 
-        Vector2 currentNodePos = new Vector2(currentNode.globalX, currentNode.globalY);
+        Vector2 currentNodePos = new Vector2(currentNode.globalPos.x, currentNode.globalPos.y);
 
         Vector2 desiredDir = (targetCenter - currentNodePos).normalized;
 
         foreach (var node in candidates)
         {
-            float baseCost = currentNode.gridSector.borderCostFields[(int)borderDir][node.localX, node.localY];
-            Vector2 nodePos = new Vector2(node.globalX, node.globalY);
+            float baseCost = currentNode.gridSector.borderCostFields[(int)borderDir][node.localPos.x, node.localPos.y];
+            Vector2 nodePos = new Vector2(node.globalPos.x, node.globalPos.y);
             Vector2 toExit = (nodePos - currentNodePos).normalized;
             float alignment = Vector2.Dot(desiredDir, toExit);
             float penalty = (1f - alignment) * alignmentWeight;

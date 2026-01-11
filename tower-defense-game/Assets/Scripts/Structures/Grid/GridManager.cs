@@ -5,71 +5,30 @@ using Unity.Mathematics;
 [System.Serializable]
 public class GridNode
 {
-    public GridNode(int globalX, int globalY) // might have to assign walk cost later on creation
+    public float walkCost = 1f;
+    public int territoryStatus; // refer to TerritoryStatus enum
+    public bool buildable;
+    public int2 globalPos; // coordinates in global grid
+    public int2 localPos; // coordinates in local sector grid.
+    public GridSector gridSector; // which grid sector it belongs to
+    public GridNode(int2 globalPos, float walkCost = 1f) // might have to assign walk cost later on creation
     {
         walkCost = 1f;
         territoryStatus = (int)GridManager.TerritoryStatus.NotAssigned;
         buildable = true;
-        this.globalX = globalX;
-        this.globalY = globalY;
+        this.globalPos = globalPos;
     }
-
-
-    public float walkCost;
-    public int territoryStatus; // refer to TerritoryStatus enum
-    public bool buildable;
-    public int globalX;
-    public int globalY; // coordinates in global grid
-    public int localX;
-    public int localY; // coordinates in local sector grid.
-    public GridSector gridSector;
 
 }
 
 public class GridManager : MonoBehaviour
 
 {
-    public static readonly int gridWidth = 200; // number of tiles
+    #region Constants
+    public static readonly int GRID_WIDTH = 200; // number of tiles in width
+    public static readonly int GRID_HEIGHT = 200;
     private static int TERRITORY_RADIUS = 5;
-    public static readonly int gridHeight = 200;
-    public static readonly float tileSize = 4f;
-
-    // private bool[,] grid; // true means buildable, false means occupied
-    private List<Transform> playerPos;
-
-    private GridNode[,] grid;
-    public GridNode[,] GetGrid(){
-        return grid;
-    }
-
-    // private int[,] territoryGrid; // corresponds to enum TerritoryStatus
-
-    private GameObject target;
-    public GameObject Target
-    {
-        get { return target; }
-        set { target = value; }
-    }
-    private bool starterTerritoryIsAssigned;
-
-    public static float Distance (GridNode node1, GridNode node2)
-    {
-        return Mathf.Sqrt((node1.globalX - node2.globalX) *(node1.globalX - node2.globalX)+ (node1.globalY - node2.globalY) *  (node1.globalY - node2.globalY));
-    }
-
-    public static GridManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-    
+    public static readonly float TILE_SIZE = 4f;
     public enum TerritoryStatus
     {
         NotAssigned = 0,
@@ -77,34 +36,43 @@ public class GridManager : MonoBehaviour
         Assigned = 2,
         RemoveOnWaveUpdate = 3
     }
+    #endregion
 
+    #region Getters and Setters
+    public GridNode[,] GetGrid(){
+        return grid;
+    }
+
+    public GameObject Target
+    {
+        get { return playerBase; }
+        set { playerBase = value; }
+    }
+
+
+    public static GridManager Instance { get; private set; } // singleton
+
+    #endregion
+
+    #region Buildable Tiles Overlay Fields
     [Header("Buildable Tiles")]
     [SerializeField] private GameObject buildableTilePrefab;
     [SerializeField] private Material buildableTileMaterial;
 
     private List<GameObject> buildableTiles;
+    #endregion
+    private GridNode[,] grid; 
+    private GameObject playerBase;
+    private bool starterTerritoryIsAssigned = false;
 
-    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
-    {
-        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; // this might be broken i think
-        int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
-        return new Vector3Int(x,0,z);
-    }
-
-    public static Vector3 GridToCoordinates(Vector3 gridCoords)
-    {
-        return new Vector3((gridCoords.x - gridWidth/2) * tileSize, 0f, (gridCoords.z - gridHeight/2) * tileSize);
-    }
-
+    #region Initialization Methods
     void Start()
     {
-        grid = new GridNode[gridWidth, gridHeight];
-
-        playerPos = new List<Transform>();
+        grid = new GridNode[GRID_WIDTH, GRID_HEIGHT];
 
         buildableTiles = new List<GameObject>();
 
-        GridSector[,] sectors = new GridSector[gridWidth / GridSector.sectorWidth, gridHeight / GridSector.sectorHeight];
+        GridSector[,] sectors = new GridSector[GRID_WIDTH / GridSector.sectorWidth, GRID_HEIGHT / GridSector.sectorHeight];
 
         // new code to generate grid and sectors at the same time
 
@@ -119,14 +87,13 @@ public class GridManager : MonoBehaviour
                 {
                     for (int j = 0; j < GridSector.sectorHeight; j++)
                     {
-                        int globalX = x * GridSector.sectorWidth + i;
-                        int globalY = y * GridSector.sectorHeight + j;
-                        GridNode newNode = new GridNode(globalX, globalY);
-                        grid[globalX, globalY] = newNode;
+                        int2 globalPos = new int2(x * GridSector.sectorWidth + i, y * GridSector.sectorHeight + j);
+                        GridNode newNode = new GridNode(globalPos);
+                        grid[globalPos.x, globalPos.y] = newNode;
                         newNode.gridSector = sector;
                         sector.localGrid[i, j] = newNode;
-                        newNode.localX = i;
-                        newNode.localY = j;
+                        newNode.localPos.x = i;
+                        newNode.localPos.y = j;
                     }
                 }
                
@@ -154,23 +121,19 @@ public class GridManager : MonoBehaviour
         }
 
     }
-
-    /// <summary>
-    /// Get the GridNode corresponding to world coordinates in 3D space
-    /// </summary>
-    /// <param name="coordinates"></param>
-    /// <returns>GridNode</returns>
-    public GridNode NodeFromWorldPos(Vector3 coordinates)
+    private void Awake()
     {
-        int x = Mathf.FloorToInt(coordinates.x / tileSize) + gridWidth/2; 
-        int z = Mathf.FloorToInt(coordinates.z / tileSize) + gridHeight/2;
-        return grid[x,z];
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
-
-
     void SetStarterTerritory()
     {
-        Vector3 pos = target.transform.position;
+        Vector3 pos = playerBase.transform.position;
         Vector3Int gridPos = CoordinatesToGrid(pos);
         for(int i = gridPos.x - TERRITORY_RADIUS; i <= gridPos.x + TERRITORY_RADIUS; i++)
         {
@@ -185,6 +148,9 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Buildable Checks
 
     public bool IsTileBuildable(Vector3Int coordinates)
     {
@@ -198,7 +164,7 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        if (coordinates.x < 0 || coordinates.x >= gridWidth || coordinates.z < 0 || coordinates.z >= gridHeight)
+        if (coordinates.x < 0 || coordinates.x >= GRID_WIDTH || coordinates.z < 0 || coordinates.z >= GRID_HEIGHT)
         {
             return false;
         }
@@ -221,9 +187,9 @@ public class GridManager : MonoBehaviour
         }
         return true;
     }
+    #endregion
 
-    
-
+    #region Occupy / Unoccupy Tiles
     public void OccupyArea(Vector3 coordinates, int2 size, int range)
     {
         Vector3Int gridPos = CoordinatesToGrid(coordinates);
@@ -231,7 +197,8 @@ public class GridManager : MonoBehaviour
         {
             for (int z = gridPos.z; z < gridPos.z + size.y; z++)
             {
-                if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
+                if (x >= 0 && x < GRID_WIDTH
+         && z >= 0 && z < GRID_HEIGHT)
                 {
                     grid[x, z].buildable = false;
                 }
@@ -251,6 +218,7 @@ public class GridManager : MonoBehaviour
             }
         }
     }
+
     public void StopOccupying(Vector3 coordinates, int2 size)
     {
         
@@ -259,29 +227,25 @@ public class GridManager : MonoBehaviour
         {
             for (int z = gridPos.z; z < gridPos.z + size.y; z++)
             {
-                if (x >= 0 && x < gridWidth && z >= 0 && z < gridHeight)
+                if (x >= 0 && x < GRID_WIDTH
+        && z >= 0 && z < GRID_HEIGHT)
                 {
                     grid[x, z].buildable = true;
                 }
             }
         }
+
     }
 
+    #endregion
 
-    public static Quaternion SnapRotation(Quaternion currentRotation)
-    {
-        float yRotation = currentRotation.eulerAngles.y;
-        yRotation = Mathf.Round(yRotation / 90f) * 90f;
-
-        return Quaternion.Euler(0f, yRotation, 0f);
-    }
-
+    #region Buildable Tiles Overlay Methods
     public void DrawBuildGrid()
     {
         // ClearGrid();
-        for (int x = 0; x < gridWidth; x++)
+        for (int x = 0; x < GRID_WIDTH; x++)
         {
-            for (int z = 0; z < gridHeight; z++)
+            for (int z = 0; z < GRID_HEIGHT; z++)
             {
                 if (grid[x, z].buildable && grid[x,z].territoryStatus == (int)TerritoryStatus.Assigned)
                 {
@@ -297,7 +261,7 @@ public class GridManager : MonoBehaviour
         buildableTiles.Add(buildableTile);
 
         buildableTile.transform.position = position + new Vector3(0, 0.1f, 0); // raise slightly above ground to be seen
-        buildableTile.transform.localScale = new Vector3(tileSize, tileSize, tileSize);
+        buildableTile.transform.localScale = new Vector3(TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
         buildableTile.GetComponent<Renderer>().material = buildableTileMaterial;
         buildableTile.GetComponent<Renderer>().material.color = new Color(0, 0, 1, 0.5f);
@@ -314,20 +278,55 @@ public class GridManager : MonoBehaviour
             Destroy(tile);
         }
     }
+    #endregion
 
-    void Update(){
-        if(target==null){
-            target = BaseManager.Instance.GetBase();
-        }
-        else{
-            if(!starterTerritoryIsAssigned){
-                SetStarterTerritory();
-                starterTerritoryIsAssigned = true;
-            }
-        }
+    #region Utility Methods
+
+    public bool IsInBounds(int2 pos)
+    {
+        return pos.x >= 0 && pos.x < GRID_WIDTH && pos.y >= 0 && pos.y < GRID_HEIGHT;
+    }
+    /// <summary>
+    /// Euclidean Distance between two GridNodes
+    /// </summary>
+    public static float Distance (GridNode node1, GridNode node2)
+    {
+        return Mathf.Sqrt((node1.globalPos.x - node2.globalPos.x) * (node1.globalPos.x - node2.globalPos.x)+ (node1.globalPos.y - node2.globalPos.y) *  (node1.globalPos.y - node2.globalPos.y));
+    }
+    
+    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
+    {
+        int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; // centred on 0, 0
+        int z = Mathf.FloorToInt(coordinates.z / TILE_SIZE) + GRID_HEIGHT / 2;
+        return new Vector3Int(x, 0, z);
     }
 
-    
+    public static Vector3 GridToCoordinates(Vector3 gridCoords)
+    {
+        return new Vector3((gridCoords.x - GRID_WIDTH / 2) * TILE_SIZE, 0f, (gridCoords.z - GRID_HEIGHT / 2) * TILE_SIZE);
+    }
+    public static Quaternion SnapRotation(Quaternion currentRotation)
+    {
+        float yRotation = currentRotation.eulerAngles.y;
+        yRotation = Mathf.Round(yRotation / 90f) * 90f;
+
+        return Quaternion.Euler(0f, yRotation, 0f);
+    }
+
+    /// <summary>
+    /// Get the GridNode corresponding to world coordinates in 3D space
+    /// </summary>
+    /// <param name="coordinates"></param>
+    /// <returns>GridNode</returns>
+    public GridNode NodeFromWorldPos(Vector3 coordinates)
+    {
+        int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; 
+        int z = Mathf.FloorToInt(coordinates.z / TILE_SIZE) + GRID_HEIGHT / 2;
+        return grid[x, z];
+    }
+    #endregion
+
+    #region Territory Management
     public void TerritoryUpdate()
     {
         for(int i = 0; i < grid.GetLength(0); i++)
@@ -350,7 +349,21 @@ public class GridManager : MonoBehaviour
     public void UnassignTerritory(){
         starterTerritoryIsAssigned = false;
     }
-    
+    #endregion
+
+
+    void Update(){
+        if(playerBase == null){
+            playerBase = BaseManager.Instance.GetBase();
+        }
+        else{
+            if(!starterTerritoryIsAssigned){
+                SetStarterTerritory();
+                starterTerritoryIsAssigned = true;
+            }
+        }
+    }
+
 }
 
 

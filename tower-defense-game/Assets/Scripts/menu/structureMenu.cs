@@ -187,8 +187,8 @@ public class StructureMenu : MonoBehaviour
     int2 CalculateOccupyingSize()
     {
         MeshRenderer meshRenderer = selectedBuildingScript.building_model.GetComponent<MeshRenderer>();
-        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
-                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
+        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.TILE_SIZE), 
+                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.TILE_SIZE) );
     }
 
     private void UnhighlightObject()

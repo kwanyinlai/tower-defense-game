@@ -9,7 +9,7 @@ public class SectorManager : MonoBehaviour
 {
     public static SectorManager Instance { get; private set; }
     private GridNode[,] grid;
-    private GridSector[,] sectors = new GridSector[GridManager.gridWidth / GridSector.sectorWidth, GridManager.gridHeight / GridSector.sectorHeight];
+    private GridSector[,] sectors = new GridSector[GridManager.GRID_WIDTH / GridSector.sectorWidth, GridManager.GRID_HEIGHT / GridSector.sectorHeight];
     private int2[] directions = {
                 new int2(0,1),
                 new int2(1,0),
@@ -195,14 +195,14 @@ public class SectorManager : MonoBehaviour
             for (int y =0; y< sectors.GetLength(1); y++)
             {
                 Vector3 origin = new Vector3(
-                    (x * GridSector.sectorWidth - GridManager.gridWidth / 2) * GridManager.tileSize,
+                    (x * GridSector.sectorWidth - GridManager.GRID_WIDTH / 2) * GridManager.TILE_SIZE,
                     0f,
-                    (y * GridSector.sectorHeight - GridManager.gridHeight / 2) * GridManager.tileSize
+                    (y * GridSector.sectorHeight - GridManager.GRID_HEIGHT / 2) * GridManager.TILE_SIZE
                 );
 
                 Gizmos.DrawWireCube(
-                    origin + new Vector3(GridSector.sectorWidth * GridManager.tileSize / 2, 0f, GridSector.sectorHeight * GridManager.tileSize / 2),
-                    new Vector3(GridSector.sectorWidth * GridManager.tileSize, 0.1f, GridSector.sectorHeight * GridManager.tileSize)
+                    origin + new Vector3(GridSector.sectorWidth * GridManager.TILE_SIZE / 2, 0f, GridSector.sectorHeight * GridManager.TILE_SIZE / 2),
+                    new Vector3(GridSector.sectorWidth * GridManager.TILE_SIZE, 0.1f, GridSector.sectorHeight * GridManager.TILE_SIZE)
                 );
             }
         }

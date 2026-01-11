@@ -44,7 +44,7 @@ public class WaveManager : MonoBehaviour
             waveTimer = 0;
             EnemySpawnScript spawner = waveManager.GetComponent<EnemySpawnScript>();
             spawner.SpawnEnemies(waveNum);
-            gridManager.TerritoryUpdate();
+            // gridManager.TerritoryUpdate();
         }
     }
 }

@@ -39,16 +39,11 @@ public class GridManager : MonoBehaviour
     #endregion
 
     #region Getters and Setters
-    public GridNode[,] GetGrid(){
-        return grid;
-    }
-
-    public GameObject Target
+    public GameObject PlayerBase
     {
         get { return playerBase; }
         set { playerBase = value; }
     }
-
 
     public static GridManager Instance { get; private set; } // singleton
 
@@ -61,76 +56,91 @@ public class GridManager : MonoBehaviour
 
     private List<GameObject> buildableTiles;
     #endregion
+
+    #region Territory Management Fields
+    private bool starterTerritoryIsAssigned = false;
+    private HashSet<int2> pendingTerritoryChanges = new HashSet<int2>();
+    #endregion
     private GridNode[,] grid; 
     private GameObject playerBase;
-    private bool starterTerritoryIsAssigned = false;
 
     #region Initialization Methods
-    void Start()
+
+    
+    private void InitializeGridAndSectors()
     {
         grid = new GridNode[GRID_WIDTH, GRID_HEIGHT];
 
-        buildableTiles = new List<GameObject>();
+        int sectorCountX = GRID_WIDTH / GridSector.sectorWidth;
+        int sectorCountY = GRID_HEIGHT / GridSector.sectorHeight;
+        GridSector[,] sectors = new GridSector[sectorCountX, sectorCountY];
 
-        GridSector[,] sectors = new GridSector[GRID_WIDTH / GridSector.sectorWidth, GRID_HEIGHT / GridSector.sectorHeight];
-
-        // new code to generate grid and sectors at the same time
-
-        for (int x = 0; x < sectors.GetLength(0); x++)
+        // initialise all sectors
+        for (int sectorX = 0; sectorX < sectorCountX; sectorX++)
         {
-            for (int y = 0; y < sectors.GetLength(1); y++)
+            for (int sectorY = 0; sectorY < sectorCountY; sectorY++)
             {
-                GridSector sector = new GridSector(new int2(x, y));
-                sectors[x, y] = sector;
+                GridSector sector = new GridSector(new int2(sectorX, sectorY));
+                sectors[sectorX, sectorY] = sector;
 
-                for (int i = 0; i < GridSector.sectorWidth; i++)
+                // create nodes for this sector and add it to the main grid
+                for (int localX = 0; localX < GridSector.sectorWidth; localX++)
                 {
-                    for (int j = 0; j < GridSector.sectorHeight; j++)
+                    for (int localY = 0; localY < GridSector.sectorHeight; localY++)
                     {
-                        int2 globalPos = new int2(x * GridSector.sectorWidth + i, y * GridSector.sectorHeight + j);
-                        GridNode newNode = new GridNode(globalPos);
-                        grid[globalPos.x, globalPos.y] = newNode;
-                        newNode.gridSector = sector;
-                        sector.localGrid[i, j] = newNode;
-                        newNode.localPos.x = i;
-                        newNode.localPos.y = j;
+                        int2 globalPos = new int2(sectorX * GridSector.sectorWidth + localX, sectorY * GridSector.sectorHeight + localY);
+
+                        GridNode node = new GridNode(globalPos);
+                        
+                        grid[globalPos.x, globalPos.y] = node;
+                        sector.localGrid[localX, localY] = node;
+                        
+                        // TODO: bidirectional references might not be cleanest, but we'll use them for now
+                        node.gridSector = sector;
+                        int2 localPos = new int2(localX, localY);
+                        node.localPos = localPos;
                     }
                 }
-               
-                
+
                 sector.AggregateCosts();
-                
             }
         }
-        SectorManager.Instance.SetSectors(sectors); // initialize sectors in SectorManager
 
-        // Generate sector neighbors
-        for (int x = 0; x < sectors.GetLength(0); x++)
+        SectorManager.Instance.SetSectors(sectors);
+        // IMPORTANT NOTE: sector's local grids stores references to the same GridNodes as the main grid
+
+        ConnectSectorNeighbors(sectors);
+    }
+
+    private void ConnectSectorNeighbors(GridSector[,] sectors)
+    {
+        int sectorCountX = sectors.GetLength(0);
+        int sectorCountY = sectors.GetLength(1);
+
+        for (int x = 0; x < sectorCountX; x++)
         {
-            for (int y = 0; y < sectors.GetLength(1); y++)
+            for (int y = 0; y < sectorCountY; y++)
             {
                 GridSector sector = sectors[x, y];
-                sector.neighbours[(int)GridSector.CardinalDirections.North] = (y < sectors.GetLength(1) - 1) ? sectors[x, y + 1] : null;
-                sector.neighbours[(int)GridSector.CardinalDirections.East] = (x < sectors.GetLength(0) - 1) ? sectors[x + 1, y] : null;
-                sector.neighbours[(int)GridSector.CardinalDirections.South] = (y > 0) ? sectors[x, y - 1] : null;
-                sector.neighbours[(int)GridSector.CardinalDirections.West] = (x > 0) ? sectors[x - 1, y] : null;
-                // GenerateCostFieldForBorders() requires grid to be fully initialised, which is not the case
-                // if done in the previous for loop
+
+                // assign neighbors in each cardinal direction
+                sector.neighbours[(int)GridSector.CardinalDirections.North] = 
+                    (y < sectorCountY - 1) ? sectors[x, y + 1] : null;
+                    
+                sector.neighbours[(int)GridSector.CardinalDirections.East] = 
+                    (x < sectorCountX - 1) ? sectors[x + 1, y] : null;
+                    
+                sector.neighbours[(int)GridSector.CardinalDirections.South] = 
+                    (y > 0) ? sectors[x, y - 1] : null;
+                    
+                sector.neighbours[(int)GridSector.CardinalDirections.West] = 
+                    (x > 0) ? sectors[x - 1, y] : null;
+
                 sector.GenerateCostFieldForBorders();
             }
         }
+    }
 
-    }
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
     void SetStarterTerritory()
     {
         Vector3 pos = playerBase.transform.position;
@@ -280,6 +290,21 @@ public class GridManager : MonoBehaviour
     }
     #endregion
 
+    #region Coordinate Conversion Methods
+      
+    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
+    {
+        int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; // centred on 0, 0
+        int z = Mathf.FloorToInt(coordinates.z / TILE_SIZE) + GRID_HEIGHT / 2;
+        return new Vector3Int(x, 0, z);
+    }
+
+    public static Vector3 GridToCoordinates(Vector3 gridCoords)
+    {
+        return new Vector3((gridCoords.x - GRID_WIDTH / 2) * TILE_SIZE, 0f, (gridCoords.z - GRID_HEIGHT / 2) * TILE_SIZE);
+    }
+    #endregion
+
     #region Utility Methods
 
     public bool IsInBounds(int2 pos)
@@ -293,18 +318,6 @@ public class GridManager : MonoBehaviour
     {
         return Mathf.Sqrt((node1.globalPos.x - node2.globalPos.x) * (node1.globalPos.x - node2.globalPos.x)+ (node1.globalPos.y - node2.globalPos.y) *  (node1.globalPos.y - node2.globalPos.y));
     }
-    
-    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
-    {
-        int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; // centred on 0, 0
-        int z = Mathf.FloorToInt(coordinates.z / TILE_SIZE) + GRID_HEIGHT / 2;
-        return new Vector3Int(x, 0, z);
-    }
-
-    public static Vector3 GridToCoordinates(Vector3 gridCoords)
-    {
-        return new Vector3((gridCoords.x - GRID_WIDTH / 2) * TILE_SIZE, 0f, (gridCoords.z - GRID_HEIGHT / 2) * TILE_SIZE);
-    }
     public static Quaternion SnapRotation(Quaternion currentRotation)
     {
         float yRotation = currentRotation.eulerAngles.y;
@@ -314,7 +327,7 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Get the GridNode corresponding to world coordinates in 3D space
+    /// Get the GridNode corresponding to world coordinates in 3D space. Null if invalid.
     /// </summary>
     /// <param name="coordinates"></param>
     /// <returns>GridNode</returns>
@@ -322,10 +335,25 @@ public class GridManager : MonoBehaviour
     {
         int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; 
         int z = Mathf.FloorToInt(coordinates.z / TILE_SIZE) + GRID_HEIGHT / 2;
+        if (x < 0 || x >= GRID_WIDTH || z < 0 || z >= GRID_HEIGHT)
+        {
+            return null;
+        }
         return grid[x, z];
+    }
+
+    public GridNode NodeFromCoordinates(Vector3Int gridCoords)
+    {
+        if (gridCoords.x < 0 || gridCoords.x >= GRID_WIDTH || gridCoords.z < 0 || gridCoords.z >= GRID_HEIGHT)
+        {
+            return null;
+        }
+        return grid[gridCoords.x, gridCoords.z];
     }
     #endregion
 
+    /*
+    Commenting out territory management for now. Want to remove territory altogether.
     #region Territory Management
     public void TerritoryUpdate()
     {
@@ -350,7 +378,21 @@ public class GridManager : MonoBehaviour
         starterTerritoryIsAssigned = false;
     }
     #endregion
-
+    */
+    void Start()
+    {
+        InitializeGridAndSectors();
+    }
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     void Update(){
         if(playerBase == null){

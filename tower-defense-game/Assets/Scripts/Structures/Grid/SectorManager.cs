@@ -8,7 +8,6 @@ using Unity.Mathematics;
 public class SectorManager : MonoBehaviour
 {
     public static SectorManager Instance { get; private set; }
-    private GridNode[,] grid;
     private GridSector[,] sectors = new GridSector[GridManager.GRID_WIDTH / GridSector.sectorWidth, GridManager.GRID_HEIGHT / GridSector.sectorHeight];
     private int2[] directions = {
                 new int2(0,1),
@@ -30,7 +29,7 @@ public class SectorManager : MonoBehaviour
 
     void Start()
     {
-        grid = GridManager.Instance.GetGrid();
+        ;
     }
 
     public void SetSectors(GridSector[,] sectors)

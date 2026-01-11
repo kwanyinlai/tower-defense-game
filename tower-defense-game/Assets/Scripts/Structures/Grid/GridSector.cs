@@ -106,15 +106,15 @@ public class GridSector // for HPA*
     
     private static bool CheckConnected(GridNode node, int2 dir)
     {
-        if (node.globalPos.x + dir.x >= GridManager.Instance.GetGrid().GetLength(0) || node.globalPos.x + dir.x < 0)
+        if (node.globalPos.x + dir.x >= GridManager.GRID_WIDTH || node.globalPos.x + dir.x < 0)
         {
             return false;
         }
-        if (node.globalPos.y + dir.y >= GridManager.Instance.GetGrid().GetLength(1) || node.globalPos.y + dir.y < 0)
+        if (node.globalPos.y + dir.y >= GridManager.GRID_HEIGHT || node.globalPos.y + dir.y < 0)
         {
             return false;
         }
-        return GridManager.Instance.GetGrid()[node.globalPos.x + dir.x, node.globalPos.y + dir.y].walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
+        return GridManager.Instance.NodeFromCoordinates(new Vector3Int(node.globalPos.x + dir.x, 0, node.globalPos.y + dir.y)).walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
     }
 
     private List<GridNode> GetBorderNodes(CardinalDirections dir)

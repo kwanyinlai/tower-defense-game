@@ -32,7 +32,7 @@ public class BaseBattleSystem : CombatSystem
 
     protected override void Die()
     {
-        GridManager.Instance.UnassignTerritory();
+        // GridManager.Instance.UnassignTerritory();
         if (gameObject.tag == "Target")
         {
             SceneManager.LoadScene("GameOver");

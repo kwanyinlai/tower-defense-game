@@ -53,39 +53,6 @@ public class GridSector // for HPA*
     }
 
 
-    // public void GenerateVectorField(List<GridNode> exitNodes)
-    // {
-    //     // Perform Dijkstra's from goal 
-    //     for (int x = 0; x < localGrid.GetLength(0); x++)
-    //     {
-    //         for (int y = 0; y < localGrid.GetLength(1); y++)
-    //         {
-    //             costField[x, y] = float.MaxValue;
-    //         }
-    //     }
-
-    //     PriorityQueue<GridNode, float> uncheckedNodes = new PriorityQueue<GridNode, float>();
-    //     // enqueue all border nodes first
-    //     foreach (var node in exitNodes)
-    //     {
-    //         costField[node.localPos.x, node.localPos.y]= 0f;
-    //         uncheckedNodes.Enqueue(node, 0f);
-    //     }
-    //     // first generate cost field, each node points to closest exit
-    //     while (uncheckedNodes.Count > 0)
-    //     {
-    //         var current = uncheckedNodes.Dequeue();
-    //         foreach (var neighbour in GetNeighbouringNodes(current))
-    //         {
-    //             float tentativeCost = costField[current.localPos.x, current.localPos.y] + neighbour.walkCost;
-    //             if (tentativeCost < costField[neighbour.localPos.x, neighbour.localPos.y])
-    //             {
-    //                 costField[neighbour.localPos.x, neighbour.localPos.y] = tentativeCost;
-    //                 uncheckedNodes.Enqueue(neighbour, tentativeCost);
-    //             }
-    //         }
-    //     }
-    // }
 
     public void GenerateCostFieldForBorders()
     {

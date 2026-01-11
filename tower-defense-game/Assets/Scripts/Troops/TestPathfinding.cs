@@ -83,7 +83,7 @@ public class TestPathfinding : MonoBehaviour
         // we check if they are neighbours as a check for veering off path 
         // so we can regenerate the path if needed
         if (highLevelPath.Count > 0 && highLevelPath[0] != currentNode.gridSector &&
-            SectorManager.Instance.AreSectorsNeighbours(currentNode.gridSector, highLevelPath[0]))
+            SectorManager.Instance.AreSectorsAdjacent(currentNode.gridSector, highLevelPath[0]))
         {
             highLevelPath.RemoveAt(0);
         }
@@ -143,7 +143,7 @@ public class TestPathfinding : MonoBehaviour
 
         // check whether the current sector is adjacent to the next target sector
         // if not, regenerate the path because we have veered off path
-        if (highLevelPath.Count > 0 && !SectorManager.Instance.AreSectorsNeighbours(currentNode.gridSector, highLevelPath[highLevelPath.Count - 1]) &&
+        if (highLevelPath.Count > 0 && !SectorManager.Instance.AreSectorsAdjacent(currentNode.gridSector, highLevelPath[highLevelPath.Count - 1]) &&
             !currentNode.gridSector.Equals(highLevelPath[0]))
         {
             highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(

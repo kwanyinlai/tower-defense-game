@@ -148,7 +148,7 @@ public abstract class TroopAI : MonoBehaviour
 
         // check whether the current sector is adjacent to the next target sector
         // if not, regenerate the path because we have veered off path
-        if (!SectorManager.Instance.AreSectorsNeighbours(currentNode.gridSector, highLevelPath[0]))
+        if (!SectorManager.Instance.AreSectorsAdjacent(currentNode.gridSector, highLevelPath[0]))
         {
             highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
                 currentNode.gridSector,

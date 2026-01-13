@@ -52,8 +52,6 @@ public class GridSector // for HPA*
         cachedFields = new FlowFieldCache(cacheSize);
     }
 
-
-
     public void GenerateCostFieldForBorders()
     {
         List<GridNode> borderNodes = GetBorderNodes(CardinalDirections.North);
@@ -81,7 +79,7 @@ public class GridSector // for HPA*
         {
             return false;
         }
-        return GridManager.Instance.NodeFromCoordinates(new Vector3Int(node.globalPos.x + dir.x, 0, node.globalPos.y + dir.y)).walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
+        return GridManager.Instance.NodeFromGridCoordinate(new Vector3Int(node.globalPos.x + dir.x, 0, node.globalPos.y + dir.y)).walkCost != Mathf.Infinity && node.walkCost != Mathf.Infinity;
     }
 
     private List<GridNode> GetBorderNodes(CardinalDirections dir)

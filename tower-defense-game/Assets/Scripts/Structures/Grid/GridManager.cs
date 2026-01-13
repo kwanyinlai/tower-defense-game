@@ -71,14 +71,14 @@ public class GridManager : MonoBehaviour
     {
         grid = new GridNode[GRID_WIDTH, GRID_HEIGHT];
 
-        int sectorCountX = GRID_WIDTH / GridSector.sectorWidth;
-        int sectorCountY = GRID_HEIGHT / GridSector.sectorHeight;
-        GridSector[,] sectors = new GridSector[sectorCountX, sectorCountY];
+        int numSectorsX = GRID_WIDTH / GridSector.sectorWidth;
+        int numSectorsY = GRID_HEIGHT / GridSector.sectorHeight;
+        GridSector[,] sectors = new GridSector[numSectorsX, numSectorsY];
 
         // initialise all sectors
-        for (int sectorX = 0; sectorX < sectorCountX; sectorX++)
+        for (int sectorX = 0; sectorX < numSectorsX; sectorX++)
         {
-            for (int sectorY = 0; sectorY < sectorCountY; sectorY++)
+            for (int sectorY = 0; sectorY < numSectorsY; sectorY++)
             {
                 GridSector sector = new GridSector(new int2(sectorX, sectorY));
                 sectors[sectorX, sectorY] = sector;
@@ -114,21 +114,21 @@ public class GridManager : MonoBehaviour
 
     private void ConnectSectorNeighbors(GridSector[,] sectors)
     {
-        int sectorCountX = sectors.GetLength(0);
-        int sectorCountY = sectors.GetLength(1);
+        int numSectorsX = sectors.GetLength(0);
+        int numSectorsY = sectors.GetLength(1);
 
-        for (int x = 0; x < sectorCountX; x++)
+        for (int x = 0; x < numSectorsX; x++)
         {
-            for (int y = 0; y < sectorCountY; y++)
+            for (int y = 0; y < numSectorsY; y++)
             {
                 GridSector sector = sectors[x, y];
 
                 // assign neighbors in each cardinal direction
                 sector.neighbours[(int)GridSector.CardinalDirections.North] = 
-                    (y < sectorCountY - 1) ? sectors[x, y + 1] : null;
+                    (y < numSectorsY - 1) ? sectors[x, y + 1] : null;
                     
                 sector.neighbours[(int)GridSector.CardinalDirections.East] = 
-                    (x < sectorCountX - 1) ? sectors[x + 1, y] : null;
+                    (x < numSectorsX - 1) ? sectors[x + 1, y] : null;
                     
                 sector.neighbours[(int)GridSector.CardinalDirections.South] = 
                     (y > 0) ? sectors[x, y - 1] : null;
@@ -141,22 +141,22 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    void SetStarterTerritory()
-    {
-        Vector3 pos = playerBase.transform.position;
-        Vector3Int gridPos = CoordinatesToGrid(pos);
-        for(int i = gridPos.x - TERRITORY_RADIUS; i <= gridPos.x + TERRITORY_RADIUS; i++)
-        {
-            for(int j =  gridPos.z - TERRITORY_RADIUS; j <= gridPos.z + TERRITORY_RADIUS; j++)
-            {
-                float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
-                if(distSquared < Mathf.Pow(TERRITORY_RADIUS, 2))
-                {
-                    grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
-                }
-            }
-        }
-    }
+    // void SetStarterTerritory()
+    // {
+    //     Vector3 pos = playerBase.transform.position;
+    //     Vector3Int gridPos = WorldPosFromCoordinates(pos);
+    //     for(int i = gridPos.x - TERRITORY_RADIUS; i <= gridPos.x + TERRITORY_RADIUS; i++)
+    //     {
+    //         for(int j =  gridPos.z - TERRITORY_RADIUS; j <= gridPos.z + TERRITORY_RADIUS; j++)
+    //         {
+    //             float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
+    //             if(distSquared < Mathf.Pow(TERRITORY_RADIUS, 2))
+    //             {
+    //                 grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
+    //             }
+    //         }
+    //     }
+    // }
 
     #endregion
 
@@ -167,7 +167,7 @@ public class GridManager : MonoBehaviour
         // check if tile is occupied by player
         foreach (GameObject player in PlayerManager.players)
         {
-            if (coordinates == CoordinatesToGrid(player.GetComponent<Transform>().position))
+            if (coordinates == WorldPosFromCoordinates(player.GetComponent<Transform>().position))
             {
                 // TODO: this is slgihtly off rn but I'll fix it later // later note, what is off about this??
                 return false;
@@ -185,12 +185,12 @@ public class GridManager : MonoBehaviour
 
     public bool IsTileAreaBuildable(Vector3 coordinates, int2 size)
     {
-        Vector3 gridCoords = CoordinatesToGrid(coordinates);
+        Vector3 gridCoords = WorldPosFromCoordinates(coordinates);
         for (int x = (int) gridCoords.x; x < (int) gridCoords.x + size.x; x++)
         {
             for (int z = (int) gridCoords.z; z < (int) gridCoords.z + size.y; z++)
             {
-                if (!IsTileBuildable(new Vector3Int(x, 0, z))){
+                if (!IsTileBuildable(new Vector3Int(x,0,z))){
                     return false;
                 } 
             }
@@ -202,7 +202,7 @@ public class GridManager : MonoBehaviour
     #region Occupy / Unoccupy Tiles
     public void OccupyArea(Vector3 coordinates, int2 size, int range)
     {
-        Vector3Int gridPos = CoordinatesToGrid(coordinates);
+        Vector3Int gridPos = WorldPosFromCoordinates(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
         {
             for (int z = gridPos.z; z < gridPos.z + size.y; z++)
@@ -232,7 +232,7 @@ public class GridManager : MonoBehaviour
     public void StopOccupying(Vector3 coordinates, int2 size)
     {
         
-        Vector3Int gridPos = CoordinatesToGrid(coordinates);
+        Vector3Int gridPos = WorldPosFromCoordinates(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
         {
             for (int z = gridPos.z; z < gridPos.z + size.y; z++)
@@ -250,16 +250,16 @@ public class GridManager : MonoBehaviour
     #endregion
 
     #region Buildable Tiles Overlay Methods
-    public void DrawBuildGrid()
+    public void DrawBuildableGridOverlay()
     {
-        // ClearGrid();
+        // ClearBuildableGridOverlay();
         for (int x = 0; x < GRID_WIDTH; x++)
         {
             for (int z = 0; z < GRID_HEIGHT; z++)
             {
                 if (grid[x, z].buildable && grid[x,z].territoryStatus == (int)TerritoryStatus.Assigned)
                 {
-                    DrawBuildableSquare(GridToCoordinates(new Vector3Int(x, 0, z)));
+                    DrawBuildableSquare(CoordinatesToWorldPos(new Vector3Int(x, 0, z)));
                 }
             }
         }
@@ -281,7 +281,7 @@ public class GridManager : MonoBehaviour
         buildableTile.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
-    public void ClearBuildGrid()
+    public void ClearBuildableGridOverlay()
     {
         foreach (GameObject tile in buildableTiles)
         {
@@ -292,28 +292,32 @@ public class GridManager : MonoBehaviour
 
     #region Coordinate Conversion Methods
       
-    public static Vector3Int CoordinatesToGrid(Vector3 coordinates)
+    public static Vector3Int WorldPosFromCoordinates(Vector3 coordinates)
     {
-        int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; // centred on 0, 0
+        int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; // centred on 0,0
         int z = Mathf.FloorToInt(coordinates.z / TILE_SIZE) + GRID_HEIGHT / 2;
         return new Vector3Int(x, 0, z);
     }
+    
 
-    public static Vector3 GridToCoordinates(Vector3 gridCoords)
+    public static Vector3 CoordinatesToWorldPos(Vector3 gridCoords)
     {
         return new Vector3((gridCoords.x - GRID_WIDTH / 2) * TILE_SIZE, 0f, (gridCoords.z - GRID_HEIGHT / 2) * TILE_SIZE);
+    }
+
+    public static Vector3 CoordinatesToWorldPos(int2 gridCoords)
+    {
+        return new Vector3((gridCoords.x - GRID_WIDTH / 2) * TILE_SIZE, 0f, (gridCoords.y - GRID_HEIGHT / 2) * TILE_SIZE);
     }
     #endregion
 
     #region Utility Methods
 
-    public bool IsInBounds(int2 pos)
+    public bool NodeIsInBounds(int2 pos)
     {
         return pos.x >= 0 && pos.x < GRID_WIDTH && pos.y >= 0 && pos.y < GRID_HEIGHT;
     }
-    /// <summary>
-    /// Euclidean Distance between two GridNodes
-    /// </summary>
+    
     public static float Distance (GridNode node1, GridNode node2)
     {
         return Mathf.Sqrt((node1.globalPos.x - node2.globalPos.x) * (node1.globalPos.x - node2.globalPos.x)+ (node1.globalPos.y - node2.globalPos.y) *  (node1.globalPos.y - node2.globalPos.y));
@@ -326,11 +330,6 @@ public class GridManager : MonoBehaviour
         return Quaternion.Euler(0f, yRotation, 0f);
     }
 
-    /// <summary>
-    /// Get the GridNode corresponding to world coordinates in 3D space. Null if invalid.
-    /// </summary>
-    /// <param name="coordinates"></param>
-    /// <returns>GridNode</returns>
     public GridNode NodeFromWorldPos(Vector3 coordinates)
     {
         int x = Mathf.FloorToInt(coordinates.x / TILE_SIZE) + GRID_WIDTH / 2; 
@@ -342,7 +341,7 @@ public class GridManager : MonoBehaviour
         return grid[x, z];
     }
 
-    public GridNode NodeFromCoordinates(Vector3Int gridCoords)
+    public GridNode NodeFromGridCoordinate(Vector3Int gridCoords)
     {
         if (gridCoords.x < 0 || gridCoords.x >= GRID_WIDTH || gridCoords.z < 0 || gridCoords.z >= GRID_HEIGHT)
         {
@@ -350,8 +349,20 @@ public class GridManager : MonoBehaviour
         }
         return grid[gridCoords.x, gridCoords.z];
     }
+    public GridNode NodeFromGridCoordinate(int2 gridCoords)
+    {
+        if (gridCoords.x < 0 || gridCoords.x >= GRID_WIDTH || gridCoords.y < 0 || gridCoords.y >= GRID_HEIGHT)
+        {
+            return null;
+        }
+        return grid[gridCoords.x, gridCoords.y];
+    }
     #endregion
 
+    public GridNode[,] GetGrid() // TODO: probably want to replace this -- unsafe to let people have access to grid
+    {
+        return grid;
+    }
     /*
     Commenting out territory management for now. Want to remove territory altogether.
     #region Territory Management
@@ -400,7 +411,7 @@ public class GridManager : MonoBehaviour
         }
         else{
             if(!starterTerritoryIsAssigned){
-                SetStarterTerritory();
+                // SetStarterTerritory();
                 starterTerritoryIsAssigned = true;
             }
         }

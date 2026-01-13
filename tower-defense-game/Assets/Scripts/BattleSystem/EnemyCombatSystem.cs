@@ -1,9 +1,9 @@
-using UnityEngine;
-using System.Collections.Generic;
+// using UnityEngine;
+// using System.Collections.Generic;
 
-public class EnemyCombatSystem : TroopCombatSystem
-{
+// public class EnemyCombatSystem : TroopCombatSystem
+// {
     
 
 
-}
+// }

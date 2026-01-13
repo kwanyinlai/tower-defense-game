@@ -1,18 +1,18 @@
-using UnityEngine;
-using UnityEngine.AI;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using System.Runtime.Serialization.Json;
+// using UnityEngine;
+// using UnityEngine.AI;
+// using System.Collections.Generic;
+// using Unity.VisualScripting;
+// using System.Runtime.Serialization.Json;
 
 
-[CreateAssetMenu(menuName = "Troop Behaviours/Tank Behaviour")]
-public class TankEnemyAI : IAttackBehaviour
-{
-    public float slowEffectDecimal = 0.10f;
+// [CreateAssetMenu(menuName = "Troop Behaviours/Tank Behaviour")]
+// public class TankEnemyAI : IAttackBehaviour
+// {
+//     public float slowEffectDecimal = 0.10f;
 
-    protected override void ApplyBuffOnStart(TroopCombatSystem selfCombatSystem)
-    {
-        selfCombatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
-    }
+//     protected override void ApplyBuffOnStart(TroopCombatSystem selfCombatSystem)
+//     {
+//         selfCombatSystem.ApplyEffect("slow", slowEffectDecimal, -1);
+//     }
 
-}
+// }

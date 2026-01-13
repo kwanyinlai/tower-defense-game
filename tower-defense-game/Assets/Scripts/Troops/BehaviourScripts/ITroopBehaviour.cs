@@ -1,44 +1,44 @@
-using UnityEngine;
-using System.Collections.Generic;
-public abstract class ITroopBehaviour : ScriptableObject
-{
-    public abstract void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem);
+// using UnityEngine;
+// using System.Collections.Generic;
+// public abstract class ITroopBehaviour : ScriptableObject
+// {
+//     public abstract void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem);
 
-    protected virtual void ApplyBuffOnStart(TroopCombatSystem selfCombatSystem)
-    {
-        ;
-    }
-}
+//     protected virtual void ApplyBuffOnStart(TroopCombatSystem selfCombatSystem)
+//     {
+//         ;
+//     }
+// }
 
-public abstract class IAttackBehaviour : ITroopBehaviour
-{
-    public override void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem)
-    {
-        enemyCombatSystem.TakeDamage((int)(selfCombatSystem.Attack * (1 + selfCombatSystem.GetEffectStrength("attackBuff") - selfCombatSystem.GetEffectStrength("attackWeaken"))));
+// public abstract class IAttackBehaviour : ITroopBehaviour
+// {
+//     public override void InteractWithTarget(TroopCombatSystem selfCombatSystem, TroopCombatSystem enemyCombatSystem)
+//     {
+//         enemyCombatSystem.TakeDamage((int)(selfCombatSystem.Attack * (1 + selfCombatSystem.GetEffectStrength("attackBuff") - selfCombatSystem.GetEffectStrength("attackWeaken"))));
 
-    }
-}
+//     }
+// }
 
-public abstract class ISupportBehaviour: ITroopBehaviour
-{
-    public List<GameObject> GetAlliesInRange(TroopCombatSystem selfCombatSystem)
-    {        
-        List<GameObject> allies = new List<GameObject>();
+// public abstract class ISupportBehaviour: ITroopBehaviour
+// {
+//     public List<GameObject> GetAlliesInRange(TroopCombatSystem selfCombatSystem)
+//     {        
+//         List<GameObject> allies = new List<GameObject>();
 
-        // adds allies within range
-        foreach (var ally in TroopAI.GetAllyEntitiesAliveList(selfCombatSystem.gameObject))
-        {
-            CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
-            float distance = Vector3.Distance(selfCombatSystem.transform.position, ally.transform.position);
+//         // adds allies within range
+//         foreach (var ally in TroopAI.GetAllyEntitiesAliveList(selfCombatSystem.gameObject))
+//         {
+//             CombatSystem targetCombat = ally.GetComponent<CombatSystem>();
+//             float distance = Vector3.Distance(selfCombatSystem.transform.position, ally.transform.position);
 
-            if (distance <= selfCombatSystem.AttackRange && targetCombat.currentHealth != targetCombat.maxHealth)
-            {
-                allies.Add(ally);
-            }
-        }
+//             if (distance <= selfCombatSystem.AttackRange && targetCombat.currentHealth != targetCombat.maxHealth)
+//             {
+//                 allies.Add(ally);
+//             }
+//         }
         
-        return allies.Count == 0 ? null : allies;
-    }
+//         return allies.Count == 0 ? null : allies;
+//     }
 
 
-}
+// }

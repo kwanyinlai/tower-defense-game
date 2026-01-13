@@ -1,57 +1,57 @@
-using UnityEngine;
-using System.Collections.Generic;
+// using UnityEngine;
+// using System.Collections.Generic;
 
-public class TroopCombatSystem : CombatSystem
-{
-    [Header("Combat Attributes")]
-    [SerializeField] protected int atk = 10;
-    public int Attack
-    {
-        get { return atk; }
-        set { atk = value; }
-    }
+// public class TroopCombatSystem : CombatSystem
+// {
+//     [Header("Combat Attributes")]
+//     [SerializeField] protected int atk = 10;
+//     public int Attack
+//     {
+//         get { return atk; }
+//         set { atk = value; }
+//     }
 
-    [SerializeField] protected float attackRange = 5.0f;
-    public float AttackRange { get { return attackRange; } set { attackRange = value; } }
+//     [SerializeField] protected float attackRange = 5.0f;
+//     public float AttackRange { get { return attackRange; } set { attackRange = value; } }
 
-    protected float atkCooldown { get; set; } = 1.5f;
-    protected float atkTimer { get; set; } = 0f;
+//     protected float atkCooldown { get; set; } = 1.5f;
+//     protected float atkTimer { get; set; } = 0f;
 
-    protected override void Start()
-    {
-        base.Start();
-        currentHealth = maxHealth;
-        tagList = new HashSet<string>(viewableTagList);
-    }
+//     protected override void Start()
+//     {
+//         base.Start();
+//         currentHealth = maxHealth;
+//         tagList = new HashSet<string>(viewableTagList);
+//     }
 
-    public void DecrementAttackCoooldown(float deltaTime)
-    {
-        if (atkTimer > 0f) { atkTimer -= deltaTime; }
+//     public void DecrementAttackCoooldown(float deltaTime)
+//     {
+//         if (atkTimer > 0f) { atkTimer -= deltaTime; }
 
-    }
+//     }
 
         
-    public bool CanAttack()
-    {
-        return atkTimer <= 0f;
-    }
+//     public bool CanAttack()
+//     {
+//         return atkTimer <= 0f;
+//     }
     
-    public void ResetAttackCooldown()
-    {
-        atkTimer = atkCooldown;
-    }
+//     public void ResetAttackCooldown()
+//     {
+//         atkTimer = atkCooldown;
+//     }
 
-    protected override void Die()
-    {
-        GetComponent<TroopAI>().RemoveEntityFromAliveList();
-        foreach(GameObject player in PlayerManager.players){
-            List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
-            if (list.Contains(gameObject)){
-                list.Remove(gameObject);
-                break;
-            }
-        }
+//     protected override void Die()
+//     {
+//         GetComponent<TroopAI>().RemoveEntityFromAliveList();
+//         foreach(GameObject player in PlayerManager.players){
+//             List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
+//             if (list.Contains(gameObject)){
+//                 list.Remove(gameObject);
+//                 break;
+//             }
+//         }
 
-        base.Die();
-    }
-}
+//         base.Die();
+//     }
+// }

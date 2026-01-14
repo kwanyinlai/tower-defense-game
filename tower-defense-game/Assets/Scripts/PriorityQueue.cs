@@ -1,20 +1,22 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Simple PriorityQueue due to lack of support for PQ for current C# version supported in Unity
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class PriorityQueue<T>
 {
     private readonly List<(T Item, float Priority)> _heap = new();
 
     public float Count => _heap.Count;
 
-    // Add an item with a priority
     public void Enqueue(T item, float priority)
     {
         _heap.Add((item, priority));
         HeapifyUp(_heap.Count - 1);
     }
 
-    // Remove and return the item with the smallest priority
     public T Dequeue()
     {
         if (_heap.Count == 0)
@@ -22,7 +24,6 @@ public class PriorityQueue<T>
 
         T result = _heap[0].Item;
 
-        // Move last item to root
         _heap[0] = _heap[^1];
         _heap.RemoveAt(_heap.Count - 1);
 
@@ -31,7 +32,6 @@ public class PriorityQueue<T>
         return result;
     }
 
-    // Look at the next item without removing it
     public T Peek()
     {
         if (_heap.Count == 0)
@@ -40,7 +40,6 @@ public class PriorityQueue<T>
         return _heap[0].Item;
     }
 
-    // --- Heap helpers ---
 
     private void HeapifyUp(int index)
     {

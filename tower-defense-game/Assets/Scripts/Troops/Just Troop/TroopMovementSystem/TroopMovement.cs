@@ -19,6 +19,23 @@ public class TroopMovement : MonoBehaviour
     private float stoppingDistance = 1.5f;
     private float slowdownDistance = 3f;
 
+    // Batch Update
+    private bool positionCacheValid = false;
+    private Vector3 cachedPosition;
+    private float cachedDistance;
+
+    // Local Avoidance
+    private ILocalAvoidance localAvoidance;
+
+    void Start()
+    {
+        localAvoidance = new ORCAAvoidance();
+    }
+
+    private void OnDestroy()
+    {
+        ;
+    }
     public void Initialize(TroopStats troopStats)
     {
         stats = troopStats;
@@ -26,10 +43,18 @@ public class TroopMovement : MonoBehaviour
 
     public void SetTarget(Vector3 destination)
     {
+        // early exit if reached to reduce redundant requests
+        float distanceSqr = (destination - transform.position).sqrMagnitude;
+        if (distanceSqr < stoppingDistance * stoppingDistance)
+        {
+            return; 
+        }
+        
         targetPosition = destination;
         isMoving = true;
         hasReachedDestination = false;
         waypoints = null;
+        positionCacheValid = false;
         
         PathfindingManager.Instance.RequestPath(
             transform.position,
@@ -63,6 +88,11 @@ public class TroopMovement : MonoBehaviour
     {
         if (!isMoving || hasReachedDestination) return;
 
+         // cache position for batch updates - so calculation is from same position
+        cachedPosition = transform.position;
+        cachedDistance = (targetPosition - cachedPosition).sqrMagnitude;
+        positionCacheValid = true;
+
         Vector3 desiredDirection = GetDesiredDirection();
         
         if (desiredDirection == Vector3.zero)
@@ -74,11 +104,15 @@ public class TroopMovement : MonoBehaviour
 
         Vector2 direction2D = new Vector2(desiredDirection.x, desiredDirection.z);
         ApplyMovement(direction2D, deltaTime);
+        positionCacheValid = false;
     }
 
     private Vector3 GetDesiredDirection()
     {
-        float distanceToGoal = Vector3.Distance(transform.position, targetPosition);
+        float distanceToGoal = positionCacheValid ? 
+            cachedDistance : 
+            (targetPosition - transform.position).sqrMagnitude;
+
         
         // flag to determine reached destination (prevent oscillation)
         if (distanceToGoal < stoppingDistance)
@@ -86,17 +120,23 @@ public class TroopMovement : MonoBehaviour
             hasReachedDestination = true;
             return Vector3.zero;
         }
-
+        Vector3 direction;
         // decide nav mode
         if (PathfindingManager.Instance.ShouldUseFlowField(transform.position, targetPosition))
         {
             // regional flowfields
-            return GetFlowFieldDirection(distanceToGoal);
+            direction = GetFlowFieldDirection(distanceToGoal);
         }
         else
         {
-            return GetWaypointDirection();
+            direction = GetWaypointDirection();
         }
+
+        if (localAvoidance != null)
+        {
+            direction = localAvoidance.GetAvoidanceDirection(transform.position, direction, stats.maxSpeed);
+        }
+        return direction;
     }
 
     private Vector3 GetWaypointDirection()
@@ -108,13 +148,13 @@ public class TroopMovement : MonoBehaviour
         }
 
         Vector3 currentWaypoint = waypoints[currentWaypointIndex];
-        float distanceToWaypoint = Vector2.Distance(
-            new Vector2(transform.position.x, transform.position.z),
-            new Vector2(currentWaypoint.x, currentWaypoint.z)
-        );
+        float distanceToWaypoint = (new Vector2(cachedPosition.x, cachedPosition.z) - 
+            new Vector2(currentWaypoint.x, currentWaypoint.z)).sqrMagnitude;
+        float waypointReachedDistanceSqr = waypointReachedDistance * waypointReachedDistance;
+        // squared because we're now using sqrMagnitude - so equiv scale 
 
         // move to next waypoint
-        if (distanceToWaypoint < waypointReachedDistance)
+        if (distanceToWaypoint < waypointReachedDistanceSqr)
         {
             currentWaypointIndex++;
             

@@ -1,3 +1,5 @@
+// TODO: need DOTS optimisation and multi target, flowfield reuse maybe, cached HPA*
+
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -15,6 +17,7 @@ public class PathfindingManager : MonoBehaviour
     [Header("Flow Field Settings")]
     [SerializeField] private int flowFieldRadius = 30;
     [SerializeField] private float flowFieldActivationDistance = 30f;
+    [SerializeField] private float flowFieldBlendRadius = 5f;
     [SerializeField] private float flowFieldSeedDistance = 25f; // max distance for sharing seed data
 
     #endregion
@@ -336,6 +339,11 @@ public class PathfindingManager : MonoBehaviour
         return tileCoverage.Count;
     }
 
+    #endregion
+
+    #region Getters
+    public float FlowFieldActivationDistance => flowFieldActivationDistance;
+    public float FlowFieldBlendRadius => flowFieldBlendRadius;
     #endregion
 }
 

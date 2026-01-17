@@ -84,11 +84,11 @@ public static class WaypointPathBuilder
         if (waypoints.Count <= 2) return waypoints;
 
         List<Vector3> smoothed = new List<Vector3> { waypoints[0] };
-        int i = 0;
+        int currentIndex = 0;
 
-        while (i < waypoints.Count - 1)
+        while (currentIndex < waypoints.Count - 1)
         {
-            int furthestVisible = FindFurthestVisibleWaypoint(waypoints, i);
+            int furthestVisible = FindFurthestVisibleWaypoint(waypoints, currentIndex);
             smoothed.Add(waypoints[furthestVisible]);
             currentIndex = furthestVisible;
         }

@@ -12,6 +12,9 @@ public class TroopTargetSelector : MonoBehaviour
     private float aggroRangeBufferMultiplier = 1.2f;
     private const float TARGET_REFRESH_INTERVAL = 0.5f; 
 
+    [Header("Target Type")]
+    [SerializeField] private bool targetAllies;
+
     public void Initialize(float range, TroopFaction faction)
     {
         this.aggroRange = range;
@@ -42,7 +45,7 @@ public class TroopTargetSelector : MonoBehaviour
 
     private Transform SelectBestTargetCandidate(Vector3 position)
     {
-        // List<TroopAI> enemies = FactionManager.Instance.GetEnemiesOf(faction);
+        // List<Transform> enemies = FactionManager.Instance.GetEnemiesOf(faction);
 
         // if (enemies == null || enemies.Count == 0)
         // {
@@ -75,6 +78,8 @@ public class TroopTargetSelector : MonoBehaviour
 
         // return ChoosePriorityTarget(candidates);
         return null;
+        // TODO:
+
     }
 
     private Transform ChoosePriorityTarget(List<TargetCandidate> candidates)

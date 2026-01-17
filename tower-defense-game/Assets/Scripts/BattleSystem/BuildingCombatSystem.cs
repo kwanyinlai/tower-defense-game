@@ -80,7 +80,7 @@ public class BuildingBattleSystem : CombatSystem
         base.InitializeEffects();
     }
 
-    public bool IsDisabled() => HasEffect("disabled");
+    public bool IsDisabled() => HasEffect(StatusClass.Disabled);
 
     #endregion
 }

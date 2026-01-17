@@ -66,6 +66,11 @@ public abstract class CombatSystem : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public virtual bool IsAlive()
+    {
+        return currentHealth > 0f;
+    }
+
     #endregion
 
 
@@ -238,6 +243,7 @@ public abstract class CombatSystem : MonoBehaviour
         Burn,
         AttackBuff,
         AttackDebuff,
-        Stun
+        Stun,
+        Disabled
     }
 }

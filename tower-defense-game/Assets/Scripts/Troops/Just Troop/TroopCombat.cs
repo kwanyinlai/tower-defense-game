@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(TroopCombatSystem))]
 public class TroopCombat : MonoBehaviour
 {
-    private CombatSystem combatSystem;
+    private TroopCombatSystem combatSystem;
     private TroopStats stats;
 
     [Header("Attack Behavior")]
@@ -43,7 +43,7 @@ public class TroopCombat : MonoBehaviour
         currentTarget = null;
     }
 
-    public bool IsInCombat => currentTarget != null && currentTarget.IsAlive;
+    public bool IsInCombat => currentTarget != null && currentTarget.IsAlive();
 
     public CombatSystem CurrentTarget => currentTarget;
 
@@ -69,7 +69,7 @@ public class TroopCombat : MonoBehaviour
         if (!combatSystem.CanAttack())
             return false;
 
-        if (!target.IsAlive)
+        if (!target.IsAlive())
             return false;
 
         return true;
@@ -115,10 +115,10 @@ public class TroopCombat : MonoBehaviour
 
     #region Getters
 
-    public bool IsAlive => combatSystem != null && combatSystem.IsAlive;
+    public bool IsAlive => combatSystem != null && combatSystem.IsAlive();
 
     public float HealthPercent =>
-        combatSystem != null ? combatSystem.HealthPercent : 0f;
+        combatSystem != null ? combatSystem.GetHealthPercent() : 0f;
 
     public float AttackRange =>
         combatSystem != null ? combatSystem.AttackRange : stats.attackRange;

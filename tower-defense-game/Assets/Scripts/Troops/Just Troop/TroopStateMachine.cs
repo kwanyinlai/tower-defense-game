@@ -24,7 +24,7 @@ public class TroopStateMachine
         }
 
         float distanceToTarget = Vector3.Distance(movement.transform.position, target.position);
-        float attackRange = combat.GetAttackRange();
+        float attackRange = combat.AttackRange;
 
         if (distanceToTarget <= attackRange && movement.GetCurrentSpeed() < 0.1f)
         {

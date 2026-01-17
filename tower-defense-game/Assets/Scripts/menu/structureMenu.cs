@@ -110,7 +110,7 @@ public class StructureMenu : MonoBehaviour
 
     private void SetupBuildingUI(GameObject highlightedObject)
     {
-        selectedSBSScript = highlightedObject.GetComponent<StructureBattleSystem>();
+        selectedSBSScript = highlightedObject.GetComponent<BuildingBattleSystem>();
         selectedBuildingScript = highlightedObject.GetComponent<Building>(); 
         
         selectedObject = highlightedObject;

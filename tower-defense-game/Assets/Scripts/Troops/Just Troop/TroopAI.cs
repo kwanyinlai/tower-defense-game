@@ -114,7 +114,8 @@ public class TroopAI : MonoBehaviour
                 break;
             case TroopState.InCombat:
                 movementSystem.StopMoving();
-                combatSystem.EnterCombat(currentTarget);
+                combatSystem.EnterCombat(currentTarget.GetComponent<CombatSystem>());
+                // maybe change but should be fine, won't be called enough to matter
                 break;
         }
     }
@@ -147,7 +148,7 @@ public class TroopAI : MonoBehaviour
 
     private void UpdateCombat()
     {
-        combatSystem.TickCombat(); 
+        combatSystem.UpdateCombat(Time.deltaTime); 
     }
 
     private void HandleIdleState()
@@ -200,7 +201,8 @@ public class TroopAI : MonoBehaviour
         {
             // attack
             movementSystem.StopMoving();
-            combatSystem.TryAttack(currentTarget, transform);
+            combatSystem.TryAttack(currentTarget.GetComponent<CombatSystem>());
+            // TODO: I don't like this getting component for something so frequently called as TryAttack()
         }
     }
 

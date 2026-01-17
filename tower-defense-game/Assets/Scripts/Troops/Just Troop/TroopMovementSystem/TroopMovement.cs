@@ -25,11 +25,10 @@ public class TroopMovement : MonoBehaviour
     private float cachedDistance;
 
     // Local Avoidance
-    private ILocalAvoidance localAvoidance;
+    private ILocalAvoidance localAvoidance = null;
 
     void Start()
     {
-        localAvoidance = new ORCAAvoidance();
     }
 
     private void OnDestroy()

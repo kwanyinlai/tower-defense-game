@@ -1,193 +1,543 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Unity.Mathematics;
 using System.Collections.Generic;
 
-
+/// <summary>
+/// Test script for pathfinding system - spawns test units and gives them movement commands
+/// Supports both custom pathfinding and Unity NavMesh for comparison
+/// Attach to an empty GameObject in your scene
+/// </summary>
 public class TestPathfinding : MonoBehaviour
 {
-
-    [SerializeField] protected float maxSpeed = 3.5f;
-    public float MaxSpeed { get { return maxSpeed; } }
-
-
-    public Vector2 currVelocity = Vector2.zero;
-    public float acceleration = 5f;
-    private List<GridSector> highLevelPath;
-    private GridNode localTargetNode;
-
-  
-    // Combat Stats
-    [SerializeField] protected Vector3? enemyTarget;
-
+    [Header("Pathfinding Mode")]
+    [SerializeField] private PathfindingMode pathfindingMode = PathfindingMode.CustomFlowField;
     
+    [Header("Test Configuration")]
+    [SerializeField] private int numberOfTestUnits = 10;
+    [SerializeField] private bool spawnOnStart = true;
+    [SerializeField] private GameObject testUnitPrefab; // Optional: assign a prefab, or will create cubes
+    
+    [Header("Spawn Area")]
+    [SerializeField] private Vector3 spawnAreaCenter = Vector3.zero;
+    [SerializeField] private float spawnAreaRadius = 20f;
+    
+    [Header("Test Controls")]
+    [SerializeField] private bool useRandomTargets = true;
+    [SerializeField] private Vector3 fixedTarget = new Vector3(50, 0, 50);
+    [SerializeField] private float targetAreaRadius = 30f;
+    
+    [Header("Unit Stats")]
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float acceleration = 10f;
+    
+    private List<GameObject> testUnits = new List<GameObject>();
+    private List<TroopMovement> customMovements = new List<TroopMovement>();
+    private List<NavMeshTroopMovement> navMeshMovements = new List<NavMeshTroopMovement>();
+    
+    private PathfindingMode currentMode;
 
-    private void Update()
+    void Start()
     {
-        HandleMouseInput();
+        currentMode = pathfindingMode;
         
-
-        if (enemyTarget != null)
+        if (spawnOnStart)
         {
-            MoveTowardsTarget(enemyTarget.Value);
+            SpawnTestUnits();
         }
     }
 
-    private void HandleMouseInput()
+    void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        // Check if mode changed
+        if (pathfindingMode != currentMode)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            
+            SwitchPathfindingMode(pathfindingMode);
+        }
+        
+        // Keyboard controls for testing
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            AssignNewTargets();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            StopAllUnits();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetTest();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ClearUnits();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            TogglePathfindingMode();
+        }
 
-            int floorLayerMask = LayerMask.GetMask("Floor");
-
-            if (Physics.Raycast(ray, out hit, 100f, floorLayerMask))
+        // Update all troop movements based on current mode
+        if (currentMode == PathfindingMode.CustomFlowField)
+        {
+            foreach (TroopMovement movement in customMovements)
             {
-                // Set the clicked position as node
-                Debug.Log("Mouse clicked at: " + GridManager.Instance.NodeFromWorldPos(hit.point));
-
-                Vector3 clickPos = hit.point;
-                clickPos.y = 0; // Assuming a 2D plane at z=0
-                enemyTarget = clickPos;
+                if (movement != null && movement.enabled)
+                {
+                    movement.UpdateMovement(Time.deltaTime);
+                }
+            }
+        }
+        else
+        {
+            foreach (NavMeshTroopMovement movement in navMeshMovements)
+            {
+                if (movement != null && movement.enabled)
+                {
+                    movement.UpdateMovement(Time.deltaTime);
+                }
             }
         }
     }
 
-
-
-    protected void MoveTowardsTarget(Vector3 target)
-    { 
-        if (CheckReachedTarget(target))
+    [ContextMenu("Spawn Test Units")]
+    public void SpawnTestUnits()
+    {
+        for (int i = 0; i < numberOfTestUnits; i++)
         {
-            return;
-        }
-        GridManager gridManager = GridManager.Instance;
-
-        GridNode currentNode = gridManager.NodeFromWorldPos(transform.position);
-
-        GridSector enemyTargetSector = gridManager.NodeFromWorldPos(target).gridSector;
-
-        // if we don't have a path, generate this path
-        if (highLevelPath == null || highLevelPath.Count == 0)
-        {
-            
-            highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
-                currentNode.gridSector,
-                enemyTargetSector // TODO: maybe store as attribute in troopAI
-            );
-            
-        }
-      
-        // remove sectors from the path that we have already reached;
-        // we check if they are neighbours as a check for veering off path 
-        // so we can regenerate the path if needed
-        if (highLevelPath.Count > 0 && highLevelPath[0] != currentNode.gridSector &&
-            SectorManager.Instance.AreSectorsAdjacent(currentNode.gridSector, highLevelPath[0]))
-        {
-            highLevelPath.RemoveAt(0);
+            SpawnTestUnit(i);
         }
         
-        if (highLevelPath.Count <= 1)
-        {
-            localTargetNode = gridManager.NodeFromWorldPos(target);
-        }
-        else if (localTargetNode == null || localTargetNode.gridSector != highLevelPath[0])
-        {
-            // regenerate a new local target node within the current sector
-            Debug.Log("Current Sector: " + currentNode.gridSector.sectorCoordinate + 
-                ", Generating new local target node towards sector: " + highLevelPath[0].sectorCoordinate);
-            localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-                currentNode,
-                highLevelPath[1]
-            );
-            // if (highLevelPath.Count > 1)
-            // {
-            //     localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-            //         currentNode,
-            //         highLevelPath[0],
-            //         highLevelPath[1]
-            //     );
-            // }
-            // else
-            // {
-            //     localTargetNode = currentNode.gridSector.GuessOptimalExitNode(
-            //         currentNode,
-            //         highLevelPath[0]
-            //     );
-            // }
-        }
-        
+        Debug.Log($"Spawned {numberOfTestUnits} test units using {currentMode} pathfinding. Press SPACE to assign targets.");
+    }
 
-        Vector3 dirVector;
-        // if the current 
-        if (highLevelPath.Count <= 1)
+    private void SpawnTestUnit(int index)
+    {
+        // Create unit GameObject
+        GameObject unit;
+        
+        if (testUnitPrefab != null)
         {
-            dirVector = (target - transform.position);
-            dirVector.y = 0f;
-            dirVector.Normalize();
+            unit = Instantiate(testUnitPrefab);
         }
         else
         {
-            dirVector = currentNode.gridSector.QueryFlowField(currentNode, localTargetNode, new Vector2(currVelocity.x, currVelocity.y));
-            // dirVector.Normalize();
-            // dirVector.y *= -1;
-            // if (dirVector.y == -1 && localTargetNode.globalPos.y - currentNode.globalPos.y < 0)
-            // {
-            //     ;
-            // }
+            // Create a simple cube as test unit
+            unit = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            unit.transform.localScale = new Vector3(2f, 2f, 2f);
+            
+            // Add a colored material
+            Renderer renderer = unit.GetComponent<Renderer>();
+            Material mat = new Material(Shader.Find("Standard"));
+            mat.color = GetColorForIndex(index);
+            renderer.material = mat;
         }
         
-
-
-
-        // check whether the current sector is adjacent to the next target sector
-        // if not, regenerate the path because we have veered off path
-        if (highLevelPath.Count > 0 && !SectorManager.Instance.AreSectorsAdjacent(currentNode.gridSector, highLevelPath[highLevelPath.Count - 1]) &&
-            !currentNode.gridSector.Equals(highLevelPath[0]))
+        unit.name = $"TestUnit_{index}_{currentMode}";
+        
+        // Random position in spawn area
+        Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * spawnAreaRadius;
+        Vector3 spawnPosition = spawnAreaCenter + new Vector3(randomOffset.x, 1f, randomOffset.y);
+        unit.transform.position = spawnPosition;
+        
+        // Create stats
+        TroopStats stats = new TroopStats
         {
-            highLevelPath = SectorManager.Instance.GenerateHighLevelSectorPath(
-                currentNode.gridSector,
-                highLevelPath[highLevelPath.Count - 1]
-            );
+            troopName = $"TestUnit_{index}",
+            faction = TroopFaction.Player,
+            maxSpeed = maxSpeed,
+            acceleration = acceleration
+        };
+        
+        // Add appropriate movement component based on mode
+        if (currentMode == PathfindingMode.CustomFlowField)
+        {
+            TroopMovement movement = unit.AddComponent<TroopMovement>();
+            movement.Initialize(stats);
+            customMovements.Add(movement);
+        }
+        else
+        {
+            NavMeshTroopMovement movement = unit.AddComponent<NavMeshTroopMovement>();
+            movement.Initialize(stats);
+            navMeshMovements.Add(movement);
+        }
+        
+        testUnits.Add(unit);
+        if (FactionManager.Instance != null)
+        {
+            FactionManager.Instance.RegisterTroop(unit.transform, TroopFaction.Player);
+        }
+
+    }
+
+    [ContextMenu("Toggle Pathfinding Mode")]
+    public void TogglePathfindingMode()
+    {
+        PathfindingMode newMode = currentMode == PathfindingMode.CustomFlowField 
+            ? PathfindingMode.UnityNavMesh 
+            : PathfindingMode.CustomFlowField;
+        
+        SwitchPathfindingMode(newMode);
+    }
+
+    private void SwitchPathfindingMode(PathfindingMode newMode)
+    {
+        Debug.Log($"Switching from {currentMode} to {newMode}");
+        
+        // Store current positions
+        List<Vector3> positions = new List<Vector3>();
+        foreach (GameObject unit in testUnits)
+        {
+            if (unit != null)
+            {
+                positions.Add(unit.transform.position);
+            }
+        }
+        
+        // Clear existing units
+        ClearUnits();
+        
+        // Update mode
+        currentMode = newMode;
+        pathfindingMode = newMode;
+        
+        // Respawn with new mode
+        SpawnTestUnits();
+        
+        // Restore positions
+        for (int i = 0; i < Mathf.Min(positions.Count, testUnits.Count); i++)
+        {
+            if (testUnits[i] != null)
+            {
+                testUnits[i].transform.position = positions[i];
+            }
+        }
+    }
+
+    [ContextMenu("Assign New Targets")]
+    public void AssignNewTargets()
+    {
+        if (testUnits.Count == 0)
+        {
+            Debug.LogWarning("No test units spawned yet!");
             return;
         }
 
-        // steering behaviours
-
-
-        currVelocity = Vector2.MoveTowards(currVelocity, dirVector.normalized * maxSpeed, acceleration * Time.deltaTime);
-
-        transform.position += new Vector3(currVelocity.x, 0f, currVelocity.y) * Time.deltaTime;
-
-        if (currVelocity.sqrMagnitude > 0.01f)
+        if (currentMode == PathfindingMode.CustomFlowField)
         {
-            float angle = Mathf.Atan2(currVelocity.y, currVelocity.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            foreach (TroopMovement movement in customMovements)
+            {
+                if (movement != null)
+                {
+                    Vector3 target = GetRandomTarget();
+                    movement.SetTarget(target);
+                }
+            }
         }
-
-
+        else
+        {
+            foreach (NavMeshTroopMovement movement in navMeshMovements)
+            {
+                if (movement != null)
+                {
+                    Vector3 target = GetRandomTarget();
+                    movement.SetTarget(target);
+                }
+            }
+        }
         
-
+        Debug.Log($"Assigned new targets to {testUnits.Count} units.");
     }
 
-    private bool CheckReachedTarget(Vector3 target)
-    {   
-        Vector2 targetVec2 = new Vector2(target.x, target.z);
-        Vector2 currPos = new Vector2(transform.position.x, transform.position.z);
-        float distanceToTarget = Vector2.Distance(currPos, targetVec2);
-        if (distanceToTarget < 1f)
+    [ContextMenu("Assign Same Target")]
+    public void AssignSameTarget()
+    {
+        if (testUnits.Count == 0)
         {
-            Debug.Log("Reached target at: " + target);
-            enemyTarget = null;
-            localTargetNode = null;
-            currVelocity = Vector2.zero;
-            highLevelPath = null;
-            return true;
+            Debug.LogWarning("No test units spawned yet!");
+            return;
         }
-        return false;
+
+        Vector3 target = useRandomTargets ? GetRandomTarget() : fixedTarget;
+        
+        if (currentMode == PathfindingMode.CustomFlowField)
+        {
+            foreach (TroopMovement movement in customMovements)
+            {
+                if (movement != null)
+                {
+                    movement.SetTarget(target);
+                }
+            }
+        }
+        else
+        {
+            foreach (NavMeshTroopMovement movement in navMeshMovements)
+            {
+                if (movement != null)
+                {
+                    movement.SetTarget(target);
+                }
+            }
+        }
+        
+        Debug.Log($"All {testUnits.Count} units moving to {target}");
     }
 
+    [ContextMenu("Stop All Units")]
+    public void StopAllUnits()
+    {
+        if (currentMode == PathfindingMode.CustomFlowField)
+        {
+            foreach (TroopMovement movement in customMovements)
+            {
+                if (movement != null)
+                {
+                    movement.StopMoving();
+                }
+            }
+        }
+        else
+        {
+            foreach (NavMeshTroopMovement movement in navMeshMovements)
+            {
+                if (movement != null)
+                {
+                    movement.StopMoving();
+                }
+            }
+        }
+        
+        Debug.Log("Stopped all units.");
+    }
 
+    [ContextMenu("Clear Units")]
+    public void ClearUnits()
+    {
+        foreach (GameObject unit in testUnits)
+        {
+            if (unit != null)
+            {
+                Destroy(unit);
+            }
+        }
+        
+        testUnits.Clear();
+        customMovements.Clear();
+        navMeshMovements.Clear();
+        
+        Debug.Log("Cleared all test units.");
+    }
+
+    [ContextMenu("Reset Test")]
+    public void ResetTest()
+    {
+        ClearUnits();
+        SpawnTestUnits();
+        AssignNewTargets();
+    }
+
+    private Vector3 GetRandomTarget()
+    {
+        if (useRandomTargets)
+        {
+            // Random position on the grid
+            Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * targetAreaRadius;
+            return fixedTarget + new Vector3(randomOffset.x, 0, randomOffset.y);
+        }
+        else
+        {
+            return fixedTarget;
+        }
+    }
+
+    private Color GetColorForIndex(int index)
+    {
+        // Generate distinct colors for each unit
+        float hue = (index * 0.618033988749895f) % 1f; // Golden ratio for nice distribution
+        return Color.HSVToRGB(hue, 0.8f, 0.9f);
+    }
+
+    void OnDrawGizmos()
+    {
+        // Draw spawn area
+        Gizmos.color = Color.green;
+        DrawCircle(spawnAreaCenter, spawnAreaRadius, 32);
+        
+        // Draw target area
+        Gizmos.color = Color.red;
+        DrawCircle(fixedTarget, targetAreaRadius, 32);
+        
+        // Draw line from each unit to its target
+        if (Application.isPlaying && testUnits != null)
+        {
+            if (currentMode == PathfindingMode.CustomFlowField)
+            {
+                foreach (TroopMovement movement in customMovements)
+                {
+                    if (movement != null && movement.IsMoving())
+                    {
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawLine(movement.transform.position, movement.GetCurrentDestination());
+                    }
+                }
+            }
+            else
+            {
+                foreach (NavMeshTroopMovement movement in navMeshMovements)
+                {
+                    if (movement != null && movement.IsMoving())
+                    {
+                        Gizmos.color = Color.cyan;
+                        Gizmos.DrawLine(movement.transform.position, movement.GetCurrentDestination());
+                    }
+                }
+            }
+        }
+    }
+
+    private void DrawCircle(Vector3 center, float radius, int segments)
+    {
+        float angleStep = 360f / segments;
+        Vector3 prevPoint = center + new Vector3(radius, 0, 0);
+        
+        for (int i = 1; i <= segments; i++)
+        {
+            float angle = i * angleStep * Mathf.Deg2Rad;
+            Vector3 newPoint = center + new Vector3(
+                Mathf.Cos(angle) * radius,
+                0,
+                Mathf.Sin(angle) * radius
+            );
+            
+            Gizmos.DrawLine(prevPoint, newPoint);
+            prevPoint = newPoint;
+        }
+    }
+
+    void OnGUI()
+    {
+        // Display instructions and debug info
+        GUILayout.BeginArea(new Rect(10, 10, 400, 400));
+        GUILayout.Label("=== Pathfinding Test Controls ===");
+        GUILayout.Label($"Mode: {currentMode}");
+        GUILayout.Label($"Units: {testUnits.Count}");
+        GUILayout.Label("");
+        GUILayout.Label("SPACE - Assign random targets");
+        GUILayout.Label("T - Toggle pathfinding mode");
+        GUILayout.Label("S - Stop all units");
+        GUILayout.Label("R - Reset test");
+        GUILayout.Label("C - Clear units");
+        GUILayout.Label("");
+        
+        if (currentMode == PathfindingMode.CustomFlowField)
+        {
+            if (PathfindingManager.Instance != null)
+            {
+                GUILayout.Label("=== Custom Pathfinding Stats ===");
+                GUILayout.Label($"Cached Flow Fields: {PathfindingManager.Instance.GetCachedFlowFieldCount()}");
+                GUILayout.Label($"Queued Requests: {PathfindingManager.Instance.GetQueuedPathRequests()}");
+                GUILayout.Label($"Coverage Tiles: {PathfindingManager.Instance.GetCoverageTileCount()}");
+            }
+        }
+        else
+        {
+            GUILayout.Label("=== Unity NavMesh Stats ===");
+            GUILayout.Label("Using Unity's built-in NavMesh");
+            GUILayout.Label("No custom pathfinding overhead");
+        }
+        
+        GUILayout.EndArea();
+    }
 }
 
+public enum PathfindingMode
+{
+    CustomFlowField,
+    UnityNavMesh
+}
+
+/// <summary>
+/// NavMesh-based movement for comparison with custom pathfinding
+/// </summary>
+public class NavMeshTroopMovement : MonoBehaviour
+{
+    private TroopStats stats;
+    private NavMeshAgent agent;
+    private Vector3 targetPosition;
+    private bool isMoving = false;
+    
+    public void Initialize(TroopStats troopStats)
+    {
+        stats = troopStats;
+        
+        // Add and configure NavMeshAgent
+        agent = gameObject.AddComponent<NavMeshAgent>();
+        agent.speed = stats.maxSpeed;
+        agent.acceleration = stats.acceleration;
+        agent.angularSpeed = 360f;
+        agent.stoppingDistance = 1.5f;
+        agent.autoBraking = true;
+    }
+    
+    public void SetTarget(Vector3 destination)
+    {
+        if (agent == null) return;
+        
+        targetPosition = destination;
+        isMoving = true;
+        agent.SetDestination(destination);
+    }
+    
+    public void StopMoving()
+    {
+        if (agent == null) return;
+        
+        isMoving = false;
+        agent.ResetPath();
+    }
+    
+    public void UpdateMovement(float deltaTime)
+    {
+        if (!isMoving || agent == null) return;
+        
+        // Check if reached destination
+        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+        {
+            if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+            {
+                StopMoving();
+            }
+        }
+    }
+    
+    public bool IsMoving() => isMoving;
+    public Vector3 GetCurrentDestination() => targetPosition;
+    
+    private void OnDrawGizmosSelected()
+    {
+        if (agent != null && agent.hasPath)
+        {
+            // Draw NavMesh path
+            Gizmos.color = Color.cyan;
+            Vector3[] corners = agent.path.corners;
+            for (int i = 0; i < corners.Length - 1; i++)
+            {
+                Gizmos.DrawLine(corners[i], corners[i + 1]);
+            }
+            
+            // Draw target
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(targetPosition, 0.5f);
+            
+            // Draw stopping distance
+            Gizmos.color = new Color(1f, 0f, 1f, 0.3f);
+            Gizmos.DrawWireSphere(targetPosition, agent.stoppingDistance);
+        }
+    }
+}

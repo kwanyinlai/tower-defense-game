@@ -32,6 +32,7 @@ public class TroopAI : MonoBehaviour
     {
         UpdateState();
         UpdateBehavior();
+        UpdateCombat();
     }
 
     private void OnDestroy()
@@ -142,6 +143,11 @@ public class TroopAI : MonoBehaviour
                 HandleRetreatingState();
                 break;
         }
+    }
+
+    private void UpdateCombat()
+    {
+        combatSystem.TickCombat(); 
     }
 
     private void HandleIdleState()

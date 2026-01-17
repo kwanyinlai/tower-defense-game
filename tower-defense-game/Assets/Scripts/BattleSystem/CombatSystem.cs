@@ -7,10 +7,6 @@ public abstract class CombatSystem : MonoBehaviour
     public float maxHealth = 100f;
     public float currentHealth;
     public float shield = 0f;
-
-    [Header("Target Tags")]
-    public string[] viewableTagList;
-    protected HashSet<string> tagList;
     
     // storing dictionary with strongest effect only
     private Dictionary<StatusClass, StatusEffect> activeEffects = new Dictionary<StatusClass, StatusEffect>();
@@ -18,7 +14,6 @@ public abstract class CombatSystem : MonoBehaviour
     protected virtual void Start()
     {
         currentHealth = maxHealth;
-        tagList = new HashSet<string>(viewableTagList);
         InitializeEffects();
     }
 
@@ -185,15 +180,6 @@ public abstract class CombatSystem : MonoBehaviour
         {
             Heal(healAmount * deltaTime);
         }
-    }
-
-    #endregion
-
-    #region Targeting
-
-    public HashSet<string> GetTagList()
-    {
-        return tagList;
     }
 
     #endregion

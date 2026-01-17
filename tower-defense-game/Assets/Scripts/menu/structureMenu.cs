@@ -165,7 +165,7 @@ public class StructureMenu : MonoBehaviour
     private void SellBuilding()
     {
         ResourcePool.AddResource(selectedBuildingScript.GetSellResources());
-        Vector3Int structPost = GridManager.CoordinatesToGrid(selectedObject.transform.position);
+        Vector3 structPost = GridManager.WorldPosFromCoordinates(selectedObject.transform.position);
         gridManager.StopOccupying(selectedObject.transform.position, CalculateOccupyingSize());
         selectedSBSScript.TakeDamage(100000);
         selectedObject = null;

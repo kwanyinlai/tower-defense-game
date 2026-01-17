@@ -4,23 +4,22 @@ using System.Collections.Generic;
 // TODO:
 // SOME SORT OF COLOR CODING MECHANIC FOR LOCAL CO-OP WITH THE UNIT SELECTION 
 
-public class TroopManagment : MonoBehaviour
+public class TroopManagement : MonoBehaviour
 {
     [SerializeField] private GameObject selectorCircle;
     private List<GameObject> selectedTroops = new List<GameObject>();
-    public List<GameObject> SelectedTroops{ get; }
+    public List<GameObject> SelectedTroops { get { return selectedTroops; } }
     private float selectionRadius = 100f;
     private bool isPlacingWaypoint = false; // change flags to replace with something else
     [SerializeField] private GameObject waypoint;
     [SerializeField] private GameObject waypointOutline;
     private bool isManagingTroops = false; // TODO: delete this
 
-    
     // private float menuTime; // for timing how long menu is up for before it closes
     [SerializeField] private LayerMask selectableLayer;
     private PlayerManager playerData;
     
-    public bool IsManagingTroops {get; private set;}
+    public bool IsManagingTroops { get; private set; }
 
     
     void Start()
@@ -37,8 +36,9 @@ public class TroopManagment : MonoBehaviour
         {
             StopAndClearSelecting();
         }
-        if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter){
-
+        
+        if (playerData.CurrentState == PlayerManager.PlayerStates.ControllingCharacter)
+        {
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (!(Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && selectedTroops.Count > 1)
@@ -48,109 +48,66 @@ public class TroopManagment : MonoBehaviour
 
                 isManagingTroops = true;
             }
-               
-                
-                
-            
 
-            if(isPlacingWaypoint){
-                // timeMenu += time.deltaTime;
-                // if (timer >= timeLimit){
-
-                // }
-
-
-                switch(true){
-
-                    /*case bool _ when Input.GetKeyDown(KeyCode.Alpha1):
-                        SetWaypoint();
-                        ValidMenuSelection();
-                        break;
-                    case bool _ when Input.GetKeyDown(KeyCode.Alpha2):
-                        // other command
-                        ValidMenuSelection();
-                        break;
-                    case bool _ when Input.GetKeyDown(KeyCode.Alpha3):
-                        // other command
-                        ValidMenuSelection();
-                        break;
-                    case bool _ when Input.GetKeyDown(KeyCode.Alpha4):
-                        // other command
-                        ValidMenuSelection();
-                        break;
-                        */
+            if (isPlacingWaypoint)
+            {
+                switch(true)
+                {
                     case bool _ when Input.GetKeyDown(KeyCode.Return):
                         SetWaypoint();
                         ValidInput();
                         isPlacingWaypoint = false;
                         break;
                     case bool _ when Input.GetKeyDown(KeyCode.Escape):
-                        ValidInput(); // do nothing just close menu
+                        ValidInput();
                         isPlacingWaypoint = false;
                         break;
                 }
-                
-                
             }
-            else{
+            else
+            {
                 HideWaypointOutline();
             }
 
             if (isManagingTroops)
             {
-                // SelectTroops();
                 RaySelectAlliedTroops();
                 isManagingTroops = false;
-                
             }
         }
-
     }
 
-
-
-    void ShowWaypointOutline(){
-      
+    void ShowWaypointOutline()
+    {
         waypointOutline.transform.localScale = new Vector3(1f, 1f, 1f);
         isPlacingWaypoint = true;
-        
-
     }
     // TODO: make default reference in troopmmanagment directly call prefab, why is flag outline disappearing?
-    void HideWaypointOutline(){
-        waypointOutline.transform.localScale= new Vector3(0f,0f,0f);
 
+
+    void HideWaypointOutline()
+    {
+        waypointOutline.transform.localScale = new Vector3(0f, 0f, 0f);
     }
 
-    void StopAndClearSelecting(){
-        foreach(GameObject troop in selectedTroops){
-            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-            troopAI.IsUnderSelection=false;
-            troopAI.CommandingPlayer=null;
-
-        }
+    void StopAndClearSelecting()
+    {
         isManagingTroops = false;
-        selectedTroops.Clear();
     }
 
-    void SelectTroops(){
-                
-        foreach (GameObject troop in PlayerTroopAI.AllPlayerTroops)
+    void SelectTroops()
+    {
+        // use new FactionManager
+        List<TroopAI> allPlayerTroops = FactionManager.Instance.GetAlliesOf(TroopFaction.Player);
+        
+        foreach (TroopAI troopController in allPlayerTroops)
         {
-            Vector3 playerPosition = transform.position;
-            Vector3 troopPosition = troop.transform.position;
-            playerPosition.y = 0f;
-            troopPosition.y = 0f;
+            if (troopController == null) continue;
             
-            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-            Debug.Log("Troop AI isUnderSelection: " + troopAI.IsUnderSelection);
-            if (!selectedTroops.Contains(troop) && troopAI.IsUnderSelection == false)
+            GameObject troop = troopController.gameObject;
+            
+            if (!selectedTroops.Contains(troop))
             {
-                
-                troopAI.IsUnderSelection = true;
-                Debug.Log("Troop AI isUnderSelection: " + troopAI.IsUnderSelection);
-                troopAI.CommandingPlayer = gameObject;
-                troopAI.DeleteFromWaypoint();
                 selectedTroops.Add(troop);
             }
         }
@@ -158,33 +115,42 @@ public class TroopManagment : MonoBehaviour
         Debug.Log("Selected Troops: " + selectedTroops.Count);
     }
 
-
-
-
-    void ValidInput(){
+    void ValidInput()
+    {
         isPlacingWaypoint = false;
         StopAndClearSelecting();
-        
     }
 
-
-    void SetWaypoint(){
+    void SetWaypoint()
+    {
+        Vector3 waypointPosition = transform.position + transform.rotation * new Vector3(0f, 0f, 3f);
         GameObject deployedPoint = null;
-        if (Waypoint.FindNearestWaypoint(transform.position + transform.rotation * new Vector3(0f,0f,3f)) == null){
-            deployedPoint = Instantiate(waypoint, transform.position + transform.rotation * new Vector3(0f,0f,3f), transform.rotation);
+        
+        if (Waypoint.FindNearestWaypoint(waypointPosition) == null)
+        {
+            deployedPoint = Instantiate(waypoint, waypointPosition, transform.rotation);
         }
-        else{
-            deployedPoint = Waypoint.FindNearestWaypoint(transform.position + transform.rotation * new Vector3(0f,0f,3f));
+        else
+        {
+            deployedPoint = Waypoint.FindNearestWaypoint(waypointPosition);
         }
         
         foreach (GameObject troop in selectedTroops)
         {
-           
-            PlayerTroopAI troopAI = troop.GetComponent<PlayerTroopAI>();
-            troopAI.CommandingPlayer = null;
-            troopAI.DeleteFromWaypoint();
-            troopAI.Waypoint = deployedPoint;
-            deployedPoint.GetComponent<Waypoint>().troopsBound.Add(troop);
+            if (troop == null) continue;
+            
+            TroopAI controller = troop.GetComponent<TroopAI>();
+            if (controller != null)
+            {
+                controller.CommandMoveTo(deployedPoint.transform.position);
+            }
+            
+            // TODO: remove this maybe? new controller means this might be redundant but we will see
+            Waypoint waypointComponent = deployedPoint.GetComponent<Waypoint>();
+            if (waypointComponent != null)
+            {
+                waypointComponent.troopsBound.Add(troop);
+            }
         }
 
         StopAndClearSelecting();
@@ -193,21 +159,29 @@ public class TroopManagment : MonoBehaviour
     void RaySelectAlliedTroops()
     {
         RaycastHit hit;
-        bool destroyedRay = false;
-        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-        if (Physics.Raycast(transform.position + new Vector3(0f, 2f, 0f), forward, out hit, 10000f, selectableLayer) && !destroyedRay)
+        Vector3 rayOrigin = transform.position + new Vector3(0f, 2f, 0f);
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        
+        if (Physics.Raycast(rayOrigin, forward, out hit, 10000f, selectableLayer))
         {
-            PlayerTroopAI troop = hit.collider.GetComponent<PlayerTroopAI>();
-            if (troop != null && !selectedTroops.Contains(troop.gameObject))
+            TroopAI troopController = hit.collider.GetComponent<TroopAI>();
+            
+            if (troopController != null && 
+                troopController.GetFaction() == TroopFaction.Player && 
+                !selectedTroops.Contains(troopController.gameObject))
             {
-                troop.IsUnderSelection = true;
-                troop.CommandingPlayer = gameObject;
-                selectedTroops.Add(troop.gameObject);
-                troop.ShowCircle();
-                destroyedRay = true;
+                selectedTroops.Add(troopController.gameObject);
                 ShowWaypointOutline();
                 return;
             }
+        }
+    }
+
+    public void DeselectTroop(GameObject troop)
+    {
+        if (selectedTroops.Contains(troop))
+        {
+            selectedTroops.Remove(troop);
         }
     }
 }

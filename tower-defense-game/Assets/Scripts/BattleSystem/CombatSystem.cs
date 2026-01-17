@@ -2,49 +2,77 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public abstract class CombatSystem : MonoBehaviour
-
 {
-    /*
-    Contains all types of effects
-    If strength == 0, it means that there is no real effect being applied 
-    If durationSec == -1, it means effect lasts forever
-    */
-
-    private Dictionary<string, List<(float strength, float startTime, float durationSec)>> appliedEffects = new Dictionary<string, List<(float strength, float startTime, float durationSec)>>();
-
+    [Header("Health")]
     public float maxHealth = 100f;
     public float currentHealth;
-
     public float shield = 0f;
 
-    public string[] viewableTagList; // A Viewable List To Easily Modify Tags
-
-    protected HashSet<string> tagList;  // Uses a Set for Efficiency When Looking For Overlaps
+    [Header("Target Tags")]
+    public string[] viewableTagList;
+    protected HashSet<string> tagList;
+    
+    // storing dictionary with strongest effect only
+    private Dictionary<StatusClass, StatusEffect> activeEffects = new Dictionary<StatusClass, StatusEffect>();
 
     protected virtual void Start()
     {
+        currentHealth = maxHealth;
+        tagList = new HashSet<string>(viewableTagList);
         InitializeEffects();
     }
 
-    protected virtual void Update()
-    {
-        List<(float strength, float startTime, float durationSec)> effect;
-        float currentTime = Time.realtimeSinceStartup;
+    #region Health & Damage
 
-        foreach(string key in appliedEffects.Keys) 
+    public virtual void TakeDamage(float damage)
+    {
+        DamageVFX();
+
+        // Shield absorbs damage first
+        if (shield > 0)
         {
-            effect = appliedEffects[key];
-            if(effect.Count > 0 && (effect[0].startTime + effect[0].durationSec) < currentTime)
+            float damageAfterShield = damage - shield;
+            shield = Mathf.Max(0, shield - damage);
+            
+            if (damageAfterShield > 0)
             {
-                FilterEffect(key);
+                currentHealth -= damageAfterShield;
             }
+        }
+        else
+        {
+            currentHealth -= damage;
+        }
+
+        if (currentHealth <= 0)
+        {
+            Die();
         }
     }
 
-    public float GetPercentageHP()
+    public virtual void Heal(float amount)
+    {
+        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+    }
+
+    public void AddShield(float amount)
+    {
+        shield += amount;
+    }
+
+    public float GetHealthPercent()
     {
         return currentHealth / maxHealth;
     }
+
+    protected virtual void Die()
+    {
+        Debug.Log($"{gameObject.name} has died!");
+        Destroy(gameObject);
+    }
+
+    #endregion
+
 
     protected virtual void DamageVFX()
     {
@@ -56,7 +84,7 @@ public abstract class CombatSystem : MonoBehaviour
         {
             GameObject blood = GameObject.CreatePrimitive(PrimitiveType.Cube);
             blood.transform.localScale = new Vector3(blockSize, blockSize, blockSize);
-            blood.transform.position = transform.position + new Vector3(0, 1.5f,0) + Random.insideUnitSphere;
+            blood.transform.position = transform.position + new Vector3(0, 1.5f, 0) + Random.insideUnitSphere;
             blood.transform.rotation = Random.rotation;
 
             blood.GetComponent<Renderer>().material.color = Color.red;
@@ -65,153 +93,164 @@ public abstract class CombatSystem : MonoBehaviour
             Destroy(blood, destroyTime);
         }
     }
-   
 
-    public virtual void TakeDamage(int damage)
+
+    #region Status Effects
+
+    protected virtual void InitializeEffects()
     {
-        DamageVFX();
+        // register the effect
+        RegisterEffect(StatusClass.Heal);
+        RegisterEffect(StatusClass.Slow);
+        RegisterEffect(StatusClass.Haste);
+        RegisterEffect(StatusClass.Burn);
+        RegisterEffect(StatusClass.AttackBuff);
+        RegisterEffect(StatusClass.AttackDebuff);
+        RegisterEffect(StatusClass.Stun);
+    }
 
-
-        shield -= damage;
-
-        if (shield <= 0)
+    private void RegisterEffect(StatusClass effectName)
+    {
+        if (!activeEffects.ContainsKey(effectName))
         {
-            currentHealth += shield;
-            shield = 0f;
-        }
-
-
-        if (currentHealth <= 0)
-        {
-            Die();
+            activeEffects[effectName] = new StatusEffect { name = effectName };
         }
     }
 
-    protected virtual void Die()
+    /// <summary>
+    /// Apply a status effect. If effect exists, takes the stronger one.
+    /// </summary>
+    /// <param name="effectName">Name of the status effect (register in InitializeEffects in CombatSystem.cs)</param>
+    /// <param name="strength">Effect strength (0-1)</param>
+    /// <param name="duration">Duration in seconds. Use -1 for permanent.</param>
+    public void ApplyEffect(StatusClass effectName, float strength, float duration)
     {
-        Debug.Log($"{gameObject.name} has died!");
-        Destroy(gameObject);
+        if (!activeEffects.ContainsKey(effectName))
+        {
+            Debug.LogError($"Effect '{effectName}' not registered! Add it to InitializeEffects()", this);
+            return;
+        }
+
+        StatusEffect effect = activeEffects[effectName];
+        
+        // keep stronger effect
+        if (strength > effect.strength || effect.IsExpired())
+        {
+            effect.strength = strength;
+            effect.duration = duration;
+            effect.startTime = Time.time;
+        }
+        // extend duration if same effect
+        else if (strength == effect.strength && duration > effect.GetRemainingDuration())
+        {
+            effect.duration = duration;
+            effect.startTime = Time.time;
+        }
     }
+
+    public float GetEffectStrength(StatusClass effectName)
+    {
+        if (!activeEffects.ContainsKey(effectName))
+            return 0f; // 0 if doesn't possess effect
+
+        StatusEffect effect = activeEffects[effectName];
+        return effect.IsExpired() ? 0f : effect.strength;
+    }
+
+    public bool HasEffect(StatusClass effectName)
+    {
+        return GetEffectStrength(effectName) > 0f;
+    }
+
+    public void RemoveEffect(StatusClass effectName)
+    {
+        if (activeEffects.ContainsKey(effectName))
+        {
+            activeEffects[effectName].Clear();
+        }
+    }
+
+    // all effects that trigger per frame
+    public void UpdateEffects(float deltaTime)
+    {
+        float burnDamage = GetEffectStrength(StatusClass.Burn);
+        if (burnDamage > 0)
+        {
+            TakeDamage(burnDamage * deltaTime);
+        }
+        
+        float healAmount = GetEffectStrength(StatusClass.Heal);
+        if (healAmount > 0)
+        {
+            Heal(healAmount * deltaTime);
+        }
+    }
+
+    #endregion
+
+    #region Targeting
 
     public HashSet<string> GetTagList()
     {
         return tagList;
     }
 
-    public void AddHealth(float healthToAdd)
-    {
-        currentHealth = Mathf.Min(currentHealth + healthToAdd, maxHealth);
-    }
+    #endregion
 
-    public void AddShield(float shieldToAdd)
-    {
-        shield += shieldToAdd;
-    }
+    #region Debug
 
-    public void InitializeEffects()
-    {
-        // please initialize all effects here, this is just to prevent situations where duplicate effects are added like "health" and "Health" by accident
-        appliedEffects.Add("heal", new List<(float strength, float startTime, float durationSec)>());
-        appliedEffects.Add("slow", new List<(float strength, float startTime, float durationSec)>());
-        appliedEffects.Add("haste", new List<(float strength, float startTime, float durationSec)>());
-        appliedEffects.Add("burn", new List<(float strength, float startTime, float durationSec)>());
-        appliedEffects.Add("attackBuff", new List<(float strength, float startTime, float durationSec)>());
-        appliedEffects.Add("attackWeaken", new List<(float strength, float startTime, float durationSec)>());
-
-    }
-
-    protected void FilterEffect(string effectName)
-    {
-        List<(float strength, float startTime, float durationSec)> effects = appliedEffects[effectName];
-
-        if(effects.Count != 0)
-        {
-            float currentTime = Time.realtimeSinceStartup;
-
-            // Find the index of the best effect based on strenght & that the time is still valid
-            int bestEffectIndex = 0;
-            for (int i = 0; i < effects.Count; i++)
-            {
-                if(effects[bestEffectIndex].strength < effects[i].strength && (effects[i].durationSec >= currentTime || effects[i].durationSec == -1))
-                {
-                    bestEffectIndex = i;
-                }
-            }
-
-            // Places best effect in the front
-            (float strength, float startTime, float durationSec) effect = effects[bestEffectIndex];
-            effects.RemoveAt(bestEffectIndex);
-            effects.Insert(0, effect);
-
-            // Removes any outdated effects or effects shorter than the best effect
-            for (int i = effects.Count - 1; i >= 1; i--)
-            {
-                if ((effects[i].startTime + effects[i].durationSec) < (effects[0].startTime + effects[0].durationSec) && effects[i].durationSec != -1)
-                {
-                    effects.RemoveAt(i);
-                }
-            }
-
-            // Special case if all effects were outdated, including the "best effect"
-            if((effects[0].startTime + effects[0].durationSec) < currentTime && effects[0].durationSec != -1)
-            {
-                effects.RemoveAt(0);   
-            }
-        }
-    }
-
-    // Prints the effect dictionary using Debug.Log
     public void PrintEffects()
     {
-        string fullPrint = "";
-        string printThis = "";
-        foreach(var (key, value) in appliedEffects) 
+        string output = $"=== Effects on {gameObject.name} ===\n";
+        foreach ((StatusClass name, StatusEffect effect) in activeEffects)
         {
-            printThis = key + " = ";
-            foreach((float strength, float startTime, float durationSec) detail in value)
+            if (effect.strength > 0)
             {
-                printThis += detail.strength + ", " + detail.startTime + ", " + detail.durationSec + "; ";
+                string duration = effect.duration < 0 ? "∞" : effect.GetRemainingDuration().ToString("F1") + "s";
+                output += $"{name}: {effect.strength:F2} ({duration})\n";
             }
-            fullPrint += printThis + "\n\n";
         }
-        Debug.Log(fullPrint);
+        Debug.Log(output);
     }
 
-    public void ApplyEffect(string name, float strength, float durationSec)
+    #endregion
+
+    private class StatusEffect
     {
-        if (!appliedEffects.ContainsKey(name))
+        public StatusClass name;
+        public float strength = 0f;
+        public float duration = 0f;  // -1 = permanent
+        public float startTime = 0f;
+
+        public bool IsExpired()
         {
-            Debug.LogError("Effect name has not been initialized! Make sure the effect is spelled correctly and that it is initialized in InitializeEffects()", this);
+            if (strength == 0) return true;
+            if (duration < 0) return false; // permanent
+            return Time.time > startTime + duration;
         }
-        else
+
+        public float GetRemainingDuration()
         {
-            List<(float strength, float startTime, float durationSec)> effects = appliedEffects[name];
-            float currentTime = Time.realtimeSinceStartup;
-            // Checks if matches any pre-existing effect with similar strength
-            for(int i = 0; i < effects.Count; i++)
-            {
-                if(effects[i].strength == strength)
-                {
-                    // Checks to see if the new effect will even extend the old one
-                    if((effects[i].startTime + effects[i].durationSec < currentTime + durationSec || durationSec == -1) && effects[i].durationSec != -1)
-                    {
-                        effects[i] = (strength, currentTime, durationSec);
-                        FilterEffect(name);
-                    }
-                    return;
-                }
-            }
-            effects.Add((strength, currentTime, durationSec));
-            FilterEffect(name);
+            if (duration < 0) return Mathf.Infinity;
+            return Mathf.Max(0, (startTime + duration) - Time.time);
+        }
+
+        public void Clear()
+        {
+            strength = 0f;
+            duration = 0f;
+            startTime = 0f;
         }
     }
 
-    public float GetEffectStrength(string name)
+    public enum StatusClass
     {
-        if(appliedEffects[name].Count == 0)
-        {
-            return 0;
-        }
-        return appliedEffects[name][0].strength;
+        Heal,
+        Slow, // additive
+        Haste, // additive
+        Burn,
+        AttackBuff,
+        AttackDebuff,
+        Stun
     }
 }

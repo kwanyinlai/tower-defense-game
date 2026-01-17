@@ -98,21 +98,21 @@ public class TroopManagement : MonoBehaviour
     void SelectTroops()
     {
         // use new FactionManager
-        List<TroopAI> allPlayerTroops = FactionManager.Instance.GetAlliesOf(TroopFaction.Player);
+        // List<TroopAI> allPlayerTroops = FactionManager.Instance.GetAlliesOf(TroopFaction.Player);
         
-        foreach (TroopAI troopController in allPlayerTroops)
-        {
-            if (troopController == null) continue;
+        // foreach (TroopAI troopController in allPlayerTroops)
+        // {
+        //     if (troopController == null) continue;
             
-            GameObject troop = troopController.gameObject;
+        //     GameObject troop = troopController.gameObject;
             
-            if (!selectedTroops.Contains(troop))
-            {
-                selectedTroops.Add(troop);
-            }
-        }
+        //     if (!selectedTroops.Contains(troop))
+        //     {
+        //         selectedTroops.Add(troop);
+        //     }
+        // }
 
-        Debug.Log("Selected Troops: " + selectedTroops.Count);
+        // Debug.Log("Selected Troops: " + selectedTroops.Count);
     }
 
     void ValidInput()

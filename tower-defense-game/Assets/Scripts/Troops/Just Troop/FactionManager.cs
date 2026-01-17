@@ -5,7 +5,7 @@ public class FactionManager : MonoBehaviour
 {
     public static FactionManager Instance { get; private set; }
 
-    private Dictionary<TroopFaction, List<TroopAI>> troopsByFaction = new Dictionary<TroopFaction, List<TroopAI>>();
+    private Dictionary<TroopFaction, List<Transform>> troopsByFaction = new Dictionary<TroopFaction, List<Transform>>();
 
     private void Awake()
     {
@@ -20,11 +20,11 @@ public class FactionManager : MonoBehaviour
         // initialise faction lists
         foreach (TroopFaction faction in System.Enum.GetValues(typeof(TroopFaction)))
         {
-            troopsByFaction[faction] = new List<TroopAI>();
+            troopsByFaction[faction] = new List<Transform>();
         }
     }
 
-    public void RegisterTroop(TroopAI troop, TroopFaction faction)
+    public void RegisterTroop(Transform troop, TroopFaction faction)
     {
         if (!troopsByFaction[faction].Contains(troop))
         {
@@ -32,19 +32,19 @@ public class FactionManager : MonoBehaviour
         }
     }
 
-    public void UnregisterTroop(TroopAI troop, TroopFaction faction)
+    public void UnregisterTroop(Transform troop, TroopFaction faction)
     {
         troopsByFaction[faction].Remove(troop);
     }
 
-    public List<TroopAI> GetAlliesOf(TroopFaction faction)
+    public List<Transform> GetAlliesOf(TroopFaction faction)
     {
-        return new List<TroopAI>(troopsByFaction[faction]);
+        return new List<Transform>(troopsByFaction[faction]);
     }
 
-    public List<TroopAI> GetEnemiesOf(TroopFaction faction)
+    public List<Transform> GetEnemiesOf(TroopFaction faction)
     {
-        List<TroopAI> enemies = new List<TroopAI>();
+        List<Transform> enemies = new List<Transform>();
 
         foreach (var kvp in troopsByFaction)
         {

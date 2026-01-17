@@ -42,38 +42,39 @@ public class TroopTargetSelector : MonoBehaviour
 
     private Transform SelectBestTargetCandidate(Vector3 position)
     {
-        List<TroopAI> enemies = FactionManager.Instance.GetEnemiesOf(faction);
+        // List<TroopAI> enemies = FactionManager.Instance.GetEnemiesOf(faction);
 
-        if (enemies == null || enemies.Count == 0)
-        {
-            return null;
-        }
+        // if (enemies == null || enemies.Count == 0)
+        // {
+        //     return null;
+        // }
 
-        List<TargetCandidate> candidates = new List<TargetCandidate>();
+        // List<TargetCandidate> candidates = new List<TargetCandidate>();
 
-        foreach (TroopAI enemy in enemies)
-        {
-            if (enemy == null || enemy.gameObject == null) continue;
+        // foreach (TroopAI enemy in enemies)
+        // {
+        //     if (enemy == null || enemy.gameObject == null) continue;
 
-            float distance = Vector3.Distance(position, enemy.transform.position);
+        //     float distance = Vector3.Distance(position, enemy.transform.position);
 
-            if (distance <= aggroRange)
-            {
-                candidates.Add(new TargetCandidate
-                {
-                    transform = enemy.transform,
-                    distance = distance,
-                    controller = enemy
-                });
-            }
-        }
+        //     if (distance <= aggroRange)
+        //     {
+        //         candidates.Add(new TargetCandidate
+        //         {
+        //             transform = enemy.transform,
+        //             distance = distance,
+        //             controller = enemy
+        //         });
+        //     }
+        // }
 
-        if (candidates.Count == 0)
-        {
-            return null;
-        }
+        // if (candidates.Count == 0)
+        // {
+        //     return null;
+        // }
 
-        return ChoosePriorityTarget(candidates);
+        // return ChoosePriorityTarget(candidates);
+        return null;
     }
 
     private Transform ChoosePriorityTarget(List<TargetCandidate> candidates)

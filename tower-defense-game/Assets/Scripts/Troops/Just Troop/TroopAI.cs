@@ -56,12 +56,12 @@ public class TroopAI : MonoBehaviour
 
     private void RegisterWithFaction()
     {
-        FactionManager.Instance.RegisterTroop(this, faction);
+        FactionManager.Instance.RegisterTroop(transform, faction);
     }
 
     private void UnregisterFromFaction()
     {
-        FactionManager.Instance.UnregisterTroop(this, faction);
+        FactionManager.Instance.UnregisterTroop(transform, faction);
     }
 
     #endregion

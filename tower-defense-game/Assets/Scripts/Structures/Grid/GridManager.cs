@@ -86,8 +86,9 @@ public class GridManager : MonoBehaviour
                 sector.AggregateCosts();
             }
         }
-
-        SectorManager.Instance.SetSectors(sectors);
+        // i moved this to Awake because other scripts depend on the initialisation
+        // of grid, but might run into issue of SectorManager not being initilised yet
+        SectorManager.Instance.SetSectorList(sectors);
         // IMPORTANT NOTE: sector's local grids stores references to the same GridNodes as the main grid
 
         ConnectSectorNeighbors(sectors);
@@ -117,27 +118,11 @@ public class GridManager : MonoBehaviour
                 sector.neighbours[(int)GridSector.CardinalDirections.West] = 
                     (x > 0) ? sectors[x - 1, y] : null;
 
-                sector.GenerateCostFieldForBorders();
+            
             }
         }
     }
 
-    // void SetStarterTerritory()
-    // {
-    //     Vector3 pos = playerBase.transform.position;
-    //     Vector3Int gridPos = WorldPosFromCoordinates(pos);
-    //     for(int i = gridPos.x - TERRITORY_RADIUS; i <= gridPos.x + TERRITORY_RADIUS; i++)
-    //     {
-    //         for(int j =  gridPos.z - TERRITORY_RADIUS; j <= gridPos.z + TERRITORY_RADIUS; j++)
-    //         {
-    //             float distSquared = Mathf.Pow(i - gridPos.x, 2) + Mathf.Pow(j - gridPos.z, 2);
-    //             if(distSquared < Mathf.Pow(TERRITORY_RADIUS, 2))
-    //             {
-    //                 grid[i, j].territoryStatus = (int)TerritoryStatus.Assigned;
-    //             }
-    //         }
-    //     }
-    // }
 
     #endregion
 
@@ -183,15 +168,16 @@ public class GridManager : MonoBehaviour
     #region Occupy / Unoccupy Tiles
     public void OccupyArea(Vector3 coordinates, int2 size, int range)
     {
+        PathfindingManager.Instance.InvalidateFlowFieldsInArea(coordinates, size);
         Vector3Int gridPos = WorldPosFromCoordinates(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
         {
             for (int z = gridPos.z; z < gridPos.z + size.y; z++)
             {
-                if (x >= 0 && x < GRID_WIDTH
-         && z >= 0 && z < GRID_HEIGHT)
+                if (x >= 0 && x < GRID_WIDTH && z >= 0 && z < GRID_HEIGHT)
                 {
                     grid[x, z].buildable = false;
+                    grid[x,z].walkCost = GridNode.UNWALKABLE;
                 }
             }
         }
@@ -218,15 +204,16 @@ public class GridManager : MonoBehaviour
         {
             for (int z = gridPos.z; z < gridPos.z + size.y; z++)
             {
-                if (x >= 0 && x < GRID_WIDTH
-        && z >= 0 && z < GRID_HEIGHT)
+                if (x >= 0 && x < GRID_WIDTH && z >= 0 && z < GRID_HEIGHT)
                 {
                     grid[x, z].buildable = true;
+                    grid[x,z].walkCost = grid[x,z].baseWalkCost;
                 }
             }
         }
 
     }
+    
 
     #endregion
 
@@ -338,6 +325,7 @@ public class GridManager : MonoBehaviour
         }
         return grid[gridCoords.x, gridCoords.y];
     }
+    
     #endregion
 
     public GridNode[,] GetGrid() // TODO: probably want to replace this -- unsafe to let people have access to grid
@@ -373,7 +361,7 @@ public class GridManager : MonoBehaviour
     */
     void Start()
     {
-        InitializeGridAndSectors();
+        
     }
     private void Awake()
     {
@@ -384,6 +372,7 @@ public class GridManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        InitializeGridAndSectors();
     }
 
     void Update(){

@@ -14,7 +14,7 @@ public class StructureMenu : MonoBehaviour
     private Material defaultMaterial = null;
     
     // For Buildings
-    private StructureBattleSystem selectedSBSScript = null;
+    private BuildingBattleSystem selectedSBSScript = null;
     private Building selectedBuildingScript = null;
 
     // For Troops

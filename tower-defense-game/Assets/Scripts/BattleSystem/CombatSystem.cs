@@ -99,7 +99,8 @@ public abstract class CombatSystem : MonoBehaviour
 
     protected virtual void InitializeEffects()
     {
-        // register the effect
+        // register the effect; can be overriden in subclasses for subclass 
+        // specific effects (only for organisation, not performance differences)
         RegisterEffect(StatusClass.Heal);
         RegisterEffect(StatusClass.Slow);
         RegisterEffect(StatusClass.Haste);

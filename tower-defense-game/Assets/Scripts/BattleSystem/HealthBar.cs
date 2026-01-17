@@ -37,6 +37,7 @@ public class HealthBar : MonoBehaviour
         {
             return;
         }
+        
         float healthPercentage = health.GetHealthPercent();
         healthSlider.value = healthPercentage;
        

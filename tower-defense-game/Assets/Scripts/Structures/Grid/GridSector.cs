@@ -24,14 +24,8 @@ public class GridSector // for HPA*
 
     private float[][,] borderCostFields = new float[4][,]; // NESW
 
-    // Linked hash
-    private FlowFieldCache cachedFields = new FlowFieldCache(10);
-
-    private int cacheSize = 10;
-
 
     // FOR HPA*
-
 
     public GridSector[] neighbours = new GridSector[4]; // corresponds to cardinal directions
     public float averageCost;
@@ -48,25 +42,8 @@ public class GridSector // for HPA*
     public GridSector(int2 sectorCoordinate)
     {
         this.sectorCoordinate = sectorCoordinate;
-        cachedFields = new FlowFieldCache(cacheSize);
     }
 
-    public void GenerateCostFieldForBorders()
-    {
-        List<GridNode> borderNodes = GetBorderNodes(CardinalDirections.North);
-        borderCostFields[(int)CardinalDirections.North] = GenerateCostField(borderNodes);
-
-        borderNodes = GetBorderNodes(CardinalDirections.East);
-        borderCostFields[(int)CardinalDirections.East] = GenerateCostField(borderNodes);
-
-        borderNodes = GetBorderNodes(CardinalDirections.South);
-        borderCostFields[(int)CardinalDirections.South] = GenerateCostField(borderNodes);
-
-        borderNodes = GetBorderNodes(CardinalDirections.West);
-        borderCostFields[(int)CardinalDirections.West] = GenerateCostField(borderNodes);
-
-
-    }
     
     private static bool CheckConnected(GridNode node, int2 dir)
     {
@@ -135,172 +112,6 @@ public class GridSector // for HPA*
         return border;
     }
 
-    private float[,] GenerateCostField(List<GridNode> sourceNodes)
-    {
-        var field = new float[sectorWidth, sectorHeight];
-
-        // Initialize field with infinity
-        for (int x = 0; x < sectorWidth; x++)
-        {
-            for (int y = 0; y < sectorHeight; y++)
-            {
-                field[x, y] = Mathf.Infinity;
-            }
-        }
-
-        var pq = new PriorityQueue<GridNode>();
-        Dictionary<GridNode, float> nodeCosts = new Dictionary<GridNode, float>();
-
-        // Add source nodes
-        foreach (var src in sourceNodes)
-        {
-            field[src.localPos.x, src.localPos.y] = 0f;
-            pq.Enqueue(src, 0f);
-            nodeCosts[src] = 0f;
-        }
-
-        // Dijkstra-like loop
-        while (pq.Count > 0)
-        {
-            var current = pq.Dequeue();
-            float currentCost = nodeCosts[current];
-
-            // Skip if we already found a better path
-            if (currentCost > field[current.localPos.x, current.localPos.y])
-                continue;
-
-            foreach (var neighbour in GetNeighbouringNodes(current))
-            {
-                if (neighbour == null) continue;
-
-                float tentativeCost = currentCost + neighbour.walkCost;
-
-                if (tentativeCost < field[neighbour.localPos.x, neighbour.localPos.y])
-                {
-                    field[neighbour.localPos.x, neighbour.localPos.y] = tentativeCost;
-                    pq.Enqueue(neighbour, tentativeCost);
-                    nodeCosts[neighbour] = tentativeCost;
-                }
-            }
-        }
-
-        return field;
-    }
-
-
-    public Vector2[,] GenerateVectorField(GridNode goalNode) // single goal dijk
-    {
-        float[,] costField = new float[sectorWidth, sectorHeight];
-        // Perform Dijkstra's from goal 
-        for (int x = 0; x < localGrid.GetLength(0); x++)
-        {
-            for (int y = 0; y < localGrid.GetLength(1); y++)
-            {
-                costField[x, y] = float.MaxValue;
-            }
-        }
-
-        PriorityQueue<GridNode> uncheckedNodes = new PriorityQueue<GridNode>();
-        // enqueue all border nodes first
-
-        costField[goalNode.localPos.x, goalNode.localPos.y] = 0f;
-        uncheckedNodes.Enqueue(goalNode, 0);
-
-        // first generate cost field, each node points to closest exit
-        while (uncheckedNodes.Count > 0)
-        {
-            var current = uncheckedNodes.Dequeue();
-            foreach (var neighbour in GetNeighbouringNodes(current))
-            {
-                if (neighbour == null)
-                {
-                    continue;
-                }
-                float tentativeCost = costField[current.localPos.x, current.localPos.y] + neighbour.walkCost;
-                if (tentativeCost < costField[neighbour.localPos.x, neighbour.localPos.y])
-                {
-                    costField[neighbour.localPos.x, neighbour.localPos.y] = tentativeCost;
-                    uncheckedNodes.Enqueue(neighbour, tentativeCost);
-                }
-            }
-        }
-        return GenerateVectorFieldFromCost(costField, goalNode);
-    }
-
-    private Vector2[,] GenerateVectorFieldFromCost(float[,] costField, GridNode targetNode) // multigoal dijk
-    {
-        Vector2[,] newField = new Vector2[sectorWidth, sectorHeight];
-        for (int x = 0; x < localGrid.GetLength(0); x++)
-        {
-            for (int y = 0; y < localGrid.GetLength(1); y++)
-            {
-                // point out if this is the exeit node (catches other cases too)
-                if (x == targetNode.localPos.x && y == targetNode.localPos.y)
-                {
-                    if (x == 0)
-                    {
-                        newField[x, y] = new Vector2(-1f, 0f);
-                    }
-                    else if (y == 0)
-                    {
-                        newField[x, y] = new Vector2(0f, -1f);
-                    }
-                    else if (x == sectorWidth - 1)
-                    {
-                        newField[x, y] = new Vector2(1f, 0f);
-                    }
-                    else if (y == sectorHeight - 1)
-                    {
-                        newField[x, y] = new Vector2(0f, 1f);
-                    }
-                    continue;
-                }
-                float minCost = float.MaxValue;
-                Vector2 direction = Vector2.zero;
-
-                foreach (var neighbour in GetNeighbouringNodes(localGrid[x, y]))
-                {
-                    if (neighbour == null)
-                    {
-                        continue;
-                    }
-
-
-                    int nx = neighbour.localPos.x;
-                    int ny = neighbour.localPos.y;
-
-
-
-                    if (costField[nx, ny] < minCost)
-                    {
-                        minCost = costField[nx, ny];
-                        direction = new Vector2(nx - x, ny - y); 
-                    }
-                }
-
-
-                newField[x, y] = direction.normalized;
-            }
-        }
-        return newField;
-    }
-
-    public void AggregateCosts()
-    {
-        float total = 0;
-        int numNodes = 0;
-        for (int x = 0; x < localGrid.GetLength(0); x++)
-        {
-            for (int y = 0; y < localGrid.GetLength(1); y++)
-            {
-                total += localGrid[x, y].walkCost;
-                numNodes++;
-            }
-        }
-        this.averageCost = total / numNodes;
-    }
-    // TODO:
-
     public List<GridNode> GetNeighbouringNodes(GridNode node)
     {
         List<GridNode> neighbours = new List<GridNode>();
@@ -320,42 +131,6 @@ public class GridSector // for HPA*
         }
         return neighbours;
     }
-
-    // public Vector2 GetSmoothedVectorDirection(Vector2 coordinates)
-    // {
-    //     Vector2 dxp = coordinates.x + 1 <= sectorWidth ? vectorField[coordinates.x + 1, coordinates.y] : vectorField[coordinates.x, coordinates.y];
-    //     Vector2 dxn = coordinates.x - 1 > 0 ? vectorField[coordinates.x - 1, coordinates.y] : vectorField[coordinates.x, coordinates.y];
-    //     return null;
-    // }
-
-    public Vector2 QueryFlowField(GridNode currentNode, GridNode targetNode, Vector2 currentDirection)
-    {
-        if (cachedFields.TryGetFlowField(targetNode, out Vector2[,] cachedField))
-        {
-            return InterpolateFieldVectors(currentNode, currentDirection, cachedField);
-        }
-
-        Vector2[,] newField = GenerateVectorField(targetNode);
-        cachedFields.AddFlowFieldToCache(targetNode, newField);
-        return InterpolateFieldVectors(currentNode, currentDirection, newField);
-    }
-
-    private Vector2 InterpolateFieldVectors(GridNode currentNode, Vector2 currentDirection, Vector2[,] field)
-    {
-        Vector2 interpolatedDirection = currentDirection;
-        float interpolationFactor = 0.2f; // tune
-
-        foreach (var neighbour in GetNeighbouringNodes(currentNode))
-        {
-            if (neighbour == null)
-            {
-                continue;
-            }
-            interpolatedDirection = Vector2.Lerp(interpolatedDirection, field[neighbour.localPos.x, neighbour.localPos.y], interpolationFactor);
-        }
-        return interpolatedDirection.normalized;
-    }
-
     public Vector2 GetCentre()
     {
         return new Vector2(
@@ -444,118 +219,20 @@ public class GridSector // for HPA*
         return bestNode;
     }
 
+    public void AggregateCosts()
+    {
+        float total = 0;
+        int numNodes = 0;
+        for (int x = 0; x < localGrid.GetLength(0); x++)
+        {
+            for (int y = 0; y < localGrid.GetLength(1); y++)
+            {
+                total += localGrid[x, y].walkCost;
+                numNodes++;
+            }
+        }
+        this.averageCost = total / numNodes;
+    }
+
 }
 
-
-public class FlowFieldCache
-{
-    private int cacheSize;
-    public FlowFieldCache(int cacheSize)
-    {
-        this.cacheSize = cacheSize;
-        cachedFields = new Dictionary<GridNode, CacheItem>();
-    }
-    private class CacheItem
-    {
-        public GridNode target;
-        public Vector2[,] flowField;
-
-        public CacheItem prev;
-        public CacheItem next;
-
-        public CacheItem(GridNode target, Vector2[,] flowField)
-        {
-            this.target = target;
-            this.flowField = flowField;
-        }
-    }
-    private CacheItem head;
-    private CacheItem tail;
-    private Dictionary<GridNode, CacheItem> cachedFields;
-
-    private int capacity = 5; // TODO: update this maybe
-
-    public bool TryGetFlowField(GridNode key, out Vector2[,] flowField)
-    {
-        if (cachedFields.TryGetValue(key, out CacheItem target))
-        {
-            UpdateMostRecentlyUsed(target);
-            flowField = target.flowField;
-            return true;
-        }
-        flowField = null;
-        return false;
-    }
-
-    public void AddFlowFieldToCache(GridNode targetNode, Vector2[,] flowField)
-    {
-        if (cachedFields.TryGetValue(targetNode, out CacheItem item))
-        {
-            item.flowField = flowField;
-            UpdateMostRecentlyUsed(item);
-            return;
-        }
-
-        item = new CacheItem(targetNode, flowField);
-        AddNodeToHead(item);
-        cachedFields[targetNode] = item;
-
-        if (cachedFields.Count > cacheSize)
-        {
-            RemoveTail();
-        }
-    }
-
-    private void UpdateMostRecentlyUsed(CacheItem node)
-    {
-        if (node == head)
-        {
-            return;
-        }
-        // remove node
-        if (node.prev != null)
-        {
-            node.prev.next = node.next;
-        }
-        if (node.next != null)
-        {
-            node.next.prev = node.prev;
-        }
-        // add it back
-        AddNodeToHead(node);
-    }
-
-    private void AddNodeToHead(CacheItem node)
-    {
-        node.prev = null;
-        node.next = head;
-        if (head != null)
-        {
-            head.prev = node;
-        }
-        head = node;
-        if (tail == null)
-        {
-            tail = head;
-        }
-    }
-
-    private void RemoveTail()
-    {
-        if (tail == null)
-        {
-            return;
-        }
-        cachedFields.Remove(tail.target);
-        if (tail.prev != null)
-        {
-            tail.prev.next = null;
-            tail = tail.prev;
-        }
-        else
-        {
-            head = null;
-            tail = null;
-        }
-    }
-}

@@ -10,6 +10,7 @@ namespace Pathfinding.ECS
     public partial struct TroopMovementJob : IJobEntity
     {
         public float deltaTime;
+        
         private const float WAYPOINT_REACHED_DIST = 2f;
         private const float MIN_SPEED_MULTIPLIER = 0.2f;
         private const float FLOW_FIELD_BLEND_RADIUS = 5f;
@@ -19,11 +20,10 @@ namespace Pathfinding.ECS
             ref NavigationTarget nav,
             ref LocalTransform transform,
             in DynamicBuffer<WaypointElement> waypoints,
-            ref WaypointProgress progress)
+            ref WaypointProgress progress,
+            in AgentAvoidanceData avoidance)
         {
-            // the logic is pretty much identical to the code in PathfindingManager.cs
-            if (nav.isMoving == 0 || nav.reachedDestination == 1)
-                return;
+            if (nav.isMoving == 0 || nav.reachedDestination == 1) return;
             
             float2 currentPos = new float2(transform.Position.x, transform.Position.z);
             
@@ -39,14 +39,16 @@ namespace Pathfinding.ECS
             
             float distance = math.sqrt(distSqr);
             
+            UpdateTargetWaypoint(currentPos, waypoints, ref progress);
+            
             float2 direction;
             
-            // Use flow field direction when available (respects costs and obstacles)
+            // try use flow field
             if (nav.useFlowField == 1 && math.lengthsq(nav.flowFieldDirection) > 0.001f)
             {
                 direction = nav.flowFieldDirection;
                 
-                // Blend with direct direction when very close for smooth arrival
+                // blend with direct path when close to target to prevent overshooting
                 if (distance < FLOW_FIELD_BLEND_RADIUS)
                 {
                     float2 directDir = math.normalizesafe(nav.targetPosition - currentPos);
@@ -56,12 +58,21 @@ namespace Pathfinding.ECS
             }
             else
             {
-                // Fall back to waypoint navigation
+                // fall back to waypoint
                 direction = CalculateDirection(
                     currentPos,
                     nav.targetPosition,
                     waypoints,
                     ref progress
+                );
+            }
+            
+            // blend with agent-avoidance direction
+            if (avoidance.avoidanceStrength > 0.001f)
+            {
+                direction = math.normalizesafe(
+                    direction * (1f - avoidance.avoidanceStrength) +
+                    avoidance.avoidanceDirection * avoidance.avoidanceStrength
                 );
             }
             
@@ -73,6 +84,34 @@ namespace Pathfinding.ECS
                 nav.slowdownDistance,
                 deltaTime
             );
+        }
+        
+        // advance the waypoint index if we've reached the current waypoint.
+        void UpdateTargetWaypoint(
+            float2 currentPos,
+            in DynamicBuffer<WaypointElement> waypoints,
+            ref WaypointProgress progress)
+        {
+            if (progress.totalCount == 0 || waypoints.Length == 0)
+                return;
+            
+            const float reachedDistSqr = WAYPOINT_REACHED_DIST * WAYPOINT_REACHED_DIST;
+            
+            while (progress.currentIndex < progress.totalCount && 
+                   progress.currentIndex < waypoints.Length)
+            {
+                float3 wp = waypoints[progress.currentIndex].position;
+                float2 wpPos = new float2(wp.x, wp.z);
+                
+                if (math.distancesq(currentPos, wpPos) < reachedDistSqr)
+                {
+                    progress.currentIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
         
         float2 CalculateDirection(
@@ -87,7 +126,6 @@ namespace Pathfinding.ECS
                 return math.normalizesafe(finalTarget - currentPos);
             }
             
-            // IMPORTANT: validate index before accessing buffer
             if (progress.currentIndex >= waypoints.Length || progress.currentIndex >= progress.totalCount)
             {
                 return math.normalizesafe(finalTarget - currentPos);

@@ -311,19 +311,19 @@ namespace Pathfinding.ECS
             blob.width = width;
             blob.height = height;
             
-            BlobArray<float> costsArray = builder.Allocate(ref blob.costs, costField.Length);
+            BlobBuilderArray<float> costsArray = builder.Allocate(ref blob.costs, costField.Length);
             for (int i = 0; i < costField.Length; i++)
             {
                 costsArray[i] = costField[i];
             }
             
-            BlobArray<float2> directionsArray = builder.Allocate(ref blob.directions, flowField.Length);
+            BlobBuilderArray<float2> directionsArray = builder.Allocate(ref blob.directions, flowField.Length);
             for (int i = 0; i < flowField.Length; i++)
             {
                 directionsArray[i] = flowField[i];
             }
             
-            var blobRef = builder.CreateBlobAssetReference<FlowFieldBlob>(Allocator.Persistent);
+            BlobAssetReference<FlowFieldBlob> blobRef = builder.CreateBlobAssetReference<FlowFieldBlob>(Allocator.Persistent);
             builder.Dispose();
             
             return blobRef;
@@ -335,8 +335,8 @@ namespace Pathfinding.ECS
             int2 oldestKey = default;
             bool found = false;
             
-            var keys = cache.lastAccessTime.GetKeyArray(Allocator.Temp);
-            foreach (var key in keys)
+            NativeArray<int2> keys = cache.lastAccessTime.GetKeyArray(Allocator.Temp);
+            foreach (int2 key in keys)
             {
                 if (cache.lastAccessTime.TryGetValue(key, out float time))
                 {
@@ -350,7 +350,7 @@ namespace Pathfinding.ECS
             }
             keys.Dispose();
             
-            if (found && cache.cache.TryGetValue(oldestKey, out var flowFieldBlobRef))
+            if (found && cache.cache.TryGetValue(oldestKey, out BlobAssetReference<FlowFieldBlob> flowFieldBlobRef))
             {
                 flowFieldBlobRef.Dispose();
                 cache.cache.Remove(oldestKey);

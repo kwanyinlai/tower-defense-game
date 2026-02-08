@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Grid.ECS;
+
 
 public class GridManager : MonoBehaviour
 
@@ -44,6 +46,7 @@ public class GridManager : MonoBehaviour
     #endregion
     private GridNode[,] grid; 
     private GameObject playerBase;
+    private GridECSBridge ecsBridge;
 
     #region Initialization Methods
 
@@ -168,7 +171,10 @@ public class GridManager : MonoBehaviour
     #region Occupy / Unoccupy Tiles
     public void OccupyArea(Vector3 coordinates, int2 size, int range)
     {
-        PathfindingManager.Instance.InvalidateFlowFieldsInArea(coordinates, size);
+        if (PathfindingManager.Instance != null){
+            PathfindingManager.Instance.InvalidateFlowFieldsInArea(coordinates, size);
+        }
+        
         Vector3Int gridPos = WorldPosFromCoordinates(coordinates);
         for (int x = gridPos.x; x < gridPos.x + size.x; x++)
         {
@@ -194,6 +200,16 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
+
+        if (ecsBridge != null)
+        {
+            ecsBridge.SyncGridChanges();
+        }
+        
+        if (Pathfinding.ECS.FlowFieldCacheInitializer.Instance != null)
+        {
+            Pathfinding.ECS.FlowFieldCacheInitializer.Instance.InvalidateFlowFieldsInArea(coordinates, size);
+        }
     }
 
     public void StopOccupying(Vector3 coordinates, int2 size)
@@ -212,6 +228,15 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        if (ecsBridge != null)
+        {
+            ecsBridge.SyncGridChanges();
+        }
+        
+        if (Pathfinding.ECS.FlowFieldCacheInitializer.Instance != null)
+        {
+            Pathfinding.ECS.FlowFieldCacheInitializer.Instance.InvalidateFlowFieldsInArea(coordinates, size);
+        }
     }
     
 
@@ -332,6 +357,7 @@ public class GridManager : MonoBehaviour
     {
         return grid;
     }
+    
     /*
     Commenting out territory management for now. Want to remove territory altogether.
     #region Territory Management
@@ -373,6 +399,7 @@ public class GridManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         InitializeGridAndSectors();
+        ecsBridge = GetComponent<GridECSBridge>();
     }
 
     void Update(){

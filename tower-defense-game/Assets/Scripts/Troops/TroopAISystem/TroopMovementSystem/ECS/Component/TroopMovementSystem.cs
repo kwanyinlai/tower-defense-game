@@ -1,17 +1,19 @@
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
+using Unity.Jobs;
+
 
 namespace Pathfinding.ECS
 {
-    [BurstCompile] // haha need for speed
-    [UpdateInGroup(typeof(SimulationSystemGroup))] // group for gameplay logic?? not really sure actually
-    public partial struct TroopMovementSystem : ISystem // partial necessary for DOTS, injecting extra code??
+    [BurstCompile]
+    [UpdateInGroup(typeof(SimulationSystemGroup))]
+    public partial struct TroopMovementSystem : ISystem
     {
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TroopTag>(); // checking for tag!
+            state.RequireForUpdate<TroopTag>();
         }
         
         [BurstCompile]

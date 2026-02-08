@@ -29,26 +29,75 @@ public static class WaypointPathBuilder
 
     private static Vector3 FindBestTransitionPoint(GridSector from, GridSector to)
     {
-        // naive using border centre - perhaps improve this
         int direction = GetDirectionBetweenSectors(from, to);
-
+        
+        // lowest walk cost - distance to centre as tiebreaker
+        GridNode bestNode = null;
+        float bestCost = float.MaxValue;
+        
+        int borderLength;
         switch (direction)
         {
             case (int)GridSector.CardinalDirections.North:
-                return GetBorderCenterPoint(from, GridSector.sectorWidth / 2, GridSector.sectorHeight - 1);
-
+                borderLength = GridSector.sectorWidth;
+                for (int x = 0; x < borderLength; x++)
+                {
+                    GridNode node = from.localGrid[x, GridSector.sectorHeight - 1];
+                    if (node.walkCost < GridNode.UNWALKABLE)
+                    {
+                        float centerPenalty = Mathf.Abs(x - borderLength / 2f) * 0.1f;
+                        float cost = node.walkCost + centerPenalty;
+                        if (cost < bestCost) { bestCost = cost; bestNode = node; }
+                    }
+                }
+                break;
             case (int)GridSector.CardinalDirections.East:
-                return GetBorderCenterPoint(from, GridSector.sectorWidth - 1, GridSector.sectorHeight / 2);
-
+                borderLength = GridSector.sectorHeight;
+                for (int y = 0; y < borderLength; y++)
+                {
+                    GridNode node = from.localGrid[GridSector.sectorWidth - 1, y];
+                    if (node.walkCost < GridNode.UNWALKABLE)
+                    {
+                        float centerPenalty = Mathf.Abs(y - borderLength / 2f) * 0.1f;
+                        float cost = node.walkCost + centerPenalty;
+                        if (cost < bestCost) { bestCost = cost; bestNode = node; }
+                    }
+                }
+                break;
             case (int)GridSector.CardinalDirections.South:
-                return GetBorderCenterPoint(from, GridSector.sectorWidth / 2, 0);
-
+                borderLength = GridSector.sectorWidth;
+                for (int x = 0; x < borderLength; x++)
+                {
+                    GridNode node = from.localGrid[x, 0];
+                    if (node.walkCost < GridNode.UNWALKABLE)
+                    {
+                        float centerPenalty = Mathf.Abs(x - borderLength / 2f) * 0.1f;
+                        float cost = node.walkCost + centerPenalty;
+                        if (cost < bestCost) { bestCost = cost; bestNode = node; }
+                    }
+                }
+                break;
             case (int)GridSector.CardinalDirections.West:
-                return GetBorderCenterPoint(from, 0, GridSector.sectorHeight / 2);
-
-            default:
-                return GetSectorCenter(from);
+                borderLength = GridSector.sectorHeight;
+                for (int y = 0; y < borderLength; y++)
+                {
+                    GridNode node = from.localGrid[0, y];
+                    if (node.walkCost < GridNode.UNWALKABLE)
+                    {
+                        float centerPenalty = Mathf.Abs(y - borderLength / 2f) * 0.1f;
+                        float cost = node.walkCost + centerPenalty;
+                        if (cost < bestCost) { bestCost = cost; bestNode = node; }
+                    }
+                }
+                break;
         }
+        
+        if (bestNode != null)
+        {
+            return GridManager.CoordinatesToWorldPos(new int2(bestNode.globalPos.x, bestNode.globalPos.y));
+        }
+        
+        return GetSectorCenter(from);
     }
 
     private static Vector3 GetBorderCenterPoint(GridSector sector, int localX, int localY)
@@ -80,7 +129,7 @@ public static class WaypointPathBuilder
 
     private static List<Vector3> SmoothPath(List<Vector3> waypoints)
     {
-        // no need to smooth with few waypoints
+        // remove unnecessary waypoints
         if (waypoints.Count <= 2) return waypoints;
 
         List<Vector3> smoothed = new List<Vector3> { waypoints[0] };
@@ -121,15 +170,29 @@ public static class WaypointPathBuilder
         Vector3Int vectoredTo = GridManager.WorldPosFromCoordinates(to);
         int2 fromGrid = new int2(vectoredFrom.x, vectoredFrom.z);
         int2 toGrid = new int2(vectoredTo.x, vectoredTo.z);
-        // get all grid nodes between the waypoint
+        
+        // get all grid nodes along the line between the waypoints
         List<int2> linePoints = BresenhamLine(fromGrid, toGrid);
+        
+        int2 diff = toGrid - fromGrid;
+        // get perp direction
+        int2 perp;
+        if (Mathf.Abs(diff.x) >= Mathf.Abs(diff.y))
+            perp = new int2(0, 1); // vertical
+        else
+            perp = new int2(1, 0); // horizontal
 
         foreach (int2 point in linePoints)
         {
-            GridNode node = GridManager.Instance.NodeFromGridCoordinate(point);
-            if (node == null || node.walkCost >= GridNode.UNWALKABLE)
+            // use perp to check adjacent tiles as well (ensure we don't skip obstacles due to narrow line sampling)
+            for (int offset = -1; offset <= 1; offset++)
             {
-                return false;
+                int2 checkPoint = point + perp * offset;
+                GridNode node = GridManager.Instance.NodeFromGridCoordinate(checkPoint);
+                if (node == null || node.walkCost >= GridNode.UNWALKABLE)
+                {
+                    return false;
+                }
             }
         }
 

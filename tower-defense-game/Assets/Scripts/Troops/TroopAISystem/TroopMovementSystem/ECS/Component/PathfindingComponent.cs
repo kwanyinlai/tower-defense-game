@@ -16,22 +16,21 @@ namespace Pathfinding.ECS
     
     /// <summary>
     /// Movement State
-    /// aligned to 24 bytes
     /// </summary>
     public struct NavigationTarget : IComponentData
     {
-        public float2 targetPosition; // 8 bytes, final pos
-        public float stoppingDistance; // 4 bytes
-        public float slowdownDistance; // 4 bytes
-        public byte isMoving;
-        public byte reachedDestination;
-        public byte useFlowField;
-        // 19 bytes -> aligned to 24
+        public float2 targetPosition; // position of navigation target
+        public float2 flowFieldDirection; // direction from flow field (if used)
+        public float stoppingDistance; // distance at which to stop moving towards target
+        public float slowdownDistance; // distance at which to start slowing down
+        public byte isMoving; // whether the troop is currently moving towards a target
+        public byte reachedDestination; // whether the troop has reached its destination
+        public byte useFlowField; // whether to use flow field navigation or otherwise
+        // compiler auto-align?
     }
-    
+        
     /// <summary>
     /// Waypoint Progress
-    /// aligned to 8 bytes
     /// </summary>
     public struct WaypointProgress : IComponentData
     {
@@ -50,3 +49,4 @@ namespace Pathfinding.ECS
     /// </summary>
     public struct TroopTag : IComponentData { }
 }
+

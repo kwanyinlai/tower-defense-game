@@ -12,6 +12,7 @@ namespace Pathfinding.ECS
         public float deltaTime;
         private const float WAYPOINT_REACHED_DIST = 2f;
         private const float MIN_SPEED_MULTIPLIER = 0.2f;
+        private const float FLOW_FIELD_BLEND_RADIUS = 5f;
         
         void Execute(
             ref MovementData movement,
@@ -38,12 +39,31 @@ namespace Pathfinding.ECS
             
             float distance = math.sqrt(distSqr);
             
-            float2 direction = CalculateDirection(
-                currentPos,
-                nav.targetPosition,
-                waypoints,
-                ref progress
-            );
+            float2 direction;
+            
+            // Use flow field direction when available (respects costs and obstacles)
+            if (nav.useFlowField == 1 && math.lengthsq(nav.flowFieldDirection) > 0.001f)
+            {
+                direction = nav.flowFieldDirection;
+                
+                // Blend with direct direction when very close for smooth arrival
+                if (distance < FLOW_FIELD_BLEND_RADIUS)
+                {
+                    float2 directDir = math.normalizesafe(nav.targetPosition - currentPos);
+                    float blendFactor = 1f - (distance / FLOW_FIELD_BLEND_RADIUS);
+                    direction = math.normalizesafe(math.lerp(direction, directDir, blendFactor));
+                }
+            }
+            else
+            {
+                // Fall back to waypoint navigation
+                direction = CalculateDirection(
+                    currentPos,
+                    nav.targetPosition,
+                    waypoints,
+                    ref progress
+                );
+            }
             
             UpdateVelocityAndPosition(
                 ref movement,
@@ -115,30 +135,25 @@ namespace Pathfinding.ECS
                 );
             }
             
-            // Calculate desired velocity
             float2 desiredVelocity = direction * movement.maxSpeed * speedMultiplier;
             
-            // Smoothly lerp current velocity to desired velocity
+            // lerp to desired velo
             float lerpFactor = math.saturate(movement.acceleration * deltaTime);
             movement.velocity = math.lerp(movement.velocity, desiredVelocity, lerpFactor);
             
-            // Calculate movement delta
             float2 delta = movement.velocity * deltaTime;
             
-            // Prevent overshooting the goal
             if (math.lengthsq(delta) > distanceToGoal * distanceToGoal)
             {
                 delta = math.normalizesafe(delta) * distanceToGoal;
             }
             
-            // Update position
             transform.Position += new float3(delta.x, 0, delta.y);
             
-            // Update rotation to face movement direction
             if (math.lengthsq(movement.velocity) > 0.01f)
             {
                 float angle = math.atan2(movement.velocity.y, movement.velocity.x);
-                // Subtract PI/2 to align with Unity's forward = +Z axis
+                // -pi/2 to align with Unity's Z-axis
                 transform.Rotation = quaternion.Euler(0, angle - math.PI / 2, 0);
             }
         }

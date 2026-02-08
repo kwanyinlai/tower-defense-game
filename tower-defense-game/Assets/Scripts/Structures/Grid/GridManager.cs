@@ -210,6 +210,8 @@ public class GridManager : MonoBehaviour
         {
             Pathfinding.ECS.FlowFieldCacheInitializer.Instance.InvalidateFlowFieldsInArea(coordinates, size);
         }
+        
+        ReaggregateSectorCosts(gridPos, size);
     }
 
     public void StopOccupying(Vector3 coordinates, int2 size)
@@ -237,8 +239,34 @@ public class GridManager : MonoBehaviour
         {
             Pathfinding.ECS.FlowFieldCacheInitializer.Instance.InvalidateFlowFieldsInArea(coordinates, size);
         }
+        
+        ReaggregateSectorCosts(gridPos, size);
     }
     
+    private void ReaggregateSectorCosts(Vector3Int gridPos, int2 size)
+    {
+        // collect affected sectors
+        HashSet<GridSector> affectedSectors = new HashSet<GridSector>();
+        for (int x = gridPos.x; x < gridPos.x + size.x; x++)
+        {
+            for (int z = gridPos.z; z < gridPos.z + size.y; z++)
+            {
+                if (x >= 0 && x < GRID_WIDTH && z >= 0 && z < GRID_HEIGHT)
+                {
+                    GridSector sector = grid[x, z].gridSector;
+                    if (sector != null)
+                    {
+                        affectedSectors.Add(sector);
+                    }
+                }
+            }
+        }
+        // reaggregate
+        foreach (GridSector sector in affectedSectors)
+        {
+            sector.AggregateCosts();
+        }
+    }
 
     #endregion
 
@@ -357,7 +385,7 @@ public class GridManager : MonoBehaviour
     {
         return grid;
     }
-    
+
     /*
     Commenting out territory management for now. Want to remove territory altogether.
     #region Territory Management

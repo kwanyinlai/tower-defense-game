@@ -407,6 +407,7 @@ GameObject:
   m_Component:
   - component: {fileID: 67060902}
   - component: {fileID: 67060903}
+  - component: {fileID: 67060904}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -443,6 +444,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildableTilePrefab: {fileID: 0}
   buildableTileMaterial: {fileID: 2100000, guid: 3f8112578bd2c4ae0b0e182c72b850d5, type: 2}
+--- !u!114 &67060904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 67060901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bcba2d617824c088eae373a80b9e90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Grid.ECS.GridECSBridge
 --- !u!1 &71519438
 GameObject:
   m_ObjectHideFlags: 0
@@ -2600,8 +2613,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1426059170}
+  - component: {fileID: 1426059171}
+  - component: {fileID: 1426059172}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GridTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2622,6 +2637,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1426059171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426059169}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8958c5a9e5e48c9a4ce7f5f85a6f80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridECSBridgeTest
+  runTestsOnStart: 1
+  enableContinuousMonitoring: 1
+  testAreaCenter: {x: 0, y: 0, z: 0}
+  testAreaSize:
+    x: 5
+    y: 5
+  testRange: 3
+  drawGizmos: 1
+  normalTileColor: {r: 0, g: 1, b: 0, a: 0.3}
+  unwalkableTileColor: {r: 1, g: 0, b: 0, a: 0.6}
+--- !u!114 &1426059172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1426059169}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 751a6479fe04846199a66013d6bfbbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FlowFieldTest
+  runTestsOnStart: 1
+  testTargetPosition: {x: 50, y: 0, z: 50}
+  visualizeFlowFields: 1
+  showArrows: 1
+  showCostField: 0
+  arrowSize: 2
+  arrowSkip: 2
+  flowArrowColor: {r: 0, g: 1, b: 1, a: 0.8}
+  highCostColor: {r: 1, g: 0, b: 0, a: 1}
+  lowCostColor: {r: 0, g: 1, b: 0, a: 1}
+  manualTargetGrid:
+    x: 100
+    y: 100
 --- !u!1 &1468378131
 GameObject:
   m_ObjectHideFlags: 0
@@ -2703,6 +2765,7 @@ Transform:
   - {fileID: 15369980}
   - {fileID: 313983744}
   - {fileID: 973229857}
+  - {fileID: 1777482956}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1585556006
@@ -2719,7 +2782,7 @@ GameObject:
   - component: {fileID: 1585556008}
   - component: {fileID: 1585556007}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: PathfindingTestGeneration
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2737,17 +2800,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee80ca0d409454da8a213b68f4f2ce62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestPathfinding
-  pathfindingMode: 0
-  numberOfTestUnits: 10
+  pathfindingMode: 2
+  numberOfTestUnits: 300
   spawnOnStart: 1
-  testUnitPrefab: {fileID: 0}
   spawnAreaCenter: {x: 0, y: 0, z: 0}
-  spawnAreaRadius: 10
+  spawnAreaRadius: 200
   useRandomTargets: 1
   fixedTarget: {x: 0, y: 0, z: 0}
-  targetAreaRadius: 15
+  targetAreaRadius: 200
   maxSpeed: 5
   acceleration: 5
+  stoppingDistance: 1.5
+  slowdownDistance: 3
 --- !u!135 &1585556008
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2871,6 +2935,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1970383812}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1777482955
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1777482956}
+  - component: {fileID: 1777482957}
+  m_Layer: 0
+  m_Name: FlowFieldCacheManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1777482956
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777482955}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1509147517}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1777482957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1777482955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c91560b58be5d4c078f2639ee89b358b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Pathfinding.ECS.FlowFieldCacheInitializer
+  maxCachedFlowFields: 50
+  flowFieldRadius: 30
 --- !u!1 &1821067057
 GameObject:
   m_ObjectHideFlags: 0

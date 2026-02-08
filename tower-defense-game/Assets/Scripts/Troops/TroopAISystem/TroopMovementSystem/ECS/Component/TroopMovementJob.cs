@@ -20,8 +20,7 @@ namespace Pathfinding.ECS
             ref NavigationTarget nav,
             ref LocalTransform transform,
             in DynamicBuffer<WaypointElement> waypoints,
-            ref WaypointProgress progress,
-            in AgentAvoidanceData avoidance)
+            ref WaypointProgress progress)
         {
             if (nav.isMoving == 0 || nav.reachedDestination == 1) return;
             
@@ -64,15 +63,6 @@ namespace Pathfinding.ECS
                     nav.targetPosition,
                     waypoints,
                     ref progress
-                );
-            }
-            
-            // blend with agent-avoidance direction
-            if (avoidance.avoidanceStrength > 0.001f)
-            {
-                direction = math.normalizesafe(
-                    direction * (1f - avoidance.avoidanceStrength) +
-                    avoidance.avoidanceDirection * avoidance.avoidanceStrength
                 );
             }
             

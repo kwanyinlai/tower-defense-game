@@ -16,6 +16,7 @@ public class TroopSelectorRadius : MonoBehaviour
         GameObject obj = collision.gameObject;
         if(obj.CompareTag("Troop")) {
             PlayerTroopAI troopAI = obj.GetComponent<PlayerTroopAI>();
+            // Checks if not under selection to not double dip
             if(!troopAI.IsUnderSelection) {
                 troopAI.ShowCircle();
                 troopAIList.Add(troopAI);
@@ -40,6 +41,12 @@ public class TroopSelectorRadius : MonoBehaviour
 
     // Clears all troops in collision list
     public void ClearTroopsInRadius() {
+        foreach(PlayerTroopAI troop in troopAIList) {
+            if(troop != null) {
+                troop.HideCircle();
+            }
+        }
+        troopAIList.Clear();
         troopsInRadius.Clear();
     }
 }

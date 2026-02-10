@@ -11,6 +11,7 @@ public class Obstacle : MonoBehaviour
     [SerializeField] private bool autoCalculateSize = true;
     
     private bool isOccupying = false;
+    private Vector3 occupyOrigin;
 
     void Start()
     {
@@ -46,7 +47,7 @@ public class Obstacle : MonoBehaviour
             return col.bounds;
         }
 
-        // Fall back to Renderer
+        // fall back to Renderer
         Renderer rend = GetComponent<Renderer>();
         if (rend != null)
         {
@@ -63,8 +64,12 @@ public class Obstacle : MonoBehaviour
 
     private void OccupyGridArea()
     {
+        // Use bounds min corner so the grid occupation aligns with the actual visual obstacle,
+        // not shifted from the pivot/center
+        Bounds bounds = GetObjectBounds();
+        occupyOrigin = new Vector3(bounds.min.x, transform.position.y, bounds.min.z);
 
-        Vector3Int gridPos = GridManager.WorldPosFromCoordinates(transform.position);
+        Vector3Int gridPos = GridManager.WorldPosFromCoordinates(occupyOrigin);
         
         // Check if the area is valid
         if (gridPos.x < 0 || gridPos.x + size.x > GridManager.GRID_WIDTH ||
@@ -73,8 +78,8 @@ public class Obstacle : MonoBehaviour
             Debug.LogWarning($"Obstacle at {transform.position} is outside grid bounds.");
             return;
         }
-        Debug.Log($"Obstacle occupying grid from ({gridPos.x}, {gridPos.z}) size {size}");
-        GridManager.Instance.OccupyArea(transform.position, size, 0);
+        Debug.Log($"Obstacle '{gameObject.name}' occupying grid from ({gridPos.x}, {gridPos.z}) size {size} (boundsMin={bounds.min}, worldPos={transform.position})");
+        GridManager.Instance.OccupyArea(occupyOrigin, size, 0);
         
         isOccupying = true;
     }
@@ -86,7 +91,7 @@ public class Obstacle : MonoBehaviour
             return;
         }
 
-        GridManager.Instance.StopOccupying(transform.position, size);
+        GridManager.Instance.StopOccupying(occupyOrigin, size);
         isOccupying = false;
     }
 

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1008697391569570541}
   - component: {fileID: 2351891987776109727}
   m_Layer: 0
-  m_Name: Resource Building Outline
+  m_Name: Test3 Resource Building Outline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1788835670571768447}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.01, y: 2.36, z: -24}
+  m_LocalPosition: {x: 9.86553, y: 0.06801, z: 40.99096}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -64,6 +64,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -85,6 +87,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -136,8 +139,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2833cb099e1a499fa740be417f96269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 0, y: 0}
-  prefab: {fileID: 6364311553392659244, guid: 1e8d262e2776c604bb21002daf60d9d7, type: 3}
+  size:
+    x: 0
+    y: 0
+  prefab: {fileID: 2106481032723150418, guid: 8dc4e1f1ee8a6ef41bfbc4c6b5bbeb3d, type: 3}
   offset: 0
   bankruptMat: {fileID: 2100000, guid: 8ec7a937664bf46b7b417847b570f634, type: 2}
   normalMat: {fileID: 2100000, guid: a5692cbc034fe4c8698198a73f6f147b, type: 2}

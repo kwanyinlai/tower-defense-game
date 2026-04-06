@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BuildingBattleSystem : CombatSystem
+public class BuildingCombatSystem : CombatSystem
 {
     [Header("Building Properties")]
     [SerializeField] private float armor = 5f;

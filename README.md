@@ -1,6 +1,6 @@
 # Tower Defense / RTS Hybrid (INCOMPLETE)
 
-A Unity 6 prototype combining tower-defense and real-time strategy gameplay. Features a multi-tier pathfinding system, ORCA local avoidance, a DOTS/ECS parallel movement pipeline, and dynamic grid-based world representation.
+A Unity prototype combining tower-defense and real-time strategy gameplay. Features a multi-tier pathfinding system, ORCA local avoidance, a DOTS/ECS parallel movement pipeline, and dynamic grid-based world representation.
 
 <img width="475" height="315" alt="Screenshot 2026-04-03 at 7 10 18 PM" src="https://github.com/user-attachments/assets/995f0d39-e196-46d2-b28a-5cee5f8c848c" />
 
@@ -103,26 +103,4 @@ Assets/Scripts/
       └── WoodResourceNode.cs       Resource node
 ```
 
----
 
-## Dependencies
-
-| Package | Use |
-|---------|-----|
-| Entities (DOTS) | ECS movement pipeline |
-| Input System | Player input |
-| Cinemachine | Camera control |
-| AI Navigation | (supplementary nav mesh) |
-| URP | Rendering pipeline |
-
----
-
-## Scenes
-
-| Scene | Purpose |
-|-------|---------|
-| Start Menu | Main menu |
-| GameScene | Core gameplay |
-| TestScene | Pathfinding mode comparison harness |
-
----

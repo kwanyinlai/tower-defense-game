@@ -78,7 +78,9 @@ public class Obstacle : MonoBehaviour
             Debug.LogWarning($"Obstacle at {transform.position} is outside grid bounds.");
             return;
         }
+#if UNITY_EDITOR
         Debug.Log($"Obstacle '{gameObject.name}' occupying grid from ({gridPos.x}, {gridPos.z}) size {size} (boundsMin={bounds.min}, worldPos={transform.position})");
+#endif
         GridManager.Instance.OccupyArea(occupyOrigin, size, 0);
         
         isOccupying = true;

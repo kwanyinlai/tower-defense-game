@@ -3,7 +3,7 @@ using UnityEngine;
 public interface ILocalAvoidance
 {
     /// <summary>
-    /// Adjust the current direction to avoid obstaclces naerby
+    /// Adjust the current direction to avoid obstacles nearby
     /// </summary>
     /// <param name="currentPosition">Current position of the troop</param>
     /// <param name="desiredDirection">The original direction.</param>

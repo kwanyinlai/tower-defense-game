@@ -62,7 +62,7 @@ namespace Grid.ECS
         
         public void SyncGridChanges()
         {
-            if (!isInitialized) return;
+            if (!isInitialized || !entityManager.IsCreated || !entityManager.Exists(gridDataEntity)) return;
             
             var gridData = entityManager.GetComponentData<GridDataSingleton>(gridDataEntity);
             SyncGridToECS(gridData.walkCosts);
@@ -84,13 +84,14 @@ namespace Grid.ECS
         
         void OnDestroy()
         {
-            if (isInitialized && entityManager != default)
+            if (isInitialized && entityManager.IsCreated && entityManager.Exists(gridDataEntity))
             {
                 var gridData = entityManager.GetComponentData<GridDataSingleton>(gridDataEntity);
                 if (gridData.walkCosts.IsCreated)
                 {
                     gridData.walkCosts.Dispose();
                 }
+                entityManager.DestroyEntity(gridDataEntity);
             }
         }
     }

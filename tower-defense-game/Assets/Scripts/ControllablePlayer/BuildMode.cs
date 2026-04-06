@@ -4,11 +4,11 @@ using UnityEngine;
 public class BuildMode : MonoBehaviour
 {
     // Building Parents (for organization)
-    [SerializeField] private GameObject buildingStructureParentClass
-    ;
+    [SerializeField] private GameObject buildingStructureParentClass;
     [SerializeField]
-    private GameObject buildingStructureOutlineParentClass
-    ;
+    private GameObject buildingStructureOutlineParentClass;
+
+    
 
     private PlayerManager playerData;
 
@@ -56,6 +56,7 @@ public class BuildMode : MonoBehaviour
             CloseBuildMenu();
         }
 
+
     }
 
     void StopPlacingBuilding()
@@ -66,7 +67,7 @@ public class BuildMode : MonoBehaviour
         }
         cameraController.DeactivateBuildCam();
 
-        gridManager.ClearBuildGrid();
+        gridManager.ClearBuildableGridOverlay();
     }
 
     void PlayerDecidingBuildingPlacement()
@@ -132,7 +133,7 @@ public class BuildMode : MonoBehaviour
     {
         // TODO: who's calling this
         buildMenu.SetActive(false);
-        gridManager.DrawBuildGrid();
+        gridManager.DrawBuildableGridOverlay();
     }
 
     public void SetActiveBuilding(int selection)

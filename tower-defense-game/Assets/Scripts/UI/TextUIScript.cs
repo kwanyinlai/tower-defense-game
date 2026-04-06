@@ -25,7 +25,7 @@ public class TextUIScript : MonoBehaviour
         int wave = waveScript.waveNum;
         string text = "Wave: " + wave + "\n";
         text += ResourcePool.getResourceText();
-        text += "Base health: " + BaseBattleSystem.getHealth() + "\n";
+        // text += "Base health: " + BaseBattleSystem.getHealth() + "\n";
         infoText.text = text;
     }
 }

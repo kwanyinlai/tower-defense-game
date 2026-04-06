@@ -14,7 +14,7 @@ public class StructureMenu : MonoBehaviour
     private Material defaultMaterial = null;
     
     // For Buildings
-    private StructureBattleSystem selectedSBSScript = null;
+    private BuildingBattleSystem selectedSBSScript = null;
     private Building selectedBuildingScript = null;
 
     // For Troops
@@ -110,7 +110,7 @@ public class StructureMenu : MonoBehaviour
 
     private void SetupBuildingUI(GameObject highlightedObject)
     {
-        selectedSBSScript = highlightedObject.GetComponent<StructureBattleSystem>();
+        selectedSBSScript = highlightedObject.GetComponent<BuildingBattleSystem>();
         selectedBuildingScript = highlightedObject.GetComponent<Building>(); 
         
         selectedObject = highlightedObject;
@@ -165,7 +165,7 @@ public class StructureMenu : MonoBehaviour
     private void SellBuilding()
     {
         ResourcePool.AddResource(selectedBuildingScript.GetSellResources());
-        Vector3Int structPost = GridManager.CoordinatesToGrid(selectedObject.transform.position);
+        Vector3 structPost = GridManager.WorldPosFromCoordinates(selectedObject.transform.position);
         gridManager.StopOccupying(selectedObject.transform.position, CalculateOccupyingSize());
         selectedSBSScript.TakeDamage(100000);
         selectedObject = null;
@@ -187,8 +187,8 @@ public class StructureMenu : MonoBehaviour
     int2 CalculateOccupyingSize()
     {
         MeshRenderer meshRenderer = selectedBuildingScript.building_model.GetComponent<MeshRenderer>();
-        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
-                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
+        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.TILE_SIZE), 
+                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.TILE_SIZE) );
     }
 
     private void UnhighlightObject()

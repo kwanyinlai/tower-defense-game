@@ -52,8 +52,8 @@ public class Placeable : MonoBehaviour
     }
 
     int2 CalculateOccupyingSize(){
-        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.tileSize), 
-                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.tileSize) );
+        return new int2(Mathf.CeilToInt( meshRenderer.bounds.size.x / GridManager.TILE_SIZE), 
+                Mathf.CeilToInt(meshRenderer.bounds.size.z / GridManager.TILE_SIZE) );
     }
 
     public bool IsBuildable(Vector3 placementPosition){

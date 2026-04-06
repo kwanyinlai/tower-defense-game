@@ -4,50 +4,74 @@ using System.Collections.Generic;
 public class TroopCombatSystem : CombatSystem
 {
     [Header("Combat Attributes")]
-    [SerializeField] protected int atk = 10;
-    public int Attack
-    {
-        get { return atk; }
-        set { atk = value; }
+    [SerializeField] private int atk = 10;
+    public int Attack 
+    { 
+        get => atk; 
+        set => atk = value; 
     }
 
-    [SerializeField] protected float attackRange = 5.0f;
-    public float AttackRange { get { return attackRange; } set { attackRange = value; } }
+    [SerializeField] private float attackRange = 5.0f;
+    public float AttackRange 
+    { 
+        get => attackRange; 
+        set => attackRange = value; 
+    }
 
-    protected float atkCooldown { get; set; } = 1.5f;
-    protected float atkTimer { get; set; } = 0f;
+    [SerializeField] private float atkCooldown = 1.5f;
+    private float atkTimer = 0f;
 
     protected override void Start()
     {
         base.Start();
-        currentHealth = maxHealth;
-        tagList = new HashSet<string>(viewableTagList);
     }
 
-    public void DecrementAttackCoooldown(float deltaTime)
+    public void UpdateCombat(float deltaTime)
     {
-        if (atkTimer > 0f) { atkTimer -= deltaTime; }
+        // attack timer
+        if (atkTimer > 0f)
+        {
+            atkTimer -= deltaTime;
+        }
 
+        // status effects
+        UpdateEffects(deltaTime);
     }
 
+    public bool CanAttack() => atkTimer <= 0f && !HasEffect(StatusClass.Stun);
+
+    public void ResetAttackCooldown() => atkTimer = atkCooldown;
+
+    public int GetModifiedAttack()
+    {
+        float buffed = Attack * (1f + GetEffectStrength(StatusClass.AttackBuff));
+        float weakened = buffed * (1f - GetEffectStrength(StatusClass.AttackDebuff));
+        return Mathf.RoundToInt(weakened);
+    }
+
+    public float GetModifiedSpeed(float baseSpeed)
+    {
+        if (HasEffect(StatusClass.Stun)) return 0f;
         
-    public bool CanAttack()
-    {
-        return atkTimer <= 0f;
-    }
-    
-    public void ResetAttackCooldown()
-    {
-        atkTimer = atkCooldown;
+        float slow = GetEffectStrength(StatusClass.Slow);
+        float haste = GetEffectStrength(StatusClass.Haste);
+        return baseSpeed * (1f - slow + haste);
     }
 
     protected override void Die()
     {
-        GetComponent<TroopAI>().RemoveEntityFromAliveList();
-        foreach(GameObject player in PlayerManager.players){
-            List<GameObject> list = player.GetComponent<TroopManagment>().SelectedTroops;
-            if (list.Contains(gameObject)){
-                list.Remove(gameObject);
+        TroopAI troopAI = GetComponent<TroopAI>();
+        if (troopAI != null && FactionManager.Instance != null)
+        {
+            FactionManager.Instance.UnregisterTroop(transform, troopAI.GetFaction());
+        }
+
+        foreach (GameObject player in PlayerManager.players)
+        {
+            List<GameObject> selectedTroops = player.GetComponent<TroopManagement>().SelectedTroops;
+            if (selectedTroops.Contains(gameObject))
+            {
+                selectedTroops.Remove(gameObject);
                 break;
             }
         }

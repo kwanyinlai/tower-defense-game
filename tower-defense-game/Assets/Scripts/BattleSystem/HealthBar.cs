@@ -33,7 +33,12 @@ public class HealthBar : MonoBehaviour
 
     void UpdateHealthBar()
     {
-        float healthPercentage = health.GetPercentageHP();
+        if (health == null)
+        {
+            return;
+        }
+        
+        float healthPercentage = health.GetHealthPercent();
         healthSlider.value = healthPercentage;
        
         if (healthPercentage<1 && timer <= timeToFade)

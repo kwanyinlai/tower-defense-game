@@ -10,7 +10,7 @@ namespace Grid.ECS
     public struct GridDataSingleton : IComponentData
     {
         // flattened; index = x + y * width
-        [ReadOnly] public NativeArray<float> walkCosts;
+        public NativeArray<float> walkCosts;
         
         public int width;
         public int height;

@@ -93,6 +93,7 @@ public class TroopManagement : MonoBehaviour
     void StopAndClearSelecting()
     {
         isManagingTroops = false;
+        selectedTroops.Clear();
     }
 
     void SelectTroops()

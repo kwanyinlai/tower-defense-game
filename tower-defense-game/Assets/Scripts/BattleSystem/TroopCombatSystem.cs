@@ -60,8 +60,11 @@ public class TroopCombatSystem : CombatSystem
 
     protected override void Die()
     {
-        // TODO: fix this to not be constant
-        FactionManager.Instance.UnregisterTroop(transform, TroopFaction.Player);
+        TroopAI troopAI = GetComponent<TroopAI>();
+        if (troopAI != null && FactionManager.Instance != null)
+        {
+            FactionManager.Instance.UnregisterTroop(transform, troopAI.GetFaction());
+        }
 
         foreach (GameObject player in PlayerManager.players)
         {

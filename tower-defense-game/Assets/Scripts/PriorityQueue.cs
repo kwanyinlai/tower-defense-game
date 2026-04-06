@@ -9,7 +9,7 @@ public class PriorityQueue<T>
 {
     private readonly List<(T Item, float Priority)> _heap = new();
 
-    public float Count => _heap.Count;
+    public int Count => _heap.Count;
 
     public void Enqueue(T item, float priority)
     {

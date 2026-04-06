@@ -238,6 +238,14 @@ public class TroopAI : MonoBehaviour
         movementSystem.SetTarget(position);
     }
 
+    public void CommandMoveToWithFlowField(Vector3 position)
+    {
+        // group command — use shared flow field for efficient group navigation
+        currentTarget = null;
+        currentState = TroopState.MovingToTarget;
+        movementSystem.SetTargetWithFlowField(position);
+    }
+
 
     public void OnDeath()
     {

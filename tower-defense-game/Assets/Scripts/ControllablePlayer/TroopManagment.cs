@@ -135,14 +135,32 @@ public class TroopManagement : MonoBehaviour
             deployedPoint = Waypoint.FindNearestWaypoint(waypointPosition);
         }
         
+        Vector3 destination = deployedPoint.transform.position;
+
+        // use shared flow field if commanding multiple troops to same location
+        bool useFlowField = selectedTroops.Count >= 3;
+        if (useFlowField && PathfindingManager.Instance != null)
+        {
+            PathfindingManager.Instance.RequestSharedFlowField(destination);
+        }
+
+        // Compute spread positions so troops don't all converge on the exact same point
+        Vector3[] spreadPositions = DestinationSpreader.ComputeSpreadPositions(
+            destination, selectedTroops.Count);
+        int troopIndex = 0;
+
         foreach (GameObject troop in selectedTroops)
         {
-            if (troop == null) continue;
+            if (troop == null) { troopIndex++; continue; }
             
             TroopAI controller = troop.GetComponent<TroopAI>();
             if (controller != null)
             {
-                controller.CommandMoveTo(deployedPoint.transform.position);
+                Vector3 personalTarget = spreadPositions[troopIndex];
+                if (useFlowField)
+                    controller.CommandMoveToWithFlowField(personalTarget);
+                else
+                    controller.CommandMoveTo(personalTarget);
             }
             
             // TODO: remove this maybe? new controller means this might be redundant but we will see
@@ -151,6 +169,8 @@ public class TroopManagement : MonoBehaviour
             {
                 waypointComponent.troopsBound.Add(troop);
             }
+
+            troopIndex++;
         }
 
         StopAndClearSelecting();

@@ -206,9 +206,9 @@ public class GridManager : MonoBehaviour
             ecsBridge.SyncGridChanges();
         }
         
-        if (Pathfinding.ECS.FlowFieldCacheInitializer.Instance != null)
+        if (PathfindingManager.Instance != null)
         {
-            Pathfinding.ECS.FlowFieldCacheInitializer.Instance.InvalidateFlowFieldsInArea(coordinates, size);
+            PathfindingManager.Instance.InvalidateFlowFieldsInArea(coordinates, size);
         }
         
         ReaggregateSectorCosts(gridPos, size);
@@ -235,9 +235,9 @@ public class GridManager : MonoBehaviour
             ecsBridge.SyncGridChanges();
         }
         
-        if (Pathfinding.ECS.FlowFieldCacheInitializer.Instance != null)
+        if (PathfindingManager.Instance != null)
         {
-            Pathfinding.ECS.FlowFieldCacheInitializer.Instance.InvalidateFlowFieldsInArea(coordinates, size);
+            PathfindingManager.Instance.InvalidateFlowFieldsInArea(coordinates, size);
         }
         
         ReaggregateSectorCosts(gridPos, size);

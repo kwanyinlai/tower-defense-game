@@ -6,12 +6,21 @@ using Unity.Transforms;
 
 namespace Pathfinding.ECS
 {
+    /// <summary>
+    /// Burst-compiled job that APPLIES the velocity computed by ORCASystem to position/rotation.
+    ///
+    /// ORCASystem handles:  direction → preferred velocity → ORCA adjustment → MovementData.velocity
+    /// This job handles:    MovementData.velocity → position + rotation update
+    ///
+    /// For entities WITHOUT AvoidanceAgent, this job also computes direction + velocity
+    /// as a fallback (same 3-tier logic as before).
+    /// </summary>
     [BurstCompile(FloatPrecision.Standard, FloatMode.Fast)]
     public partial struct TroopMovementJob : IJobEntity
     {
         public float deltaTime;
         
-        private const float WAYPOINT_REACHED_DIST = 2f;
+        private const float WAYPOINT_REACHED_DIST = 4f;
         private const float MIN_SPEED_MULTIPLIER = 0.2f;
         private const float FLOW_FIELD_BLEND_RADIUS = 5f;
         
@@ -25,7 +34,6 @@ namespace Pathfinding.ECS
             if (nav.isMoving == 0 || nav.reachedDestination == 1) return;
             
             float2 currentPos = new float2(transform.Position.x, transform.Position.z);
-            
             float distSqr = math.distancesq(currentPos, nav.targetPosition);
             float stopDistSqr = nav.stoppingDistance * nav.stoppingDistance;
             
@@ -38,152 +46,145 @@ namespace Pathfinding.ECS
             
             float distance = math.sqrt(distSqr);
             
-            UpdateTargetWaypoint(currentPos, waypoints, ref progress);
-            
-            float2 direction;
-            
-            // try use flow field
-            if (nav.useFlowField == 1 && math.lengthsq(nav.flowFieldDirection) > 0.001f)
+            // Apply velocity to position (velocity was already set by ORCASystem)
+            // For entities without AvoidanceAgent, ORCASystem won't touch them,
+            // so we compute velocity here as fallback
+            if (math.lengthsq(movement.velocity) < 1e-8f && nav.isMoving == 1)
             {
-                direction = nav.flowFieldDirection;
-                
-                // blend with direct path when close to target to prevent overshooting
-                if (distance < FLOW_FIELD_BLEND_RADIUS)
+                // Fallback: compute direction + velocity for non-ORCA entities
+                float2 direction;
+                switch (nav.navigationMode)
                 {
-                    float2 directDir = math.normalizesafe(nav.targetPosition - currentPos);
-                    float blendFactor = 1f - (distance / FLOW_FIELD_BLEND_RADIUS);
-                    direction = math.normalizesafe(math.lerp(direction, directDir, blendFactor));
+                    case 0: direction = math.normalizesafe(nav.targetPosition - currentPos); break;
+                    case 1: direction = GetWaypointDirection(currentPos, nav.targetPosition, waypoints, ref progress); break;
+                    case 2: direction = GetFlowFieldDirection(currentPos, nav, distance); break;
+                    default: direction = math.normalizesafe(nav.targetPosition - currentPos); break;
                 }
-            }
-            else
-            {
-                // fall back to waypoint
-                direction = CalculateDirection(
-                    currentPos,
-                    nav.targetPosition,
-                    waypoints,
-                    ref progress
-                );
+
+                float speedMul = 1f;
+                if (distance < nav.slowdownDistance)
+                    speedMul = math.clamp(distance / nav.slowdownDistance, MIN_SPEED_MULTIPLIER, 1f);
+
+                float2 desiredVel = direction * movement.maxSpeed * speedMul;
+                float lerpFactor = math.saturate(movement.acceleration * deltaTime);
+                movement.velocity = math.lerp(movement.velocity, desiredVel, lerpFactor);
             }
             
-            UpdateVelocityAndPosition(
-                ref movement,
-                ref transform,
-                direction,
-                distance,
-                nav.slowdownDistance,
-                deltaTime
-            );
+            // Advance waypoint progress for entities using waypoints
+            if (nav.navigationMode == 1)
+            {
+                AdvanceWaypoints(currentPos, waypoints, ref progress);
+            }
+
+            // Apply position
+            float2 delta = movement.velocity * deltaTime;
+            if (math.lengthsq(delta) > distance * distance)
+            {
+                delta = math.normalizesafe(delta) * distance;
+            }
+            
+            transform.Position += new float3(delta.x, 0, delta.y);
+            
+            // Apply rotation
+            if (math.lengthsq(movement.velocity) > 0.01f)
+            {
+                float angle = math.atan2(movement.velocity.y, movement.velocity.x);
+                transform.Rotation = quaternion.Euler(0, angle - math.PI / 2, 0);
+            }
         }
         
-        // advance the waypoint index if we've reached the current waypoint.
-        void UpdateTargetWaypoint(
+        /// <summary>
+        /// Advance waypoint index past reached/overshot waypoints.
+        /// </summary>
+        void AdvanceWaypoints(
             float2 currentPos,
             in DynamicBuffer<WaypointElement> waypoints,
             ref WaypointProgress progress)
         {
-            if (progress.totalCount == 0 || waypoints.Length == 0)
-                return;
+            if (progress.totalCount == 0 || waypoints.Length == 0) return;
             
-            const float reachedDistSqr = WAYPOINT_REACHED_DIST * WAYPOINT_REACHED_DIST;
+            float reachedSqr = WAYPOINT_REACHED_DIST * WAYPOINT_REACHED_DIST;
             
             while (progress.currentIndex < progress.totalCount && 
                    progress.currentIndex < waypoints.Length)
             {
-                float3 wp = waypoints[progress.currentIndex].position;
-                float2 wpPos = new float2(wp.x, wp.z);
+                float3 wp3 = waypoints[progress.currentIndex].position;
+                float2 wp = new float2(wp3.x, wp3.z);
+                float distSqr = math.distancesq(currentPos, wp);
                 
-                if (math.distancesq(currentPos, wpPos) < reachedDistSqr)
+                if (distSqr < reachedSqr) { progress.currentIndex++; continue; }
+                
+                if (progress.currentIndex + 1 < waypoints.Length &&
+                    progress.currentIndex + 1 < progress.totalCount)
                 {
-                    progress.currentIndex++;
+                    float3 nextWp3 = waypoints[progress.currentIndex + 1].position;
+                    float2 nextWp = new float2(nextWp3.x, nextWp3.z);
+                    if (math.distancesq(currentPos, nextWp) < math.distancesq(wp, nextWp))
+                    { progress.currentIndex++; continue; }
                 }
-                else
-                {
-                    break;
-                }
+                break;
             }
         }
         
-        float2 CalculateDirection(
+        /// <summary>
+        /// Waypoint direction (fallback for non-ORCA entities).
+        /// </summary>
+        float2 GetWaypointDirection(
             float2 currentPos,
             float2 finalTarget,
             in DynamicBuffer<WaypointElement> waypoints,
             ref WaypointProgress progress)
         {
-            // no waypoints - straight to target
             if (progress.totalCount == 0 || waypoints.Length == 0)
-            {
                 return math.normalizesafe(finalTarget - currentPos);
-            }
             
-            if (progress.currentIndex >= waypoints.Length || progress.currentIndex >= progress.totalCount)
+            float reachedSqr = WAYPOINT_REACHED_DIST * WAYPOINT_REACHED_DIST;
+            
+            while (progress.currentIndex < progress.totalCount && 
+                   progress.currentIndex < waypoints.Length)
             {
-                return math.normalizesafe(finalTarget - currentPos);
-            }
-            
-            float3 waypointPos3D = waypoints[progress.currentIndex].position;
-            float2 waypointPos = new float2(waypointPos3D.x, waypointPos3D.z);
-            
-            float waypointDistanceSqr = math.distancesq(currentPos, waypointPos);
-            const float waypointReachedDistanceSqr = WAYPOINT_REACHED_DIST * WAYPOINT_REACHED_DIST;
-            
-            if (waypointDistanceSqr < waypointReachedDistanceSqr)
-            {
-                progress.currentIndex++;
+                float3 wp3 = waypoints[progress.currentIndex].position;
+                float2 wp = new float2(wp3.x, wp3.z);
+                float distSqr = math.distancesq(currentPos, wp);
                 
-                // last waypoint check
-                if (progress.currentIndex >= progress.totalCount || progress.currentIndex >= waypoints.Length)
+                if (distSqr < reachedSqr) { progress.currentIndex++; continue; }
+                
+                if (progress.currentIndex + 1 < waypoints.Length &&
+                    progress.currentIndex + 1 < progress.totalCount)
                 {
-                    return math.normalizesafe(finalTarget - currentPos);
+                    float3 nextWp3 = waypoints[progress.currentIndex + 1].position;
+                    float2 nextWp = new float2(nextWp3.x, nextWp3.z);
+                    if (math.distancesq(currentPos, nextWp) < math.distancesq(wp, nextWp))
+                    { progress.currentIndex++; continue; }
                 }
-                
-                waypointPos3D = waypoints[progress.currentIndex].position;
-                waypointPos = new float2(waypointPos3D.x, waypointPos3D.z);
+                break;
             }
             
-            // move curr
-            return math.normalizesafe(waypointPos - currentPos);
+            if (progress.currentIndex >= progress.totalCount || 
+                progress.currentIndex >= waypoints.Length)
+                return math.normalizesafe(finalTarget - currentPos);
+            
+            float3 targetWp3 = waypoints[progress.currentIndex].position;
+            float2 targetWp = new float2(targetWp3.x, targetWp3.z);
+            return math.normalizesafe(targetWp - currentPos);
         }
         
-        void UpdateVelocityAndPosition(
-            ref MovementData movement,
-            ref LocalTransform transform,
-            float2 direction,
-            float distanceToGoal,
-            float slowdownDistance,
-            float deltaTime)
+        /// <summary>
+        /// Flow field direction with blend (fallback for non-ORCA entities).
+        /// </summary>
+        float2 GetFlowFieldDirection(float2 currentPos, NavigationTarget nav, float distance)
         {
-            float speedMultiplier = 1f;
-            if (distanceToGoal < slowdownDistance)
+            float2 direction = nav.flowFieldDirection;
+            if (math.lengthsq(direction) < 0.001f)
+                return math.normalizesafe(nav.targetPosition - currentPos);
+            
+            if (distance < FLOW_FIELD_BLEND_RADIUS)
             {
-                speedMultiplier = math.clamp(
-                    distanceToGoal / slowdownDistance,
-                    MIN_SPEED_MULTIPLIER,
-                    1f
-                );
+                float2 directDir = math.normalizesafe(nav.targetPosition - currentPos);
+                float blendFactor = 1f - (distance / FLOW_FIELD_BLEND_RADIUS);
+                direction = math.normalizesafe(math.lerp(direction, directDir, blendFactor));
             }
-            
-            float2 desiredVelocity = direction * movement.maxSpeed * speedMultiplier;
-            
-            // lerp to desired velo
-            float lerpFactor = math.saturate(movement.acceleration * deltaTime);
-            movement.velocity = math.lerp(movement.velocity, desiredVelocity, lerpFactor);
-            
-            float2 delta = movement.velocity * deltaTime;
-            
-            if (math.lengthsq(delta) > distanceToGoal * distanceToGoal)
-            {
-                delta = math.normalizesafe(delta) * distanceToGoal;
-            }
-            
-            transform.Position += new float3(delta.x, 0, delta.y);
-            
-            if (math.lengthsq(movement.velocity) > 0.01f)
-            {
-                float angle = math.atan2(movement.velocity.y, movement.velocity.x);
-                // -pi/2 to align with Unity's Z-axis
-                transform.Rotation = quaternion.Euler(0, angle - math.PI / 2, 0);
-            }
+            return direction;
         }
     }
 }

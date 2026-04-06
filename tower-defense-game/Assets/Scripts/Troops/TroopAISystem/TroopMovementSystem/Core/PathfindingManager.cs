@@ -1,9 +1,13 @@
-// TODO: need DOTS optimisation and multi target, flowfield reuse maybe, cached HPA*
-
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Mathematics;
 
+/// <summary>
+/// Simplified 3-tier pathfinding:
+///   1. Direct steering   — short range (< directSteerDistance)
+///   2. A* on node grid   — long range, per-agent
+///   3. Shared flow field  — group commands to same destination
+/// </summary>
 public class PathfindingManager : MonoBehaviour
 {
     public static PathfindingManager Instance { get; private set; }
@@ -12,24 +16,39 @@ public class PathfindingManager : MonoBehaviour
 
     [Header("Performance Settings")]
     [SerializeField] private int maxPathRequestsPerFrame = 5;
-    [SerializeField] private int maxFlowFieldsInCache = 50;
-    
+
+    [Header("Navigation Thresholds")]
+    [Tooltip("Below this distance, troops steer directly (no pathfinding)")]
+    [SerializeField] private float directSteerDistance = 15f;
+
+    [Tooltip("Number of troops sharing a destination before a flow field is generated")]
+    [SerializeField] private int flowFieldGroupThreshold = 3;
+
     [Header("Flow Field Settings")]
-    [SerializeField] private int flowFieldRadius = 30;
-    [SerializeField] private float flowFieldActivationDistance = 30f;
+    [Tooltip("Maximum shared flow fields kept alive at once")]
+    [SerializeField] private int maxSharedFlowFields = 10;
+
+    [Tooltip("How close two destinations must be (in grid tiles) to share a flow field")]
+    [SerializeField] private float flowFieldMergeDistance = 3f;
+
     [SerializeField] private float flowFieldBlendRadius = 5f;
-    [SerializeField] private float flowFieldSeedDistance = 25f; // max distance for sharing seed data
+
+    [Header("Debug Visualization")]
+    [SerializeField] private bool drawSharedFlowFieldGizmos = true;
+    [SerializeField] private int debugSampleRadius = 10;
+    [SerializeField] private float debugArrowLength = 0.6f;
+    [SerializeField] private Color debugFlowArrowColor = Color.cyan;
+    [SerializeField] private Color debugGoalColor = Color.red;
 
     #endregion
-    
+
     private Queue<PathRequest> pathRequestQueue = new Queue<PathRequest>();
-    
-    // TODO: use a LRU cache
-    private Dictionary<int2, FlowField> flowFieldCache = new Dictionary<int2, FlowField>();
-    
-    // TODO: perhaps adapt this to be efficient with a quadtree; we can experiment with different
-    // DS for efficiency
-    private Dictionary<int2, List<int2>> tileCoverage = new Dictionary<int2, List<int2>>();
+
+    // Shared flow fields keyed by destination grid tile
+    private Dictionary<int2, FlowField> sharedFlowFields = new Dictionary<int2, FlowField>();
+
+    // Track how many agents are using each shared flow field
+    private Dictionary<int2, int> flowFieldRefCounts = new Dictionary<int2, int>();
 
     private void Awake()
     {
@@ -46,10 +65,48 @@ public class PathfindingManager : MonoBehaviour
         ProcessPathRequests();
     }
 
-    #region Path Requests
+    #region Navigation Mode Selection
+
+    /// <summary>
+    /// Determines the best navigation mode for a troop given its distance to target.
+    /// <summary>
+    /// Determines the best navigation mode for a single troop given its distance to target.
+    /// Only chooses between DirectSteer and AStarWaypoints.
+    /// SharedFlowField is only used via explicit group commands (SetTargetWithFlowField).
+    /// </summary>
+    public NavigationMode GetNavigationMode(Vector3 currentPosition, Vector3 targetPosition)
+    {
+        float distance = Vector3.Distance(currentPosition, targetPosition);
+
+        if (distance <= directSteerDistance)
+        {
+            return NavigationMode.DirectSteer;
+        }
+
+        return NavigationMode.AStarWaypoints;
+    }
+
+    #endregion
+
+    #region Path Requests (A* tier)
 
     public void RequestPath(Vector3 startPosition, Vector3 targetPosition, System.Action<PathResult> callback)
     {
+        // short range — skip pathfinding entirely
+        float distance = Vector3.Distance(startPosition, targetPosition);
+        if (distance <= directSteerDistance)
+        {
+            callback?.Invoke(new PathResult
+            {
+                success = true,
+                waypoints = new List<Vector3> { targetPosition },
+                startPosition = startPosition,
+                targetPosition = targetPosition,
+                navigationMode = NavigationMode.DirectSteer
+            });
+            return;
+        }
+
         PathRequest request = new PathRequest
         {
             startPosition = startPosition,
@@ -57,7 +114,7 @@ public class PathfindingManager : MonoBehaviour
             callback = callback,
             requestTime = Time.time
         };
-        
+
         pathRequestQueue.Enqueue(request);
     }
 
@@ -74,280 +131,298 @@ public class PathfindingManager : MonoBehaviour
         }
     }
 
-    #endregion
-
-    #region Path Generation
-
     private PathResult GeneratePath(PathRequest request)
     {
-        Vector3Int startNodeCoordinates = GridManager.WorldPosFromCoordinates(request.startPosition);
-        Vector3Int targetNodeCoordinates = GridManager.WorldPosFromCoordinates(request.targetPosition);
-        GridNode startNode = GridManager.Instance.NodeFromGridCoordinate(startNodeCoordinates);
-        GridNode targetNode = GridManager.Instance.NodeFromGridCoordinate(targetNodeCoordinates);
+        // A* directly on the 200x200 grid
+        List<Vector3> waypoints = GridPathfinder.FindPath(request.startPosition, request.targetPosition);
 
-        // invalid path query
-        if (startNode == null || targetNode == null)
+        if (waypoints == null || waypoints.Count == 0)
         {
             return new PathResult { success = false };
         }
-
-        // generate high level sector path
-        List<GridSector> sectorPath = SectorManager.Instance.GenerateHighLevelSectorPath(
-            startNode.gridSector, 
-            targetNode.gridSector
-        );
-
-        // too close to generate a waypoint path
-        if (sectorPath == null || sectorPath.Count == 0)
-        {
-            return new PathResult { success = false };
-        }
-
-        List<Vector3> waypoints = WaypointPathBuilder.GenerateWaypoints(
-            sectorPath,
-            startNodeCoordinates,
-            targetNodeCoordinates
-        );
 
         return new PathResult
         {
             success = true,
             waypoints = waypoints,
-            sectorPath = sectorPath,
             startPosition = request.startPosition,
-            targetPosition = request.targetPosition
+            targetPosition = request.targetPosition,
+            navigationMode = NavigationMode.AStarWaypoints
         };
     }
 
     #endregion
 
-    #region Flow Field Management
+    #region Shared Flow Fields (group command tier)
 
-    public Vector3 GetFlowFieldDirection(Vector3 currentPosition, Vector3 targetPosition)
+    /// <summary>
+    /// Request a shared flow field for a group command destination.
+    /// Multiple troops going to the same place share one field.
+    /// Returns the flow field direction at the given position.
+    /// </summary>
+    public Vector3 GetSharedFlowFieldDirection(Vector3 currentPosition, Vector3 targetPosition)
     {
-        Vector3Int targetGridPos = GridManager.WorldPosFromCoordinates(targetPosition);
-        int2 targetGrid = new int2(targetGridPos.x, targetGridPos.z);
+        int2 targetGrid = WorldToGrid(targetPosition);
+        FlowField field = FindMatchingFlowField(targetGrid);
 
-        // use existing flow field
-        if (flowFieldCache.TryGetValue(targetGrid, out FlowField exactMatch))
+        if (field != null)
         {
-            exactMatch.lastAccessed = Time.time;
-            return exactMatch.GetDirectionAt(currentPosition);
+            field.lastAccessed = Time.time;
+            return field.GetDirectionAt(currentPosition);
         }
 
-        // use seeding to speed up generating
-        FlowField newField = CreateFlowFieldWithSeeding(targetGrid);
-        return newField.GetDirectionAt(currentPosition);
+        // fallback to direct steering
+        return (targetPosition - currentPosition).normalized;
     }
 
-
-    private FlowField CreateFlowFieldWithSeeding(int2 targetGrid)
+    /// <summary>
+    /// Called when a group of troops is commanded to move to a shared destination.
+    /// Creates a full-map flow field for that destination if one doesn't exist.
+    /// </summary>
+    public void RequestSharedFlowField(Vector3 targetPosition)
     {
-        // seeding approach using existing flow fields to avoid repeat computations
-        List<FlowField> seedFields = FindSeedFlowFields(targetGrid);
+        int2 targetGrid = WorldToGrid(targetPosition);
 
-        FlowField newField;
-        
-        if (seedFields.Count > 0)
+        if (FindMatchingFlowField(targetGrid) != null)
         {
-            newField = FlowFieldBuilder.CreateRegionalWithSeed(targetGrid, flowFieldRadius, seedFields);
+            return; // already exists
         }
-        else
-        {
-            // create from scratch
-            newField = FlowFieldBuilder.CreateRegional(targetGrid, flowFieldRadius);
-        }
-        // update access
-        newField.lastAccessed = Time.time;
 
-        // manage cache
-        if (flowFieldCache.Count >= maxFlowFieldsInCache)
+        // evict oldest if at capacity
+        if (sharedFlowFields.Count >= maxSharedFlowFields)
         {
             RemoveOldestFlowField();
         }
 
-        
-        flowFieldCache[targetGrid] = newField;
+        // full-map flow field (covers entire grid — cheap at 200x200)
+        int radius = Mathf.Max(GridManager.GRID_WIDTH, GridManager.GRID_HEIGHT);
+        FlowField newField = FlowFieldBuilder.CreateRegional(targetGrid, radius);
+        newField.lastAccessed = Time.time;
 
-        // index coverage for future
-        UpdateFlowFieldCoverage(targetGrid, newField);
-
-        return newField;
+        sharedFlowFields[targetGrid] = newField;
+        flowFieldRefCounts[targetGrid] = 0;
     }
 
-    private List<FlowField> FindSeedFlowFields(int2 targetGrid)
+    /// <summary>
+    /// Register a troop as using a shared flow field (for ref counting).
+    /// </summary>
+    public void RegisterFlowFieldUser(Vector3 targetPosition)
     {
-        List<FlowField> seedFields = new List<FlowField>();
-
-        foreach ((int2 goal, FlowField field) in flowFieldCache)
+        int2 targetGrid = WorldToGrid(targetPosition);
+        int2? matchKey = FindMatchingFlowFieldKey(targetGrid);
+        if (matchKey.HasValue)
         {
-            float distance = math.distance(
-                new float2(goal.x, goal.y),
-                new float2(targetGrid.x, targetGrid.y)
-            );
-
-            // seed if close enough
-            if (distance <= flowFieldSeedDistance)
-            {
-                seedFields.Add(field);
-                
-                // hard cap on seeding, to maintain speed advantage to avoid excessive seeding
-                if (seedFields.Count >= 3)
-                    break;
-            }
+            flowFieldRefCounts[matchKey.Value]++;
         }
-
-        return seedFields;
     }
 
-
-    private void UpdateFlowFieldCoverage(int2 goalPosition, FlowField flowField)
+    /// <summary>
+    /// Unregister a troop from a shared flow field. Auto-cleanup when no users remain.
+    /// </summary>
+    public void UnregisterFlowFieldUser(Vector3 targetPosition)
     {
-        int minX = flowField.regionMin.x;
-        int maxX = flowField.regionMax.x;
-        int minY = flowField.regionMin.y;
-        int maxY = flowField.regionMax.y;
-
-        // low resolution for memory
-        int step = 5;
-        
-        for (int x = minX; x < maxX; x += step)
+        int2 targetGrid = WorldToGrid(targetPosition);
+        int2? matchKey = FindMatchingFlowFieldKey(targetGrid);
+        if (matchKey.HasValue && flowFieldRefCounts.ContainsKey(matchKey.Value))
         {
-            for (int y = minY; y < maxY; y += step)
+            flowFieldRefCounts[matchKey.Value]--;
+            if (flowFieldRefCounts[matchKey.Value] <= 0)
             {
-                int2 tile = new int2(x, y);
-                
-                if (!tileCoverage.ContainsKey(tile))
-                {
-                    tileCoverage[tile] = new List<int2>();
-                }
-                
-                tileCoverage[tile].Add(goalPosition);
+                sharedFlowFields.Remove(matchKey.Value);
+                flowFieldRefCounts.Remove(matchKey.Value);
             }
         }
     }
 
-    private void RemoveFlowFieldCoverage(int2 goalPosition, FlowField flowField)
+    /// <summary>
+    /// Check if a shared flow field exists for this destination.
+    /// </summary>
+    public bool HasSharedFlowField(Vector3 targetPosition)
     {
-        int minX = flowField.regionMin.x;
-        int maxX = flowField.regionMax.x;
-        int minY = flowField.regionMin.y;
-        int maxY = flowField.regionMax.y;
-
-        int step = 5;
-        
-        for (int x = minX; x < maxX; x += step)
-        {
-            for (int y = minY; y < maxY; y += step)
-            {
-                int2 tile = new int2(x, y);
-                
-                if (tileCoverage.TryGetValue(tile, out List<int2> goals))
-                {
-                    goals.Remove(goalPosition);
-                    if (goals.Count == 0)
-                    {
-                        tileCoverage.Remove(tile);
-                    }
-                }
-            }
-        }
+        int2 targetGrid = WorldToGrid(targetPosition);
+        return FindMatchingFlowField(targetGrid) != null;
     }
 
-    public bool ShouldUseFlowField(Vector3 currentPosition, Vector3 targetPosition)
+    private FlowField FindMatchingFlowField(int2 targetGrid)
     {
-        return  Vector3.Distance(currentPosition, targetPosition) <= flowFieldActivationDistance;
-    }
+        // exact match first
+        if (sharedFlowFields.TryGetValue(targetGrid, out FlowField exact))
+            return exact;
 
-    private void RemoveOldestFlowField()
-    {
-        int2 oldestGoal = default;
-        float oldestTime = float.MaxValue;
-        FlowField oldestField = null;
-
-        foreach ((int2 goal, FlowField flowField) in flowFieldCache)
+        // fuzzy match — nearby destination shares the same field
+        foreach (var kvp in sharedFlowFields)
         {
-            if (flowField.lastAccessed < oldestTime)
-            {
-                oldestTime = flowField.lastAccessed;
-                oldestGoal = goal;
-                oldestField = flowField;
-            }
+            float dist = math.distance(new float2(kvp.Key.x, kvp.Key.y), new float2(targetGrid.x, targetGrid.y));
+            if (dist <= flowFieldMergeDistance)
+                return kvp.Value;
         }
 
-        if (oldestField != null)
-        {
-            RemoveFlowFieldCoverage(oldestGoal, oldestField);
-            flowFieldCache.Remove(oldestGoal);
-        }
+        return null;
     }
 
-    public void ClearAllCache()
+    private int2? FindMatchingFlowFieldKey(int2 targetGrid)
     {
-        flowFieldCache.Clear();
-        tileCoverage.Clear();
+        if (sharedFlowFields.ContainsKey(targetGrid))
+            return targetGrid;
+
+        foreach (var kvp in sharedFlowFields)
+        {
+            float dist = math.distance(new float2(kvp.Key.x, kvp.Key.y), new float2(targetGrid.x, targetGrid.y));
+            if (dist <= flowFieldMergeDistance)
+                return kvp.Key;
+        }
+
+        return null;
     }
+
+    #endregion
+
+    #region Cache Management
 
     public void InvalidateFlowFieldsInArea(Vector3 position, int2 size)
     {
         Vector3Int gridPos = GridManager.WorldPosFromCoordinates(position);
         int2 centerGrid = new int2(gridPos.x, gridPos.z);
 
-        int affectedRadius = Mathf.Max(size.x, size.y) / 2 + flowFieldRadius;
+        // any flow field whose goal is within the affected area needs regeneration
+        List<int2> toRegenerate = new List<int2>();
 
-        List<int2> keysToRemove = new List<int2>();
-        
-        foreach ((int2 goal, FlowField field) in flowFieldCache)
+        foreach (var kvp in sharedFlowFields)
         {
-            float distance = math.distance(
-                new float2(centerGrid.x, centerGrid.y),
-                new float2(goal.x, goal.y)
-            );
-
-            if (distance <= affectedRadius)
+            // if the changed area overlaps with the flow field region, regenerate it
+            FlowField field = kvp.Value;
+            if (centerGrid.x + size.x >= field.regionMin.x && centerGrid.x - size.x <= field.regionMax.x &&
+                centerGrid.y + size.y >= field.regionMin.y && centerGrid.y - size.y <= field.regionMax.y)
             {
-                keysToRemove.Add(goal);
+                toRegenerate.Add(kvp.Key);
             }
         }
 
-        foreach (int2 key in keysToRemove)
+        foreach (int2 key in toRegenerate)
         {
-            if (flowFieldCache.TryGetValue(key, out FlowField field))
+            // regenerate in place
+            int radius = Mathf.Max(GridManager.GRID_WIDTH, GridManager.GRID_HEIGHT);
+            FlowField newField = FlowFieldBuilder.CreateRegional(key, radius);
+            newField.lastAccessed = Time.time;
+            sharedFlowFields[key] = newField;
+        }
+    }
+
+    public void ClearAllCache()
+    {
+        sharedFlowFields.Clear();
+        flowFieldRefCounts.Clear();
+    }
+
+    private void RemoveOldestFlowField()
+    {
+        int2 oldestKey = default;
+        float oldestTime = float.MaxValue;
+
+        foreach (var kvp in sharedFlowFields)
+        {
+            if (kvp.Value.lastAccessed < oldestTime)
             {
-                RemoveFlowFieldCoverage(key, field);
-                flowFieldCache.Remove(key);
+                oldestTime = kvp.Value.lastAccessed;
+                oldestKey = kvp.Key;
             }
         }
+
+        sharedFlowFields.Remove(oldestKey);
+        flowFieldRefCounts.Remove(oldestKey);
+    }
+
+    #endregion
+
+    #region Utility
+
+    private int2 WorldToGrid(Vector3 worldPos)
+    {
+        Vector3Int gridPos = GridManager.WorldPosFromCoordinates(worldPos);
+        return new int2(gridPos.x, gridPos.z);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!drawSharedFlowFieldGizmos || !Application.isPlaying) return;
+        if (GridManager.Instance == null || sharedFlowFields == null || sharedFlowFields.Count == 0) return;
+
+        Camera cam = Camera.main;
+        if (cam == null) return;
+
+        Vector3 camPos = cam.transform.position;
+        Vector3Int camGrid = GridManager.WorldPosFromCoordinates(camPos);
+        float tileSize = GridManager.TILE_SIZE;
+
+        foreach (var kvp in sharedFlowFields)
+        {
+            int2 targetGrid = kvp.Key;
+            Vector3 targetWorld = GridManager.CoordinatesToWorldPos(new Vector3(targetGrid.x, 0, targetGrid.y));
+            targetWorld.y = camPos.y;
+
+            Gizmos.color = debugGoalColor;
+            Gizmos.DrawWireSphere(targetWorld, tileSize * 0.6f);
+
+            int minX = Mathf.Max(0, camGrid.x - debugSampleRadius);
+            int maxX = Mathf.Min(GridManager.GRID_WIDTH - 1, camGrid.x + debugSampleRadius);
+            int minZ = Mathf.Max(0, camGrid.z - debugSampleRadius);
+            int maxZ = Mathf.Min(GridManager.GRID_HEIGHT - 1, camGrid.z + debugSampleRadius);
+
+            for (int x = minX; x <= maxX; x++)
+            {
+                for (int z = minZ; z <= maxZ; z++)
+                {
+                    Vector3 cellWorld = GridManager.CoordinatesToWorldPos(new Vector3(x, 0, z));
+                    cellWorld.y = camPos.y + 0.15f;
+
+                    Vector3 dir = GetSharedFlowFieldDirection(cellWorld, targetWorld);
+                    if (dir.sqrMagnitude < 0.001f) continue;
+
+                    Gizmos.color = debugFlowArrowColor;
+                    DrawDebugArrow(cellWorld, new Vector3(dir.x, 0, dir.z) * debugArrowLength);
+                }
+            }
+        }
+    }
+
+    private void DrawDebugArrow(Vector3 from, Vector3 direction)
+    {
+        if (direction.sqrMagnitude < 0.0001f) return;
+
+        Vector3 to = from + direction;
+        Gizmos.DrawLine(from, to);
+
+        float headSize = direction.magnitude * 0.3f;
+        Vector3 dir = direction.normalized;
+        Vector3 right = Vector3.Cross(Vector3.up, dir).normalized;
+
+        Gizmos.DrawLine(to, to - dir * headSize + right * headSize * 0.4f);
+        Gizmos.DrawLine(to, to - dir * headSize - right * headSize * 0.4f);
     }
 
     #endregion
 
     #region Debug Info
 
-    public int GetCachedFlowFieldCount()
-    {
-        return flowFieldCache.Count;
-    }
-
-    public int GetQueuedPathRequests()
-    {
-        return pathRequestQueue.Count;
-    }
-
-    public int GetCoverageTileCount()
-    {
-        return tileCoverage.Count;
-    }
+    public int GetCachedFlowFieldCount() => sharedFlowFields.Count;
+    public int GetQueuedPathRequests() => pathRequestQueue.Count;
 
     #endregion
 
     #region Getters
-    public float FlowFieldActivationDistance => flowFieldActivationDistance;
+    public float DirectSteerDistance => directSteerDistance;
     public float FlowFieldBlendRadius => flowFieldBlendRadius;
     #endregion
 }
 
-#region Custom Data Classes
+#region Enums and Data Classes
+
+public enum NavigationMode
+{
+    DirectSteer,        // short range — just move toward target
+    AStarWaypoints,     // long range — follow A* waypoints
+    SharedFlowField     // group command — sample shared flow field
+}
 
 public class PathRequest
 {
@@ -361,9 +436,9 @@ public class PathResult
 {
     public bool success;
     public List<Vector3> waypoints;
-    public List<GridSector> sectorPath;
     public Vector3 startPosition;
     public Vector3 targetPosition;
+    public NavigationMode navigationMode;
 }
 
 #endregion

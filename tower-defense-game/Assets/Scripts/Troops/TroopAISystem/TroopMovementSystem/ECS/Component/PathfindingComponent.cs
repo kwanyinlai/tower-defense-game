@@ -15,18 +15,18 @@ namespace Pathfinding.ECS
     }
     
     /// <summary>
-    /// Movement State
+    /// Movement State — mirrors the 3-tier system from PathfindingManager.
+    /// navigationMode: 0 = DirectSteer, 1 = AStarWaypoints, 2 = SharedFlowField
     /// </summary>
     public struct NavigationTarget : IComponentData
     {
-        public float2 targetPosition; // position of navigation target
-        public float2 flowFieldDirection; // direction from flow field (if used)
-        public float stoppingDistance; // distance at which to stop moving towards target
-        public float slowdownDistance; // distance at which to start slowing down
-        public byte isMoving; // whether the troop is currently moving towards a target
-        public byte reachedDestination; // whether the troop has reached its destination
-        public byte useFlowField; // whether to use flow field navigation or otherwise
-        // compiler auto-align?
+        public float2 targetPosition;      // final destination
+        public float2 flowFieldDirection;   // pre-sampled direction (written by bridge each frame when mode == 2)
+        public float stoppingDistance;
+        public float slowdownDistance;
+        public byte isMoving;
+        public byte reachedDestination;
+        public byte navigationMode;        // 0 = DirectSteer, 1 = AStarWaypoints, 2 = SharedFlowField
     }
         
     /// <summary>
